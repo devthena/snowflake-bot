@@ -1,0 +1,51 @@
+/* -------------- DASHBOARD ------------- */
+.view-dashboard {
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+
+  .dashboard-wrapper {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    padding: 15px 35px 30px;
+    width: 75%;
+    margin: 0 auto;
+    max-width: 768px;
+  }
+
+  .server {
+    border: solid 1px $white;
+    display: inline-block;
+    margin: 0 15px 0 0;
+    padding: 15px 15px 0;
+    vertical-align: middle;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    img {
+      border-radius: 25%;
+      width: 112px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .view-dashboard {
+    .dashboard-wrapper {
+      top: 120px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .view-dashboard {
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    .dashboard-wrapper {
+      top: 10px;
+    }
+  }
+}

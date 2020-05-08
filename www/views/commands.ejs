@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Snowflake Bot</title>
+  <link rel="icon" type="image/jpg" href="../images/snowflake.jpg">
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+</head>
+
+<body class="snow-comm">
+  <%- include('header') %>
+  <div class="view-home">
+    <canvas id="snowCanvas"></canvas>
+    <div class="commands-wrapper">
+      <h2>Command List</h2>
+      <section class="comm-title">
+        <p class="comm-name">Name</p>
+        <p class="comm-desc">Description</p>
+      </section>
+      <section>
+        <p class="comm-name">!8ball &lt;question&gt;</p>
+        <p class="comm-desc">
+          Ask the bot like a Magic 8 Ball
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!gamble &lt;count&gt;</p>
+        <p class="comm-desc">
+          Gambles an amount of points to double it or lose it.
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!give &lt;user&gt; &lt;points&gt;</p>
+        <p class="comm-desc">
+          Give points to specific users by tagging them.
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!leaderboard</p>
+        <p class="comm-desc">
+          Displays the top 5 users with the most points in the server.
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!optin</p>
+        <p class="comm-desc">
+          Subscribes a user to a role for the bot to tag on special channels (like movie night)
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!optout</p>
+        <p class="comm-desc">
+          Unsubscribes a user from a role for special channels (like movie night)
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!points</p>
+        <p class="comm-desc">
+          Displays the amount of points a user has.
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!snowflake</p>
+        <p class="comm-desc">
+          Displays the bot information.
+        </p>
+      </section>
+      <section>
+        <p class="comm-name">!vanish</p>
+        <p class="comm-desc">
+          Deletes today's messages from the user.
+        </p>
+      </section>
+    </div>
+  </div>
+  <%- include('footer') %>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="../scripts/snowflake.min.js"></script>
+  <script type="text/javascript" src="../scripts/snowfall.js"></script>
+</body>
+
+</html>

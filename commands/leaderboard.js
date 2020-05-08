@@ -1,0 +1,56 @@
+
+const Discord = require('discord.js');
+
+exports.run = async (Bot, message) => {
+
+  const server = Bot.servers.get(message.guild.id);
+  if (!server) return;
+
+  let sortable = [];
+  server.members.forEach((pointObj, id) => {
+    if (pointObj.points > 0) sortable.push([id, pointObj.points]);
+  });
+
+  sortable.sort((a, b) => {
+    return b[1] - a[1];
+  });
+
+  let botEmbed = new Discord.RichEmbed()
+    .setTitle(':trident: Server Leaderboard :trident:')
+    .setDescription('Here are the users with the most points!')
+    .setColor('#FFBFFA');
+
+  let limit = Math.min(sortable.length, 5);
+  for (let i = 0; i < limit; i++) {
+
+    let arr = sortable[i];
+    let user = message.guild.members.get(arr[0]);
+    let points = arr[1];
+
+    if (i == 0) {
+      botEmbed.addField(`${i + 1}. ${user.displayName} :first_place:`, `Points: ${points}`);
+    } else if (i == 1) {
+      botEmbed.addField(`${i + 1}. ${user.displayName} :second_place:`, `Points: ${points}`);
+    } else if (i == 2) {
+      botEmbed.addField(`${i + 1}. ${user.displayName} :third_place:`, `Points: ${points}`);
+    } else {
+      botEmbed.addField(`${i + 1}. ${user.displayName}`, `Points: ${points}`);
+    }
+  }
+
+  return message.channel.send(botEmbed);
+};
+
+exports.conf = {
+  enabled: true,
+  aliases: [],
+  cooldown: 5,
+  permitLevel: 0
+};
+
+exports.info = {
+  name: 'leaderboard',
+  description: 'Display top 5 users with most points.',
+  category: 'module',
+  usage: '!leaderboard'
+};

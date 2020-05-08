@@ -1,0 +1,66 @@
+/* -------------- FOOTER ------------- */
+.view-footer {
+  background: linear-gradient($purple,$grey);
+  padding: 30px 0 17px 20px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+
+  p {
+    display: inline-block;
+    font-size: 12px;
+    margin: 0;
+    vertical-align: middle;
+    width: 50%;
+  }
+
+  span {
+    color: $pink;
+  }
+
+  .socials {
+    display: inline-block;
+    padding-right: 25px;
+    text-align: right;
+    vertical-align: middle;
+    width: 45%;
+  }
+
+  .social-icons {
+    display: inline-block;
+    padding-right: 25px;
+    vertical-align: middle;
+    width: 17px;
+    max-height: 17px;
+
+    &:hover {
+      svg path {
+        fill: $pink;
+      }
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+
+    svg path {
+      fill: $white;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .view-footer {
+    padding: 17px 0 12px 0;
+        
+    p {
+      text-align: center;
+      width: 100%;
+    }
+    .socials {
+      padding: 8px 0 0 0;
+      text-align: center;
+      width: 100%;
+    }
+  }
+}

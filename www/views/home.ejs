@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Snowflake Bot</title>
+  <link rel="icon" type="image/jpg" href="../images/snowflake.jpg">
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+</head>
+
+<body class="snow-home">
+  <%- include('header') %>
+  <div class="view-home">
+    <canvas id="snowCanvas"></canvas>
+    <div class="home-wrapper">
+      <h2><%= headline %></h2>
+      <p>This bot is exclusively made for the AthenaUS and AikoBliss servers. :)</p>
+      <p>If you're a member, this is where you can find information about the bot's commands. For questions and
+        general feedback, just @ Athena in the Discord!</p>
+    </div>
+  </div>
+  <%- include('footer') %>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="../scripts/snowflake.min.js"></script>
+  <script type="text/javascript" src="../scripts/snowfall.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+{
+  "name": "snowflake-bot",
+  "version": "0.9.0",
+  "description": "A Discord bot for AthenaUS and AikoBliss servers",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "node-sass --output-style compressed -o www/public/styles www/styles",
+    "uglify": "uglifyjs www/scripts/*.js -m -o www/public/scripts/snowflake.min.js",
+    "build": "npm run scss && npm run uglify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devthena/snowflake-bot.git"
+  },
+  "author": "AthenaUS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devthena/snowflake-bot/issues"
+  },
+  "homepage": "https://github.com/devthena/snowflake-bot#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "node-schedule": "^1.3.2",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.3",
+    "sqlite3": "^4.2.0"
+  },
+  "devDependencies": {
+    "node-sass": "^4.14.1",
+    "uglify-js": "^3.9.2"
+  }
+}

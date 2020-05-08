@@ -1,0 +1,86 @@
+/* -------------- HEADER ------------- */
+.view-header {
+  background: linear-gradient($grey,$purple);
+  font-weight: bold;
+  padding: 15px 0 25px 0;
+  position: relative;
+
+  .logo-text {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 20px;
+    margin: 0;
+    padding-left: 20px;
+    vertical-align: middle;
+    width: 11%;
+
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+
+    span {
+      color: $pink;
+    }
+  }
+
+  ul {
+    display: inline-block;
+    list-style-type: none;
+    padding: 0;
+    text-align: right;
+    vertical-align: middle;
+    width: 82%;
+  }
+
+  li {
+    display: inline-block;
+    font-size: 14px;
+    padding-right: 30px;
+
+    &:last-child {
+      padding-right: 0;
+    }
+
+    a {
+      color: $pink;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      &:hover {
+        color: $white;
+      }
+
+      &.selected {
+        color: $white;
+      }
+    }
+
+    button {
+      background: transparent;
+      border: solid 1px $pink;
+      border-radius: 5px;
+      color: $white;
+      cursor: pointer;
+      font-family: $font-family;
+      font-size: 14px;
+      font-weight: bold;
+      height: 25px;
+      outline: 0;
+      width: 90px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .view-header {
+    .logo-text {
+      padding-left: 0;
+      text-align: center;
+      width: 100%;
+    }
+    ul {
+      display: none;
+    }
+  }
+}
