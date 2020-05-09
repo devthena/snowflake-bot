@@ -187,23 +187,19 @@ module.exports = (app, Bot) => {
     // update the server Map
     Bot.servers.set(serverID, serverInfo);
 
-    // reload the job schedules
-    // Bot.loadSchedules();
-
     // update the database
     var db = new sqlite3.Database('./master.db', (error) => {
       if (error) return Bot.logger.error(`[DB] Cannot establish connection to database: ${error}`);
       Bot.logger.info('[DB] Established connection to database (web.js - api/server/update)');
     });
 
-    var stringMods = `mod_alert_optin = ?, mod_alert_stream = ?, mod_auto_add = ?, mod_game_8ball = ?, mod_game_gamble = ?, mod_highlight_board = ?, mod_optins = ?`;
+    var stringMods = `mod_alert_stream = ?, mod_auto_add = ?, mod_game_8ball = ?, mod_game_gamble = ?, mod_highlight_board = ?, mod_optins = ?`;
     var stringRoles = `role_auto_add = ?, role_moderator = ?, role_optins = ?`;
-    var stringChannels = `channel_alert_optin = ?, channel_alert_stream = ?, channel_highlight_board = ?`;
-    var stringMessages = `message_alert_optin = ?, message_alert_stream = ?`;
+    var stringChannels = `channel_alert_stream = ?, channel_highlight_board = ?`;
+    var stringMessages = `message_alert_stream = ?`;
     var sql = `UPDATE guilds SET ${stringMods}, ${stringRoles}, ${stringChannels}, ${stringMessages} WHERE server_id = ?`;
 
     var stringValues = [
-      serverUpdates.mods.alertOptin,
       serverUpdates.mods.alertStream,
       serverUpdates.mods.autoAdd,
       serverUpdates.mods.game8Ball,
@@ -213,10 +209,8 @@ module.exports = (app, Bot) => {
       serverUpdates.roles.autoAdd,
       serverUpdates.roles.moderator,
       serverUpdates.roles.optins,
-      serverUpdates.channels.alertOptin,
       serverUpdates.channels.alertStream,
       serverUpdates.channels.highlightBoard,
-      serverUpdates.messages.alertOptin,
       serverUpdates.messages.alertStream,
       serverID
     ];

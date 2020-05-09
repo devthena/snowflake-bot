@@ -87,10 +87,10 @@
             </div>
             <div class="switch-box">
               <div class="input-wrapper">
-                <% if(server.mods.alertOptins === 'true') { %>
-                <input type="checkbox" class="switch" name="alertOptins" checked>
+                <% if(server.mods.alertStream === 'true') { %>
+                <input type="checkbox" class="switch" name="alertStream" checked>
                 <% } else { %>
-                <input type="checkbox" class="switch" name="alertOptins">
+                <input type="checkbox" class="switch" name="alertStream">
                 <% } %>
                 <svg class="is-checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426.67 426.67">
                   <path
@@ -102,24 +102,24 @@
                     fill-rule="evenodd" clip-rule="evenodd" />
                 </svg>
               </div>
-              <label><span>Optin Alerts</span> - Let the bot send an alert to the optin channel</label>
-              <% if(server.mods.alertOptins === 'true') { %>
-              <div class="feature-config alertOptins" style="display:block;">
+              <label><span>Stream Alerts</span> - Let the bot announce when you go live</label>
+              <% if(server.mods.alertStream === 'true') { %>
+              <div class="feature-config alertStream" style="display:block;">
                 <% } else { %>
-                <div class="feature-config alertOptins" style="display:none;">
+                <div class="feature-config alertStream" style="display:none;">
                   <% } %>
                   <label>Alert Channel:</label>
-                  <input type="text" name="channels:alertOptin" value="<%= server.channels.alertOptin %>" /><br />
+                  <input type="text" name="channels:alertStream" value="<%= server.channels.alertStream %>" /><br />
                   <label>Alert Message:</label>
-                  <textarea name="messages:alertOptin"><%= server.messages.alertOptin %></textarea>
+                  <textarea name="messages:alertStream"><%= server.messages.alertStream %></textarea>
                 </div>
               </div>
               <div class="switch-box">
                 <div class="input-wrapper">
-                  <% if(server.mods.alertStream === 'true') { %>
-                  <input type="checkbox" class="switch" name="alertStream" checked>
+                  <% if(server.mods.highlightBoard === 'true') { %>
+                  <input type="checkbox" class="switch" name="highlightBoard" checked>
                   <% } else { %>
-                  <input type="checkbox" class="switch" name="alertStream">
+                  <input type="checkbox" class="switch" name="highlightBoard">
                   <% } %>
                   <svg class="is-checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426.67 426.67">
                     <path
@@ -131,24 +131,23 @@
                       fill-rule="evenodd" clip-rule="evenodd" />
                   </svg>
                 </div>
-                <label><span>Stream Alerts</span> - Let the bot announce when you go live</label>
-                <% if(server.mods.alertStream === 'true') { %>
-                <div class="feature-config alertStream" style="display:block;">
+                <label><span>Highlight Board</span> - Let the bot repost messages that gets certain
+                  number of reactions</label>
+                <% if(server.mods.highlightBoard === 'true') { %>
+                <div class="feature-config highlightBoard" style="display:block;">
                   <% } else { %>
-                  <div class="feature-config alertStream" style="display:none;">
+                  <div class="feature-config highlightBoard" style="display:none;">
                     <% } %>
-                    <label>Alert Channel:</label>
-                    <input type="text" name="channels:alertStream" value="<%= server.channels.alertStream %>" /><br />
-                    <label>Alert Message:</label>
-                    <textarea name="messages:alertStream"><%= server.messages.alertStream %></textarea>
+                    <label>Highlight Channel:</label>
+                    <input type="text" name="channels:highlightBoard" value="<%= server.channels.highlightBoard %>" />
                   </div>
                 </div>
                 <div class="switch-box">
                   <div class="input-wrapper">
-                    <% if(server.mods.highlightBoard === 'true') { %>
-                    <input type="checkbox" class="switch" name="highlightBoard" checked>
+                    <% if(server.mods.game8Ball === 'true') { %>
+                    <input type="checkbox" class="switch" name="game8Ball" checked>
                     <% } else { %>
-                    <input type="checkbox" class="switch" name="highlightBoard">
+                    <input type="checkbox" class="switch" name="game8Ball">
                     <% } %>
                     <svg class="is-checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426.67 426.67">
                       <path
@@ -160,66 +159,38 @@
                         fill-rule="evenodd" clip-rule="evenodd" />
                     </svg>
                   </div>
-                  <label><span>Highlight Board</span> - Let the bot repost messages that gets certain
-                    number of reactions</label>
-                  <% if(server.mods.highlightBoard === 'true') { %>
-                  <div class="feature-config highlightBoard" style="display:block;">
-                    <% } else { %>
-                    <div class="feature-config highlightBoard" style="display:none;">
-                      <% } %>
-                      <label>Highlight Channel:</label>
-                      <input type="text" name="channels:highlightBoard" value="<%= server.channels.highlightBoard %>" />
-                    </div>
-                  </div>
-                  <div class="switch-box">
-                    <div class="input-wrapper">
-                      <% if(server.mods.game8Ball === 'true') { %>
-                      <input type="checkbox" class="switch" name="game8Ball" checked>
-                      <% } else { %>
-                      <input type="checkbox" class="switch" name="game8Ball">
-                      <% } %>
-                      <svg class="is-checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426.67 426.67">
-                        <path
-                          d="M153.504 366.84c-8.657 0-17.323-3.303-23.927-9.912L9.914 237.265c-13.218-13.218-13.218-34.645 0-47.863 13.218-13.218 34.645-13.218 47.863 0l95.727 95.727 215.39-215.387c13.218-13.214 34.65-13.218 47.86 0 13.22 13.218 13.22 34.65 0 47.863L177.435 356.928c-6.61 6.605-15.27 9.91-23.932 9.91z" />
-                      </svg>
-                      <svg class="is-unchecked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212.982 212.982">
-                        <path
-                          d="M131.804 106.49l75.936-75.935c6.99-6.99 6.99-18.323 0-25.312-6.99-6.99-18.322-6.99-25.312 0L106.49 81.18 30.555 5.242c-6.99-6.99-18.322-6.99-25.312 0-6.99 6.99-6.99 18.323 0 25.312L81.18 106.49 5.24 182.427c-6.99 6.99-6.99 18.323 0 25.312 6.99 6.99 18.322 6.99 25.312 0L106.49 131.8l75.938 75.937c6.99 6.99 18.322 6.99 25.312 0 6.99-6.99 6.99-18.323 0-25.313l-75.936-75.936z"
-                          fill-rule="evenodd" clip-rule="evenodd" />
-                      </svg>
-                    </div>
-                    <label><span>Game: Magic 8-Ball</span> - Let users play Magic 8-Ball</label>
-                  </div>
-                  <div class="switch-box">
-                    <div class="input-wrapper">
-                      <% if(server.mods.gameGamble === 'true') { %>
-                      <input type="checkbox" class="switch" name="gameGamble" checked>
-                      <% } else { %>
-                      <input type="checkbox" class="switch" name="gameGamble">
-                      <% } %>
-                      <svg class="is-checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426.67 426.67">
-                        <path
-                          d="M153.504 366.84c-8.657 0-17.323-3.303-23.927-9.912L9.914 237.265c-13.218-13.218-13.218-34.645 0-47.863 13.218-13.218 34.645-13.218 47.863 0l95.727 95.727 215.39-215.387c13.218-13.214 34.65-13.218 47.86 0 13.22 13.218 13.22 34.65 0 47.863L177.435 356.928c-6.61 6.605-15.27 9.91-23.932 9.91z" />
-                      </svg>
-                      <svg class="is-unchecked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212.982 212.982">
-                        <path
-                          d="M131.804 106.49l75.936-75.935c6.99-6.99 6.99-18.323 0-25.312-6.99-6.99-18.322-6.99-25.312 0L106.49 81.18 30.555 5.242c-6.99-6.99-18.322-6.99-25.312 0-6.99 6.99-6.99 18.323 0 25.312L81.18 106.49 5.24 182.427c-6.99 6.99-6.99 18.323 0 25.312 6.99 6.99 18.322 6.99 25.312 0L106.49 131.8l75.938 75.937c6.99 6.99 18.322 6.99 25.312 0 6.99-6.99 6.99-18.323 0-25.313l-75.936-75.936z"
-                          fill-rule="evenodd" clip-rule="evenodd" />
-                      </svg>
-                    </div>
-                    <label><span>Game: Double or Nothing Gamble</span> - Let users gamble their
-                      points</label>
-                  </div>
+                  <label><span>Game: Magic 8-Ball</span> - Let users play Magic 8-Ball</label>
                 </div>
-                <div class="save-wrapper">
-                  <span class="server-notif"></span>
-                  <button class="btn-save" disabled>Save Changes</button>
+                <div class="switch-box">
+                  <div class="input-wrapper">
+                    <% if(server.mods.gameGamble === 'true') { %>
+                    <input type="checkbox" class="switch" name="gameGamble" checked>
+                    <% } else { %>
+                    <input type="checkbox" class="switch" name="gameGamble">
+                    <% } %>
+                    <svg class="is-checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426.67 426.67">
+                      <path
+                        d="M153.504 366.84c-8.657 0-17.323-3.303-23.927-9.912L9.914 237.265c-13.218-13.218-13.218-34.645 0-47.863 13.218-13.218 34.645-13.218 47.863 0l95.727 95.727 215.39-215.387c13.218-13.214 34.65-13.218 47.86 0 13.22 13.218 13.22 34.65 0 47.863L177.435 356.928c-6.61 6.605-15.27 9.91-23.932 9.91z" />
+                    </svg>
+                    <svg class="is-unchecked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212.982 212.982">
+                      <path
+                        d="M131.804 106.49l75.936-75.935c6.99-6.99 6.99-18.323 0-25.312-6.99-6.99-18.322-6.99-25.312 0L106.49 81.18 30.555 5.242c-6.99-6.99-18.322-6.99-25.312 0-6.99 6.99-6.99 18.323 0 25.312L81.18 106.49 5.24 182.427c-6.99 6.99-6.99 18.323 0 25.312 6.99 6.99 18.322 6.99 25.312 0L106.49 131.8l75.938 75.937c6.99 6.99 18.322 6.99 25.312 0 6.99-6.99 6.99-18.323 0-25.313l-75.936-75.936z"
+                        fill-rule="evenodd" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <label><span>Game: Double or Nothing Gamble</span> - Let users gamble their
+                    points</label>
                 </div>
               </div>
+              <div class="save-wrapper">
+                <span class="server-notif"></span>
+                <button class="btn-save" disabled>Save Changes</button>
+              </div>
             </div>
-            <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-              integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-            <script type="text/javascript" src="../scripts/snowflake.min.js"></script>
+          </div>
+          <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+          <script type="text/javascript" src="../scripts/snowflake.min.js"></script>
 </body>
 
 </html>
