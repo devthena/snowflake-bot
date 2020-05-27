@@ -1,5 +1,5 @@
-if (process.version.slice(1).split('.')[0] < 8) {
-  throw new Error('Node 8.0.0 or higher is required. Update Node on your system.');
+if (process.version.slice(1).split('.')[0] < 12) {
+  throw new Error('Node 12.0.0 or higher is required. Update Node on your system.');
 }
 
 require('dotenv').config();
