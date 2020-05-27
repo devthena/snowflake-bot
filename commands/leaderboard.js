@@ -15,7 +15,7 @@ exports.run = async (Bot, message) => {
     return b[1] - a[1];
   });
 
-  let botEmbed = new Discord.RichEmbed()
+  let botEmbed = new Discord.MessageEmbed()
     .setTitle(':trident: Server Leaderboard :trident:')
     .setDescription('Here are the users with the most points!')
     .setColor('#FFBFFA');
@@ -24,7 +24,7 @@ exports.run = async (Bot, message) => {
   for (let i = 0; i < limit; i++) {
 
     let arr = sortable[i];
-    let user = message.guild.members.get(arr[0]);
+    let user = message.guild.members.cache.get(arr[0]);
     let points = arr[1];
 
     if (i == 0) {

@@ -13,7 +13,7 @@ module.exports = (Bot, reaction, user) => {
 
     if (reaction.count >= 5) {
 
-      const highlightBoardChannel = reaction.message.guild.channels.find(channel => channel.name.includes(server.channels.highlightBoard));
+      const highlightBoardChannel = reaction.message.guild.channels.cache.find(channel => channel.name.includes(server.channels.highlightBoard));
 
       if (highlightBoardChannel) {
 
@@ -22,8 +22,8 @@ module.exports = (Bot, reaction, user) => {
           attachment = reaction.message.attachments.first().url;
         }
 
-        const botEmbed = new Discord.RichEmbed()
-          .setAuthor(reaction.message.author.username, reaction.message.author.displayAvatarURL)
+        const botEmbed = new Discord.MessageEmbed()
+          .setAuthor(reaction.message.author.username, reaction.message.author.displayAvatarURL())
           .setColor('#FFBFFA')
           .setDescription(`${reaction.message.cleanContent}\n\nLink for [original message](${reaction.message.url}) in ${reaction.message.channel}`)
           .setImage(attachment)

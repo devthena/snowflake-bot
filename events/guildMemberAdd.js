@@ -6,10 +6,10 @@ module.exports = (Bot, member) => {
 
   if (Bot.isTrue(server.mods.autoAdd)) {
 
-    const autoAddRole = member.guild.roles.find(role => role.name.includes(server.roles.autoAdd));
+    const autoAddRole = member.guild.roles.cache.find(role => role.name.includes(server.roles.autoAdd));
 
     if (autoAddRole) {
-      member.addRole(autoAddRole)
+      member.roles.add(autoAddRole)
         .then(function () {
           Bot.logger.info(`[SYS] Added role ${server.roles.autoAdd} to ${member.user.username}`);
         }).catch(function (error) {

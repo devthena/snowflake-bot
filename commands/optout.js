@@ -10,7 +10,7 @@ exports.run = async (Bot, message, args) => {
 
   const serverOptinRoles = server.roles.optins.split(',');
   const specifiedRole = args.join(' ');
-  const optInRole = message.member.guild.roles.find(role => role.name.includes(specifiedRole));
+  const optInRole = message.member.guild.roles.cache.find(role => role.name.includes(specifiedRole));
 
   if (optInRole) {
 
@@ -18,11 +18,11 @@ exports.run = async (Bot, message, args) => {
 
     if (isRoleAllowed) {
 
-      if (!message.member.roles.has(optInRole.id)) {
+      if (!message.member.roles.cache.has(optInRole.id)) {
         return message.channel.send(`${message.member.displayName}, you don't have that role, goob. :)`);
       }
 
-      message.member.removeRole(optInRole)
+      message.member.roles.remove(optInRole)
         .then(function () {
           message.channel.send(`You are now free from the ${specifiedRole} role, ${message.member.displayName}.`);
         }).catch(function (error) {

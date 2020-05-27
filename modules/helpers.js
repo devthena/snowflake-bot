@@ -12,13 +12,13 @@ module.exports = (Bot) => {
 
       // Administrators
       if (params.message.guild.ownerID === params.message.member.id) return true;
-      else return params.message.member.hasPermission('ADMINISTRATOR');
+      else return params.message.member.permissions.has('ADMINISTRATOR');
 
     } else if (params.permitLevel == 9) {
 
       // Moderators
       if ((params.message.guild.ownerID === params.message.member.id)
-        || (params.message.member.hasPermission('ADMINISTRATOR'))) {
+        || (params.message.member.permisions.has('ADMINISTRATOR'))) {
 
         return true;
 
@@ -27,7 +27,7 @@ module.exports = (Bot) => {
         const moderatorName = params.server.roles.moderator;
         if (moderatorName.length > 0) {
 
-          const moderatorRole = params.message.member.roles.find(role => role.name.includes(moderatorName));
+          const moderatorRole = params.message.member.roles.cache.find(role => role.name.includes(moderatorName));
           if (moderatorRole) return true;
           else return false;
 

@@ -29,9 +29,9 @@ module.exports = (Bot) => {
     });
 
     let serverCount = 0;
-    let lastIndex = Bot.guilds.size;
+    let lastIndex = Bot.guilds.cache.size;
 
-    Bot.guilds.forEach(guild => {
+    Bot.guilds.cache.forEach(guild => {
 
       let blankMap = new Map();
       let serverConfig = {
@@ -124,10 +124,10 @@ module.exports = (Bot) => {
 
     Bot.servers.forEach((server, id) => {
 
-      let guild = Bot.guilds.get(id);
+      let guild = Bot.guilds.cache.get(id);
       let sql = `SELECT * from members WHERE server_id = ${id}`;
 
-      guild.members.forEach(member => {
+      guild.members.cache.forEach(member => {
         server.members.set(member.id, { points: 0 });
       });
 
@@ -135,7 +135,7 @@ module.exports = (Bot) => {
         if (error) Bot.logger.error(`[DB] loadMemberData: ${error}`);
 
         if (row) {
-          let member = guild.members.get(row.user_id);
+          let member = guild.members.cache.get(row.user_id);
           if (!member) {
             toDelete.push(row.id);
           } else {
@@ -226,7 +226,7 @@ module.exports = (Bot) => {
   Bot.startBackupTimer = () => {
 
     if (pointer < botActivities.length) {
-      Bot.user.setActivity(botActivities[pointer].activity, { type: botActivities[pointer].type });
+      Bot.user.setActivity(botActivities[pointer].name, { type: botActivities[pointer].type });
       pointer++;
       if (pointer >= botActivities.length) pointer = 0;
     }

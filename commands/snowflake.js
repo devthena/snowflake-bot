@@ -6,14 +6,14 @@ exports.run = async (Bot, message) => {
   let d = new Date(Bot.user.createdTimestamp);
   let createdDate = d.toDateString();
 
-  let botEmbed = new Discord.RichEmbed()
+  let botEmbed = new Discord.MessageEmbed()
     .setTitle('Bot Information')
     .setFooter('Note: This bot is exclusive to AthenaUS and AikoBliss servers.')
     .setDescription('I\'m made with ❤ by AthenaUS!')
     .setThumbnail(Bot.user.displayAvatarURL)
     .setColor('#FFBFFA')
     .addField('Created On', createdDate, true)
-    .addField('Release', 'Version 0.9.1-beta', true);
+    .addField('Release', 'v1.0.0-alpha', true);
 
   return message.channel.send(botEmbed);
 };

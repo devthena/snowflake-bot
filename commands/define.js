@@ -24,7 +24,7 @@ exports.run = async (Bot, message, args) => {
       let description = `pronunciation: ${pronunciation} | syllables: ${syllables}`;
       let maxDefinitions = definitions.slice(0, 3);
 
-      let botEmbed = new Discord.RichEmbed()
+      let botEmbed = new Discord.MessageEmbed()
         .setTitle(`"${res.data.word}"`)
         .setDescription(description)
         .setColor('#FFBFFA');
