@@ -18,7 +18,7 @@ module.exports = (Bot) => {
 
       // Moderators
       if ((params.message.guild.ownerID === params.message.member.id)
-        || (params.message.member.permisions.has('ADMINISTRATOR'))) {
+        || (params.message.member.permissions.has('ADMINISTRATOR'))) {
 
         return true;
 
