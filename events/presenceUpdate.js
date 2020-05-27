@@ -1,17 +1,20 @@
 
-module.exports = (Bot, oldMember, newMember) => {
+const types = require('./../constants/activity-types');
 
-  const server = Bot.servers.get(newMember.guild.id);
+module.exports = (Bot, oldPresence, newPresence) => {
+
+  const server = Bot.servers.get(newPresence.guild.id);
   if (!server) return;
 
-  let liveRole = newMember.guild.roles.find(role => role.name.includes('Now Live'));
+  let liveRole = newPresence.guild.roles.cache.find(role => role.name.includes('Now Live'));
+  let newMember = newPresence.member;
   // let validLive = false;
   // let gameSwitch = false;
 
   // member went offline
-  if (newMember.presence.status == 'offline') {
-    if (liveRole && newMember.roles.has(liveRole.id)) {
-      newMember.removeRole(liveRole)
+  if (newPresence.status === 'offline') {
+    if (liveRole && newPresence.guild.roles.cache.has(liveRole.id)) {
+      newMember.roles.remove(liveRole)
         .then(function () {
           Bot.logger.info(`${newMember.displayName} is done streaming.`);
         }).catch(function (error) {
@@ -21,13 +24,16 @@ module.exports = (Bot, oldMember, newMember) => {
     return;
   }
 
-  // member has a game presence upon changing status
-  if (newMember.presence.game) {
+  // member has activities
+  if (newPresence.activites) {
 
     // member has started streaming
-    if (newMember.presence.game.streaming) {
-      if (liveRole && !newMember.roles.has(liveRole.id)) {
-        newMember.addRole(liveRole)
+    const isStreaming = newPresence.activites.some(activity => activity.type === types.streaming);
+    const hasBeenStreaming = oldPresence.activites.some(activity => activity.type === types.streaming);
+    // TODO: store the activity info for stream announcement
+    if (!hasBeenStreaming && isStreaming) {
+      if (liveRole && !newMember.roles.cache.has(liveRole.id)) {
+        newMember.roles.add(liveRole)
           .then(function () {
             Bot.logger.info(`${newMember.displayName} is done streaming.`);
           }).catch(function (error) {
@@ -35,38 +41,33 @@ module.exports = (Bot, oldMember, newMember) => {
           });
       }
       return;
-    } else if (oldMember.presence.game) {
+
+    } else if (hasBeenStreaming && !isStreaming) {
 
       // member stopped streaming
-      if (oldMember.presence.game.streaming) {
-        if (liveRole && newMember.roles.has(liveRole.id)) {
-          newMember.removeRole(liveRole)
-            .then(function () {
-              Bot.logger.info(`${newMember.displayName} is done streaming.`);
-            }).catch(function (error) {
-              Bot.logger.error(`Presence Offline - ${error}`);
-            });
-        }
-        return;
+      if (liveRole && newMember.roles.cache.has(liveRole.id)) {
+        newMember.roles.remove(liveRole)
+          .then(function () {
+            Bot.logger.info(`${newMember.displayName} is done streaming.`);
+          }).catch(function (error) {
+            Bot.logger.error(`Presence Offline - ${error}`);
+          });
       }
+      return;
     }
   }
 
-  // member has no game presence upon changing status
-  if (!newMember.presence.game) {
-    if (oldMember.presence.game) {
-      if (oldMember.presence.game.streaming) {
-        if (liveRole && newMember.roles.has(liveRole.id)) {
-          newMember.removeRole(liveRole)
-            .then(function () {
-              Bot.logger.info(`${newMember.displayName} is done streaming.`);
-            }).catch(function (error) {
-              Bot.logger.error(`Presence Offline - ${error}`);
-            });
-        }
-        return;
-      }
+  // member has no activities
+  else {
+    if (liveRole && newMember.roles.cache.has(liveRole.id)) {
+      newMember.roles.remove(liveRole)
+        .then(function () {
+          Bot.logger.info(`${newMember.displayName} is done streaming.`);
+        }).catch(function (error) {
+          Bot.logger.error(`Presence Offline - ${error}`);
+        });
     }
+    return;
   }
 
   // if (oldMember.presence.game) {

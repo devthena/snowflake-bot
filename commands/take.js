@@ -4,7 +4,7 @@ exports.run = async (Bot, message, args) => {
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
-  if (message.mentions.members.size === 0) {
+  if (message.mentions.size === 0) {
     return message.channel.send(`${message.member.displayName}, you have to tag the person you want to take points from. :wink:`);
   }
 

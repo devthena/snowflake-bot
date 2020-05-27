@@ -8,7 +8,7 @@ exports.run = async (Bot, message) => {
     attachment = message.attachments.first().url;
   }
 
-  let botEmbed = new Discord.RichEmbed()
+  let botEmbed = new Discord.MessageEmbed()
     .setImage(attachment)
     .setAuthor(message.author.username, message.author.displayAvatarURL)
     .setFooter(`Posted on ${message.createdAt}`)

@@ -5,12 +5,12 @@ exports.run = async (Bot, message, args) => {
 
   let count = parseInt(args[0], 10);
   if (!count || count < 1) return message.channel.send('It has to be at least 1 message, goob :)');
-  else if (count > 100) return message.channel.send('Ahhh that\'s too much! You can only delete a max of 100 at a time.');
+  else if (count > 200) return message.channel.send('Ahhh that\'s too much! You can only delete a max of 200 at a time.');
 
   // delete the last message (user command) then fetch messages to bulk delete
   message.delete().then(async () => {
 
-    let fetched = await message.channel.fetchMessages({ limit: count });
+    let fetched = await message.channel.messages.fetch({ limit: count });
     Bot.logger.warn(`[COMM] CLEAR: ${fetched.size} messages found, deleting...`);
 
     let twoWeekTimestamp = Date.now() - 12096e5;

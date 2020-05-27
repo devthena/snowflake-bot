@@ -81,7 +81,7 @@ module.exports = (app, Bot) => {
       var activeUser = Bot.activeUsers.get(userID);
       var serverID = req.params.id;
 
-      var currentGuild = activeUser.guilds.find(function (guild) { return guild.id === serverID });
+      var currentGuild = activeUser.guilds.cache.find(function (guild) { return guild.id === serverID });
       var currentServer = activeUser.servers.find(function (server) { return currentGuild.id === serverID });
 
       if (currentServer) {
@@ -141,7 +141,7 @@ module.exports = (app, Bot) => {
     var guildList = [];  // bot guild list
     var user = { id: profile.id, isRegistered: false };
 
-    Bot.guilds.forEach(guild => {
+    Bot.guilds.cache.forEach(guild => {
       if (guild.ownerID === profile.id) {
         var server = Bot.servers.get(guild.id);
         if (server) serverList.push(server);

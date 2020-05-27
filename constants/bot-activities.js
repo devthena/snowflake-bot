@@ -1,31 +1,31 @@
 
 const botActivities = [
   {
-    activity: 'with Chat',
+    name: 'with Chat',
     type: 'PLAYING'
   },
   {
-    activity: 'with Alias',
+    name: 'with Alias',
     type: 'PLAYING'
   },
   {
-    activity: 'Athena VODs',
+    name: 'Athena VODs',
     type: 'WATCHING'
   },
   {
-    activity: 'you lose points',
+    name: 'you lose points',
     type: 'WATCHING'
   },
   {
-    activity: 'Aiko VODs',
+    name: 'Aiko VODs',
     type: 'WATCHING'
   },
   {
-    activity: 'Athena covers',
+    name: 'Athena covers',
     type: 'LISTENING'
   },
   {
-    activity: 'with 1s and 0s',
+    name: 'with 1s and 0s',
     type: 'PLAYING'
   }
 ];
