@@ -1,4 +1,5 @@
 
+const Discord = require('discord.js');
 const types = require('./../constants/activity-types');
 
 module.exports = (Bot, oldPresence, newPresence) => {
@@ -8,39 +9,62 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
   let liveRole = newPresence.guild.roles.cache.find(role => role.name.includes('Now Live'));
   let newMember = newPresence.member;
-  // let validLive = false;
-  // let gameSwitch = false;
 
   // member went offline
   if (newPresence.status === 'offline') {
-    if (liveRole && newPresence.guild.roles.cache.has(liveRole.id)) {
+    if (liveRole && newMember.roles.cache.has(liveRole.id)) {
       newMember.roles.remove(liveRole)
         .then(function () {
-          Bot.logger.info(`${newMember.displayName} is done streaming.`);
+          Bot.logger.info(`${newMember.displayName} went offline.`);
         }).catch(function (error) {
-          Bot.logger.error(`Presence Offline - ${error}`);
+          Bot.logger.error(`presenceUpdate: ${error}`);
         });
     }
     return;
   }
 
   // member has activities
-  if (newPresence.activites) {
+  if (newPresence.activities.length) {
 
     // member has started streaming
-    const isStreaming = newPresence.activites.some(activity => activity.type === types.streaming);
-    const hasBeenStreaming = oldPresence.activites.some(activity => activity.type === types.streaming);
-    // TODO: store the activity info for stream announcement
+    const isStreaming = newPresence.activities.some(activity => activity.type === types.streaming);
+    const hasBeenStreaming = oldPresence ? oldPresence.activities.some(activity => activity.type === types.streaming) : false;
+
     if (!hasBeenStreaming && isStreaming) {
+
       if (liveRole && !newMember.roles.cache.has(liveRole.id)) {
         newMember.roles.add(liveRole)
           .then(function () {
-            Bot.logger.info(`${newMember.displayName} is done streaming.`);
+            Bot.logger.info(`${newMember.displayName} started streaming.`);
           }).catch(function (error) {
-            Bot.logger.error(`Presence Offline - ${error}`);
+            Bot.logger.error(`presenceUpdate: ${error}`);
           });
       }
-      return;
+
+      // stream announcements for server owners
+      if (Bot.isTrue(server.mods.alertStream) && newPresence.guild.ownerID === newMember.id) {
+
+        const streamActivity = newPresence.activities.find(activity => activity.type === types.streaming);
+        const alertStreamChannel = newPresence.guild.channels.cache.find(channel => channel.name.includes(server.channels.alertStream));
+
+        if (streamActivity && alertStreamChannel) {
+
+          let liveMessage = streamActivity.details ? `${streamActivity.name}\nDetails: ${streamActivity.details}` : streamActivity.name;
+          liveMessage += `\n\n[${streamActivity.url}]${streamActivity.url}`;
+
+          let liveImage = streamActivity.assets ? streamActivity.assets.largeImageURL() : null;
+
+          const botEmbed = new Discord.MessageEmbed()
+            .setAuthor(newMember.user.username, newMember.user.displayAvatarURL())
+            .setColor('#FFBFFA')
+            .setTitle('Now Streaming')
+            .setDescription(liveMessage)
+            .setImage(liveImage)
+            .setFooter(`Posted on ${streamActivity.createdAt.toDateString()}`);
+
+          alertStreamChannel.send(botEmbed);
+        }
+      }
 
     } else if (hasBeenStreaming && !isStreaming) {
 
@@ -50,72 +74,21 @@ module.exports = (Bot, oldPresence, newPresence) => {
           .then(function () {
             Bot.logger.info(`${newMember.displayName} is done streaming.`);
           }).catch(function (error) {
-            Bot.logger.error(`Presence Offline - ${error}`);
+            Bot.logger.error(`presenceUpdate: ${error}`);
           });
       }
-      return;
     }
-  }
 
-  // member has no activities
-  else {
+  } else {
+
     if (liveRole && newMember.roles.cache.has(liveRole.id)) {
       newMember.roles.remove(liveRole)
         .then(function () {
           Bot.logger.info(`${newMember.displayName} is done streaming.`);
         }).catch(function (error) {
-          Bot.logger.error(`Presence Offline - ${error}`);
+          Bot.logger.error(`presenceUpdate: ${error}`);
         });
     }
-    return;
   }
-
-  // if (oldMember.presence.game) {
-
-  //     if (!oldMember.presence.game.streaming) {
-  //         validLive = true;
-  //     } else {
-  //         if (oldMember.presence.game.details !== newMember.presence.game.details) gameSwitch = true;
-  //         else return;
-  //     }
-
-  // } else {
-  //     validLive = true;
-  // }
-
-  // if (Bot.isTrue(server.mods.alertStream) && newMember.guild.ownerID === newMember.id) {
-
-  //     const game = newMember.presence.game.details;
-  //     const title = newMember.presence.game.name;
-  //     const url = newMember.presence.game.url;
-  //     const user = newMember.user.username;
-  //     let finalMessage = null;
-
-  //     const alertStreamChannel = newMember.guild.channels.find(channel => channel.name.includes(server.channels.alertStream));
-  //     if (!alertStreamChannel) return Bot.logger.error('[SYS] Cannot find specified alert stream channel in the server');
-
-  //     if (gameSwitch) {
-
-  //         const switchMessage = `${user} switched the game to ${game}!`;
-  //         Bot.logger.info(`[LIVE] ${user}: Switched game to ${game}`);
-  //         finalMessage = switchMessage;
-
-  //     } else if (validLive) {
-
-  //         const liveMessage = server.messages.alertStream
-  //             .replace('{game}', game)
-  //             .replace('{title}', title)
-  //             .replace('{url}', url)
-  //             .replace('{user}', user);
-
-  //         Bot.logger.info(`[LIVE] ${user}: ${url}`);
-  //         finalMessage = liveMessage;
-  //     }
-
-  //     if (!finalMessage) return;
-  //     alertStreamChannel.send(finalMessage).catch(error => {
-  //         Bot.logger.error(`${error}`);
-  //     });
-  // }
 
 };
