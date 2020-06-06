@@ -1,6 +1,8 @@
 
 module.exports = (Bot, member) => {
 
+  if (!member.guild.available) return;
+
   const server = Bot.servers.get(member.guild.id);
   if (!server) return;
 

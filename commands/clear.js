@@ -1,6 +1,8 @@
 
 exports.run = async (Bot, message, args) => {
 
+  if (!message.guild.available) return;
+
   if (isNaN(args[0])) return message.channel.send('Please add the number of messages you want to delete.');
 
   let count = parseInt(args[0], 10);

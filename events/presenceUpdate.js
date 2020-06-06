@@ -4,6 +4,8 @@ const types = require('./../constants/activity-types');
 
 module.exports = (Bot, oldPresence, newPresence) => {
 
+  if (!newPresence.guild.available) return;
+
   const server = Bot.servers.get(newPresence.guild.id);
   if (!server) return;
 

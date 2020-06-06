@@ -1,6 +1,8 @@
 
 exports.run = async (Bot, message, args) => {
 
+  if (!message.guild.available) return;
+
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
   if (!Bot.isTrue(server.mods.gameGamble)) return;
@@ -106,6 +108,6 @@ exports.conf = {
 exports.info = {
   name: 'gamble',
   description: 'Gamble member points.',
-  category: 'module',
+  category: 'default',
   usage: '!gamble <count>'
 };

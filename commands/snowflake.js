@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 
 exports.run = async (Bot, message) => {
 
+  if (!message.guild.available) return;
+
   let botEmbed = new Discord.MessageEmbed()
     .setTitle('Bot Information')
     .setFooter('Note: This bot is exclusive to AthenaUS and AikoBliss servers.')
