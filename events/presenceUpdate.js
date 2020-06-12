@@ -52,7 +52,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
         if (streamActivity && alertStreamChannel) {
 
           let liveMessage = streamActivity.details ? `${streamActivity.name}\nDetails: ${streamActivity.details}` : streamActivity.name;
-          liveMessage += `\n\n[${streamActivity.url}]${streamActivity.url}`;
+          if (streamActivity.url) liveMessage += `\n\n${streamActivity.url}`;
 
           let liveImage = streamActivity.assets ? streamActivity.assets.largeImageURL() : null;
 
