@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 
 exports.run = async (Bot, message) => {
 
+  if (!message.guild.available) return;
+
   let botEmbed = new Discord.MessageEmbed()
     .setTitle('Bot Information')
     .setFooter('Note: This bot is exclusive to AthenaUS and AikoBliss servers.')
@@ -10,7 +12,7 @@ exports.run = async (Bot, message) => {
     .setThumbnail(Bot.user.displayAvatarURL)
     .setColor('#FFBFFA')
     .addField('Created On', Bot.user.createdAt.toDateString(), true)
-    .addField('Release', 'v1.1.0-alpha', true);
+    .addField('Release', 'v1.1.1-alpha', true);
 
   return message.channel.send(botEmbed);
 };

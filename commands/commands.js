@@ -1,6 +1,8 @@
 
 exports.run = async (Bot, message) => {
 
+  if (!message.guild.available) return;
+
   let commURL = 'http://snowflakebot.com/commands';
   let reply = `For information on the bot commands, visit this link: ${commURL}`;
 

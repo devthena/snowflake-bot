@@ -2,6 +2,8 @@ const CONSTANTS = require('../constants/general');
 
 module.exports = (Bot, message) => {
 
+  if (!message.guild.available) return;
+
   if (message.author.bot) return;
   if (message.channel.type !== 'text') return;
 

@@ -4,6 +4,8 @@ const types = require('./../constants/activity-types');
 
 module.exports = (Bot, oldPresence, newPresence) => {
 
+  if (!newPresence.guild.available) return;
+
   const server = Bot.servers.get(newPresence.guild.id);
   if (!server) return;
 
@@ -50,7 +52,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
         if (streamActivity && alertStreamChannel) {
 
           let liveMessage = streamActivity.details ? `${streamActivity.name}\nDetails: ${streamActivity.details}` : streamActivity.name;
-          liveMessage += `\n\n[${streamActivity.url}]${streamActivity.url}`;
+          if (streamActivity.url) liveMessage += `\n\n${streamActivity.url}`;
 
           let liveImage = streamActivity.assets ? streamActivity.assets.largeImageURL() : null;
 

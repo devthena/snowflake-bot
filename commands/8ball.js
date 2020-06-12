@@ -1,6 +1,8 @@
 
 exports.run = async (Bot, message, args) => {
 
+  if (!message.guild.available) return;
+
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
   if (!Bot.isTrue(server.mods.game8Ball)) return;
@@ -45,6 +47,6 @@ exports.conf = {
 exports.info = {
   name: '8ball',
   description: 'Magic 8 ball.',
-  category: 'module',
+  category: 'default',
   usage: '!8ball <question>'
 };

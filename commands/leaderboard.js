@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 
 exports.run = async (Bot, message) => {
 
+  if (!message.guild.available) return;
+
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
@@ -51,6 +53,6 @@ exports.conf = {
 exports.info = {
   name: 'leaderboard',
   description: 'Display top 5 users with most points.',
-  category: 'module',
+  category: 'default',
   usage: '!leaderboard'
 };

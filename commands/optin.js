@@ -1,6 +1,8 @@
 
 exports.run = async (Bot, message, args) => {
 
+  if (!message.guild.available) return;
+
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
@@ -56,6 +58,6 @@ exports.conf = {
 exports.info = {
   name: 'optin',
   description: 'Opt in a user to a role',
-  category: 'module',
+  category: 'default',
   usage: '!optin'
 };

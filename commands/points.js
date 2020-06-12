@@ -1,6 +1,8 @@
 
 exports.run = async (Bot, message) => {
 
+  if (!message.guild.available) return;
+
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
