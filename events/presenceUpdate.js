@@ -51,7 +51,8 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
         if (streamActivity && alertStreamChannel) {
 
-          let liveMessage = streamActivity.details ? `${streamActivity.name}\nDetails: ${streamActivity.details}` : streamActivity.name;
+          let liveMessage = '';
+          if (streamActivity.details) liveMessage += streamActivity.details;
           if (streamActivity.url) liveMessage += `\n\n${streamActivity.url}`;
 
           let liveImage = streamActivity.assets ? streamActivity.assets.largeImageURL() : null;
@@ -59,12 +60,14 @@ module.exports = (Bot, oldPresence, newPresence) => {
           const botEmbed = new Discord.MessageEmbed()
             .setAuthor(newMember.user.username, newMember.user.displayAvatarURL())
             .setColor('#FFBFFA')
-            .setTitle('Now Streaming')
+            .setTitle(`Now Streaming ${streamActivity.state}`)
             .setDescription(liveMessage)
             .setImage(liveImage)
             .setFooter(`Posted on ${streamActivity.createdAt.toDateString()}`);
 
-          alertStreamChannel.send(botEmbed);
+          alertStreamChannel.send(botEmbed)
+            .then(() => { alertStreamChannel.send('@everyone'); })
+            .catch(error => Bot.logger.error(`presenceUpdate: ${error}`));
         }
       }
 
