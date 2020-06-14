@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 
 module.exports = (Bot, reaction, user) => {
 
+  if (reaction.message.channel.type !== 'text') return;
+
   if (!reaction.message.guild.available) return;
 
   if (reaction.message.author.bot || user.bot) return;
