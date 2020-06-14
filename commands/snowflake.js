@@ -12,7 +12,7 @@ exports.run = async (Bot, message) => {
     .setThumbnail(Bot.user.displayAvatarURL)
     .setColor('#FFBFFA')
     .addField('Created On', Bot.user.createdAt.toDateString(), true)
-    .addField('Release', 'v1.1.1-alpha', true);
+    .addField('Release', 'v1.1.2-alpha', true);
 
   return message.channel.send(botEmbed);
 };
