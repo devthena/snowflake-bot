@@ -65,8 +65,8 @@ module.exports = (Bot, oldPresence, newPresence) => {
             .setImage(liveImage)
             .setFooter(`Posted on ${streamActivity.createdAt.toDateString()}`);
 
-          alertStreamChannel.send(botEmbed)
-            .then(() => { alertStreamChannel.send('@everyone'); })
+          alertStreamChannel.send(`@everyone ${newMember.user.username} is now live!`)
+            .then(() => { alertStreamChannel.send(botEmbed); })
             .catch(error => Bot.logger.error(`presenceUpdate: ${error}`));
         }
       }
