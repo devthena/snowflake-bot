@@ -5,12 +5,13 @@ const SCOPES = ['identify'];
 const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
 // const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
 
-const data = require('./data/data.js');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const DiscordStrategy = require('passport-discord').Strategy;
+
+const activeUsers = new Map();
 
 module.exports = (app, Bot) => {
 
@@ -44,7 +45,7 @@ module.exports = (app, Bot) => {
 
   // render: home page
   app.get('/', (req, res) => {
-    res.render('home', data.home);
+    res.render('home');
   });
 
   // render: commands page
@@ -63,7 +64,7 @@ module.exports = (app, Bot) => {
     if (req.session.passport.user.isRegistered) {
 
       var userID = req.session.passport.user.id;
-      var activeUser = Bot.activeUsers.get(userID);
+      var activeUser = activeUsers.get(userID);
       res.render('admin/dashboard', activeUser);
 
     } else {
@@ -78,11 +79,15 @@ module.exports = (app, Bot) => {
     if (req.session.passport.user.isRegistered) {
 
       var userID = req.session.passport.user.id;
-      var activeUser = Bot.activeUsers.get(userID);
+      var activeUser = activeUsers.get(userID);
       var serverID = req.params.id;
 
-      var currentGuild = activeUser.guilds.cache.find(function (guild) { return guild.id === serverID });
-      var currentServer = activeUser.servers.find(function (server) { return currentGuild.id === serverID });
+      var currentServer = null;
+      var currentGuild = activeUser.guilds.find(function (guild) { return guild.id === serverID });
+
+      if (currentGuild) {
+        currentServer = activeUser.servers.find(function (server) { return currentGuild.id === serverID });
+      }
 
       if (currentServer) {
         res.render('admin/server', {
@@ -162,7 +167,7 @@ module.exports = (app, Bot) => {
       };
 
       user.isRegistered = true;
-      Bot.activeUsers.set(profile.id, activeUser);
+      activeUsers.set(profile.id, activeUser);
       return done(null, user);
 
     } else {

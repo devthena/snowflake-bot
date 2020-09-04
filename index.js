@@ -22,7 +22,6 @@ const Bot = new Discord.Client({ disableEveryone: false });
 require('./modules/functions.js')(Bot);
 require('./modules/helpers.js')(Bot);
 
-Bot.activeUsers = new Map();
 Bot.cooldowns = new Array();
 Bot.commands = new Map();
 Bot.logger = require('./modules/logger').createLogger('development.log');
