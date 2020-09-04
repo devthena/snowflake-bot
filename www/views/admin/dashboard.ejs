@@ -18,9 +18,9 @@
         <% guilds.forEach(function(guild){ %>
         <div id="<%= guild.id %>" class="server">
           <% if(guild.iconURL){ %>
-          <img src="<%= guild.iconURL %>" />
+          <img src="<%= guild.iconURL() %>" />
           <% } else { %>
-          <img src="../../images/discord-default.png" />
+          <img src="../../images/discord-logo.png" />
           <% } %>
           <p class="server-name"><%= guild.name %></p>
           <% if(guild.memberCount){ %>
