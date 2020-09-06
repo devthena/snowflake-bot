@@ -67,7 +67,7 @@ module.exports = async Bot => {
       } else {
 
         let columns = `(server_id,owner_id,${dbConfig.MODS.join()},${dbConfig.ROLES.join()},${dbConfig.CHANNELS.join()},${dbConfig.MESSAGES.join()})`;
-        let values = `(${guild.id},${guild.ownerID},${dbConfig.DEFAULT_CONFIG_VALUES})`;
+        let values = `(${guild.id},${guild.ownerID},${dbConfig.DEFAULT_VALUES})`;
 
         db.run(`INSERT INTO guilds ${columns} VALUES ${values}`, error => {
           if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);

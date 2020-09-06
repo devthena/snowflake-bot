@@ -1,4 +1,4 @@
-const CONSTANTS = require('../constants/dbConfig');
+const botConfig = require('../constants/botConfig');
 const isTrue = require('../helpers/isTrue');
 const hasPermission = require('../helpers/hasPermission');
 
@@ -29,7 +29,7 @@ module.exports = (Bot, message) => {
     }
   }
 
-  if (message.content.indexOf(CONSTANTS.PREFIX) !== 0 && message.member) {
+  if (message.content.indexOf(botConfig.PREFIX) !== 0 && message.member) {
 
     const words = message.content.split(/ +/g);
     const pattern = new RegExp('[A-Za-z].{2,}');
@@ -49,7 +49,7 @@ module.exports = (Bot, message) => {
 
   } else {
 
-    const args = message.content.slice(CONSTANTS.PREFIX.length).trim().split(/ +/g);
+    const args = message.content.slice(botConfig.PREFIX.length).trim().split(/ +/g);
     const comm = args.shift().toLowerCase();
 
     const command = Bot.commands.get(comm);
