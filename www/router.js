@@ -1,6 +1,7 @@
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const DB_NAME = process.env.DB_NAME;
 const SCOPES = ['identify'];
 const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
 // const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
@@ -193,7 +194,7 @@ module.exports = (app, Bot) => {
     Bot.servers.set(serverID, serverInfo);
 
     // update the database
-    var db = new sqlite3.Database('./master.db', (error) => {
+    var db = new sqlite3.Database(`./${DB_NAME}`, (error) => {
       if (error) return Bot.logger.error(`[DB] Cannot establish connection to database: ${error}`);
       Bot.logger.info('[DB] Established connection to database (web.js - api/server/update)');
     });
