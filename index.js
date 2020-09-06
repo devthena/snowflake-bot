@@ -18,13 +18,12 @@ app.use(express.static(__dirname + '/www/public'));
 
 const Bot = new Discord.Client({ disableEveryone: false });
 
-// load modules for the bot
-require('./modules/functions.js')(Bot);
-require('./modules/helpers.js')(Bot);
+// add the helper functions specific to the bot
+const loadCommand = require('./helpers/loadCommand');
 
 Bot.cooldowns = new Array();
 Bot.commands = new Map();
-Bot.logger = require('./modules/logger').createLogger('development.log');
+Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.servers = new Map();
 
 require('./www/router')(app, Bot);
@@ -36,7 +35,7 @@ const initBot = async () => {
 
   commandFiles.forEach(fn => {
     if (!fn.endsWith(".js")) return;
-    Bot.loadCommand(fn);
+    loadCommand(Bot, fn);
   });
 
   // load the bot event files

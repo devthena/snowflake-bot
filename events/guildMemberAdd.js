@@ -1,3 +1,4 @@
+const isTrue = require('../helpers/isTrue');
 
 module.exports = (Bot, member) => {
 
@@ -6,7 +7,7 @@ module.exports = (Bot, member) => {
   const server = Bot.servers.get(member.guild.id);
   if (!server) return;
 
-  if (Bot.isTrue(server.mods.autoAdd)) {
+  if (isTrue(server.mods.autoAdd)) {
 
     const autoAddRole = member.guild.roles.cache.find(role => role.name.includes(server.roles.autoAdd));
 

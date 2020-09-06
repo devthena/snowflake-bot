@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const isTrue = require('../helpers/isTrue');
 
 module.exports = (Bot, reaction, user) => {
 
@@ -11,7 +12,7 @@ module.exports = (Bot, reaction, user) => {
   const server = Bot.servers.get(reaction.message.guild.id);
   if (!server) return;
 
-  if (Bot.isTrue(server.mods.highlightBoard)) {
+  if (isTrue(server.mods.highlightBoard)) {
     if (!server.messageTrackIds) return;
     if (server.messageTrackIds && server.messageTrackIds.indexOf(reaction.message.id) < 0) return;
 
