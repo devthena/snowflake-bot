@@ -13,8 +13,8 @@ const Discord = require('discord.js');
 
 // configure settings for rendering web pages
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/www/views');
-app.use(express.static(__dirname + '/www/public'));
+app.set('views', __dirname + '/web/views');
+app.use(express.static(__dirname + '/web/public'));
 
 const Bot = new Discord.Client({ disableEveryone: false });
 
@@ -26,7 +26,7 @@ Bot.commands = new Map();
 Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.servers = new Map();
 
-require('./www/router')(app, Bot);
+require('./web/router')(app, Bot);
 
 const initBot = async () => {
 
