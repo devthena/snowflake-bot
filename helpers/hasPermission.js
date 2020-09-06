@@ -19,7 +19,7 @@ const hasPermission = (message, permitLevel, serverRoles) => {
       // Moderator
       if ((message.guild.ownerID === message.member.id) || (message.member.permissions.has('ADMINISTRATOR'))) return true;
       if (serverRoles.moderator.length > 0) {
-        const moderatorRole = message.member.roles.cache.find(role => role.name.includes(moderatorName));
+        const moderatorRole = message.member.roles.cache.find(role => role.name.includes(serverRoles.moderator));
         return !!moderatorRole;
       }
       return false;
