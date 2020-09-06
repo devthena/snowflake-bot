@@ -1,4 +1,6 @@
 const CONSTANTS = require('../constants/general');
+const isTrue = require('../helpers/isTrue');
+const hasPermission = require('../helpers/hasPermission');
 
 module.exports = (Bot, message) => {
 
@@ -11,7 +13,7 @@ module.exports = (Bot, message) => {
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
-  if (Bot.isTrue(server.mods.highlightBoard)) {
+  if (isTrue(server.mods.highlightBoard)) {
     if (!server.messageTrackIds) {
       server.messageTrackIds = [];
       server.messageTimers = new Map();
@@ -54,13 +56,7 @@ module.exports = (Bot, message) => {
     if (!command) return;
     if (!command.conf.enabled) return;
 
-    let permitParams = {
-      permitLevel: command.conf.permitLevel,
-      message: message,
-      server: server
-    };
-
-    if (Bot.hasCommandPermit(permitParams)) {
+    if (hasPermission(message, command.conf.permitLevel, server.roles)) {
 
       if (Bot.cooldowns.indexOf(command.info.name) < 0) {
 

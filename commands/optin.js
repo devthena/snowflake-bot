@@ -1,3 +1,4 @@
+const isTrue = require('../helpers/isTrue');
 
 exports.run = async (Bot, message, args) => {
 
@@ -6,7 +7,7 @@ exports.run = async (Bot, message, args) => {
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
-  if (Bot.isTrue(server.mods.optins)) {
+  if (isTrue(server.mods.optins)) {
 
     if (!args.length) {
       return message.channel.send('You have to specify the role you want to opt in to (case sensitive!)');

@@ -7,21 +7,6 @@ let pointer = 0;
 
 module.exports = (Bot) => {
 
-  Bot.loadCommand = (command) => {
-
-    try {
-      const comm = require(`./../commands/${command}`);
-      Bot.logger.info(`[SYS] Loading command: ${comm.info.name}`);
-      Bot.commands.set(comm.info.name, comm);
-      comm.conf.aliases.forEach(alias => {
-        Bot.aliases.set(alias, comm.info.name);
-      });
-      return false;
-    } catch (e) {
-      Bot.logger.error(`[SYS] Error loading command ${command}: ${e}`);
-    }
-  };
-
   Bot.loadServerData = () => {
 
     let db = new sqlite3.Database('./master.db', error => {
