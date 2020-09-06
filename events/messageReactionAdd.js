@@ -1,6 +1,13 @@
 const Discord = require('discord.js');
 const isTrue = require('../helpers/isTrue');
 
+/**
+ * Tracks the number of reactions of messages for posting in highlight board
+ * @listens event:messageReactionAdd
+ * @param {ClientUser} Bot 
+ * @param {MessageReaction} reaction 
+ * @param {User} user 
+ */
 module.exports = (Bot, reaction, user) => {
 
   if (reaction.message.channel.type !== 'text') return;

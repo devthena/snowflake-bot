@@ -1,4 +1,8 @@
-
+/**
+ * Displays the current amount of points a member has
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ */
 exports.run = async (Bot, message) => {
 
   if (!message.guild.available) return;
@@ -26,7 +30,7 @@ exports.conf = {
 
 exports.info = {
   name: 'points',
-  description: 'Display a member\'s points.',
+  description: 'Displays the current amount of points a member has.',
   category: 'default',
   usage: '!points'
 };

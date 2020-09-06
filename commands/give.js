@@ -1,4 +1,9 @@
-
+/**
+ * Give an amount of points to a specific member
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -63,7 +68,7 @@ exports.conf = {
 
 exports.info = {
   name: 'give',
-  description: 'Give points to specific users.',
+  description: 'Give an amount of points to a specific member.',
   category: 'default',
-  usage: '!give <user> <amount>'
+  usage: '!give <@user> <amount>'
 };

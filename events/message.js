@@ -2,6 +2,12 @@ const botConfig = require('../constants/botConfig');
 const isTrue = require('../helpers/isTrue');
 const hasPermission = require('../helpers/hasPermission');
 
+/**
+ * Runs commands, add points to users, and tracks messages for the highlight board
+ * @listens event:message
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ */
 module.exports = (Bot, message) => {
 
   if (message.channel.type !== 'text') return;

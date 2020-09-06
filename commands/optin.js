@@ -1,5 +1,11 @@
 const isTrue = require('../helpers/isTrue');
 
+/**
+ * Adds a specific opt role to a member
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -58,7 +64,7 @@ exports.conf = {
 
 exports.info = {
   name: 'optin',
-  description: 'Opt in a user to a role',
+  description: 'Adds a specific opt role to a member.',
   category: 'default',
-  usage: '!optin'
+  usage: '!optin <role>'
 };

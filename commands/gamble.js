@@ -1,5 +1,11 @@
 const isTrue = require('../helpers/isTrue');
 
+/**
+ * Game: Double or Nothing
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -108,7 +114,7 @@ exports.conf = {
 
 exports.info = {
   name: 'gamble',
-  description: 'Gamble member points.',
-  category: 'default',
-  usage: '!gamble <count>'
+  description: 'Play a game of double or nothing using a given amount of points.',
+  category: 'games',
+  usage: '!gamble <amount>'
 };

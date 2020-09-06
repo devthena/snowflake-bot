@@ -1,4 +1,9 @@
-
+/**
+ * Deletes a number of messages in a specific channel
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -35,7 +40,7 @@ exports.conf = {
 
 exports.info = {
   name: 'clear',
-  description: 'Deletes messages from a channel.',
+  description: 'Deletes a number of messages in a specific channel.',
   category: 'default',
   usage: '!clear <count>'
 };

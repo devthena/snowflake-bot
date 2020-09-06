@@ -3,6 +3,14 @@ const Discord = require('discord.js');
 const isTrue = require('../helpers/isTrue');
 const types = require('./../constants/activityTypes');
 
+/**
+ * Adds a role to determine which members are currently live streaming
+ * For server owners, announces the live stream when enabled
+ * @listens event:presenceUpdate
+ * @param {ClientUser} Bot 
+ * @param {Presence} oldPresence 
+ * @param {Presence} newPresence 
+ */
 module.exports = (Bot, oldPresence, newPresence) => {
 
   if (!newPresence.guild.available) return;

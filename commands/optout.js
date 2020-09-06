@@ -1,4 +1,9 @@
-
+/**
+ * Removes a specific opt role from a member
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -51,7 +56,7 @@ exports.conf = {
 
 exports.info = {
   name: 'optout',
-  description: 'Opt out a user from a role',
+  description: 'Removes a specific opt role from a member.',
   category: 'default',
-  usage: '!optout'
+  usage: '!optout <role>'
 };

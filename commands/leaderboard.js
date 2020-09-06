@@ -1,6 +1,11 @@
 
 const Discord = require('discord.js');
 
+/**
+ * Displays a list of members with the highest amount of points
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ */
 exports.run = async (Bot, message) => {
 
   if (!message.guild.available) return;
@@ -52,7 +57,7 @@ exports.conf = {
 
 exports.info = {
   name: 'leaderboard',
-  description: 'Display top 5 users with most points.',
+  description: 'Display a list of members with the highest amount of points.',
   category: 'default',
   usage: '!leaderboard'
 };

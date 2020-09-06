@@ -1,7 +1,7 @@
 /**
  * Checks if a user has permission to run a command
- * @param {Object} message 
- * @param {Integer} permitLevel 
+ * @param {Message} message 
+ * @param {Number} permitLevel 
  * @param {Object} serverRoles 
  */
 const hasPermission = (message, permitLevel, serverRoles) => {
