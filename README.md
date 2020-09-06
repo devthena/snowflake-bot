@@ -1,5 +1,5 @@
 ## Snowflake Bot
-A Discord bot I created for AthenaUS and AikoBliss servers. This bot is not meant for public use but you are more than welcome to clone or fork this repository.
+A Discord bot I created for AthenaUS and AikoBliss servers. This bot is not meant for public use but you are more than welcome to fork this repository.
 
 ### Setup Bot Application
 Here is a link to a guide in setting up a Discord bot application: https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot. From this guide you should be able to get a Client ID, Client Secret, and Token
@@ -11,25 +11,6 @@ The following are required in your `.env` file to properly run the bot:
 * CLIENT_ID
 * CLIENT_SECRET
 * TOKEN
-
-### Database Setup
-The code is currently looking for a `master.db` file and it uses SQLite3 for manipulating the database. The structure for the tables are tailored to what we need for the Discord servers.
-
-#### Here is the `guilds` table structure:
-* server_id PRIMARY UNIQUE
-* owner_id
-* mod_alert_stream
-* mod_auto_add
-* mod_game_8ball
-* mod_game_gamble
-* mod_highlight_board
-* mod_optins
-* role_auto_add
-* role_moderator
-* role_optins
-* channel_alert_stream
-* channel_highlight_board
-* message_alert_stream
 
 ### Development and Testing
 In your terminal, run the following commands:
@@ -58,4 +39,4 @@ The web application tied to this still needs a lot of refactoring but the Discor
 * Discord.js documentation - https://discord.js.org/#/docs/main/stable/general/welcome
 
 ### Contributing
-This is a little project I did for fun and I will keep updating it when I have more time. At the moment I am not accepting pull requests. Please consider forking the repository if you want to play with the code and test fixes or features.
+This is a little project I did for fun and I will keep updating it when I have time. At the moment I am not accepting pull requests. Please consider forking the repository if you want to play with the code.

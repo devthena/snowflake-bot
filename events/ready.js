@@ -1,4 +1,5 @@
 const dbConfig = require('../constants/dbConfig');
+const DB_NAME = process.env.DB_NAME;
 const serverConfig = require('../constants/serverConfig');
 const sqlite3 = require('sqlite3').verbose();
 const loadMembers = require('../helpers/loadMembers');
@@ -11,7 +12,7 @@ const loadMembers = require('../helpers/loadMembers');
 module.exports = async Bot => {
   Bot.logger.info('* Snowflake is online *');
 
-  let db = new sqlite3.Database('./master.db', error => {
+  let db = new sqlite3.Database(`./${DB_NAME}`, error => {
     if (error) return Bot.logger.error(`[DB] Event Ready: ${error}`);
   });
 
@@ -67,7 +68,7 @@ module.exports = async Bot => {
       } else {
 
         let columns = `(server_id,owner_id,${dbConfig.MODS.join()},${dbConfig.ROLES.join()},${dbConfig.CHANNELS.join()},${dbConfig.MESSAGES.join()})`;
-        let values = `(${guild.id},${guild.ownerID},${dbConfig.DEFAULT_CONFIG_VALUES})`;
+        let values = `(${guild.id},${guild.ownerID},${dbConfig.DEFAULT_VALUES})`;
 
         db.run(`INSERT INTO guilds ${columns} VALUES ${values}`, error => {
           if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);

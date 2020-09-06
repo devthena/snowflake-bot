@@ -1,3 +1,4 @@
+const DB_NAME = process.env.DB_NAME;
 const sqlite3 = require('sqlite3').verbose();
 
 /**
@@ -6,7 +7,7 @@ const sqlite3 = require('sqlite3').verbose();
  */
 const backupMembers = Bot => {
 
-  let db = new sqlite3.Database('./master.db', error => {
+  let db = new sqlite3.Database(`./${DB_NAME}`, error => {
     if (error) return Bot.logger.error(`[DB] backupMembers: ${error}`);
   });
 

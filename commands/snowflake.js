@@ -1,4 +1,4 @@
-
+const botConfig = require('../constants/botConfig');
 const Discord = require('discord.js');
 
 exports.run = async (Bot, message) => {
@@ -9,10 +9,10 @@ exports.run = async (Bot, message) => {
     .setTitle('Bot Information')
     .setFooter('Note: This bot is exclusive to AthenaUS and AikoBliss servers.')
     .setDescription('I\'m made with ❤ by AthenaUS!')
-    .setThumbnail(Bot.user.displayAvatarURL)
-    .setColor('#FFBFFA')
+    .setThumbnail(Bot.user.displayAvatarURL())
+    .setColor(botConfig.COLOR)
     .addField('Created On', Bot.user.createdAt.toDateString(), true)
-    .addField('Release', 'version 1.1.5', true);
+    .addField('Release', `version ${botConfig.VERSION}`, true);
 
   return message.channel.send(botEmbed);
 };

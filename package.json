@@ -1,13 +1,13 @@
 {
   "name": "snowflake-bot",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A Discord bot for AthenaUS and AikoBliss servers",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "node-sass --output-style compressed -o www/public/styles www/styles",
-    "uglify": "uglifyjs www/scripts/*.js -m -o www/public/scripts/snowflake.min.js",
+    "scss": "node-sass --output-style compressed -o web/public/styles web/styles",
+    "uglify": "uglifyjs web/scripts/*.js -m -o web/public/scripts/snowflake.min.js",
     "build": "npm run scss && npm run uglify"
   },
   "repository": {
