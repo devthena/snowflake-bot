@@ -1,4 +1,4 @@
-const CONSTANTS = require('../constants/general');
+const CONSTANTS = require('../constants/dbConfig');
 const isTrue = require('../helpers/isTrue');
 const hasPermission = require('../helpers/hasPermission');
 

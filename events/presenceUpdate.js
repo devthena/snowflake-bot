@@ -1,7 +1,7 @@
 
 const Discord = require('discord.js');
 const isTrue = require('../helpers/isTrue');
-const types = require('./../constants/activity-types');
+const types = require('./../constants/activityTypes');
 
 module.exports = (Bot, oldPresence, newPresence) => {
 

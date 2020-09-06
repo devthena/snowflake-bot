@@ -20,11 +20,10 @@ const Bot = new Discord.Client({ disableEveryone: false });
 
 // add the helper functions specific to the bot
 const loadCommand = require('./helpers/loadCommand');
-require('./modules/functions')(Bot);
 
 Bot.cooldowns = new Array();
 Bot.commands = new Map();
-Bot.logger = require('./modules/logger').createLogger('development.log');
+Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.servers = new Map();
 
 require('./www/router')(app, Bot);
