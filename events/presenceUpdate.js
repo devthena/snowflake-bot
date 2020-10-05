@@ -1,8 +1,17 @@
 
 const Discord = require('discord.js');
 const isTrue = require('../helpers/isTrue');
+const botConfig = require('../constants/botConfig');
 const types = require('./../constants/activityTypes');
 
+/**
+ * Adds a role to determine which members are currently live streaming
+ * For server owners, announces the live stream when enabled
+ * @listens event:presenceUpdate
+ * @param {ClientUser} Bot 
+ * @param {Presence} oldPresence 
+ * @param {Presence} newPresence 
+ */
 module.exports = (Bot, oldPresence, newPresence) => {
 
   if (!newPresence.guild.available) return;
@@ -60,7 +69,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
           const botEmbed = new Discord.MessageEmbed()
             .setAuthor(newMember.user.username, newMember.user.displayAvatarURL())
-            .setColor('#FFBFFA')
+            .setColor(botConfig.COLOR)
             .setTitle(`Now Streaming ${streamActivity.state}`)
             .setDescription(liveMessage)
             .setImage(liveImage)

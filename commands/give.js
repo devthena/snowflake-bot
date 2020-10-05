@@ -1,4 +1,11 @@
+const botConfig = require('../constants/botConfig');
 
+/**
+ * Give an amount of points to a specific member
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -6,44 +13,54 @@ exports.run = async (Bot, message, args) => {
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
+  const currency = botConfig.CURRENCY;
+  const currencyText = botConfig.CURRENCY_TEXT;
+
+  const notices = {
+    invalidInput: `${message.member.displayName}, you can only give ${currencyText}, please enter an amount. :wink:`,
+    invalidMax: `Ahhh that's too much! You can only give a max of 10000 ${currency} at a time.`,
+    noBot: `Sorry ${message.member.displayName}, I have no use for ${currencyText}. Please keep it! :snowflake:`,
+    noPoints: `Sorry ${message.member.displayName}, you have no ${currencyText} to give. :neutral_face:`,
+    noTag: `${message.member.displayName}, you have to tag the person you want to give your ${currencyText} to. :wink:`,
+    notEnough: `Sorry ${message.member.displayName}, you don't have that many ${currencyText} to give. :neutral_face:`
+  };
+
   if (message.mentions.members.size === 0) {
-    return message.channel.send(`${message.member.displayName}, you have to tag the person you want to give your points to. :wink:`);
+    return message.channel.send(notices.noTag);
   }
 
-  if (isNaN(args[1])) return message.channel.send(`${message.member.displayName}, you can only give points, please enter an amount.`);
+  if (isNaN(args[1])) return message.channel.send(notices.invalidInput);
 
   let amount = parseInt(args[1], 10);
-  if (amount <= 0) return message.channel.send(`${message.member.displayName}, you can't give ${amount} points, goob. :)`);
+  if (amount <= 0) return message.channel.send(`${message.member.displayName}, you can't give ${amount} ${currency}, goob. :wink:`);
 
   let giver = server.members.get(message.member.id);
   if (!giver) {
     giver = { points: 0 };
     server.members.set(message.member.id, giver);
     Bot.servers.set(message.guild.id, server);
-    return message.channel.send(`${message.member.displayName}, you have no points to give. :neutral_face:`);
+    return message.channel.send(notices.noPoints);
   }
 
   if (giver.points < amount && message.member.id !== message.guild.ownerID) {
-    return message.channel.send(`${message.member.displayName}, you don't have that many points to give. :neutral_face:`);
+    return message.channel.send(notices.notEnough);
   }
 
-  if (amount > 10000) return message.channel.send('Ahhh that\'s too much! You can only give a max of 1000 points at a time.');
+  if (amount > 10000) return message.channel.send(notices.invalidMax);
 
   let recipient = message.mentions.members.first();
   let member = server.members.get(recipient.id);
-  let pointCopy = `${amount} points`;
   let recipientCopy = `${recipient.displayName}`;
 
   if (message.member.id === recipient.id) recipientCopy = 'yourself. :smirk:';
 
   if (Bot.user.id === recipient.id) {
-    return message.channel.send(`${message.member.displayName}, thanks, but I stopped accepting points from users. :snowflake:`);
+    return message.channel.send(notices.noBot);
   }
 
   if (message.member.id !== message.guild.ownerID) {
     giver.points -= amount;
     server.members.set(message.member.id, giver);
-    pointCopy = `${amount} of your points`;
   }
 
   if (!member) member = { points: amount };
@@ -51,7 +68,7 @@ exports.run = async (Bot, message, args) => {
 
   server.members.set(recipient.id, member);
   Bot.servers.set(message.guild.id, server);
-  return message.channel.send(`${message.member.displayName}, you have given ${pointCopy} to ${recipientCopy}`);
+  return message.channel.send(`${message.member.displayName}, you have given ${amount} ${currency} to ${recipientCopy}.`);
 };
 
 exports.conf = {
@@ -63,7 +80,7 @@ exports.conf = {
 
 exports.info = {
   name: 'give',
-  description: 'Give points to specific users.',
+  description: 'Give an amount of points to a specific member.',
   category: 'default',
-  usage: '!give <user> <amount>'
+  usage: '!give <@user> <amount>'
 };

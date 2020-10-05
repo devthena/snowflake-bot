@@ -1,4 +1,9 @@
-
+/**
+ * Take an amount of points from a specific member
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -49,7 +54,7 @@ exports.conf = {
 
 exports.info = {
   name: 'take',
-  description: 'Take points from specific users.',
+  description: 'Take an amount of points from a specific member.',
   category: 'default',
-  usage: '!take <user> <amount>'
+  usage: '!take <@user> <amount>'
 };

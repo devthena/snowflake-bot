@@ -3,8 +3,7 @@ $(document).ready(function () {
   var serverUpdates = {
     mods: {},
     roles: {},
-    channels: {},
-    messages: {}
+    channels: {}
   };
 
   var pathname = window.location.pathname;

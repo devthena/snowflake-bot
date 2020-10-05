@@ -13,7 +13,7 @@ const backupMembers = Bot => {
 
   let serverCount = 0;
   let lastIndex = Bot.servers.size;
-  let sql = 'INSERT OR REPLACE INTO members (id,user_id,server_id,points) VALUES (?,?,?,?)';
+  let sql = 'INSERT OR REPLACE INTO members (id,user_id,server_id,level,exp,points,stars) VALUES (?,?,?,?,?,?,?)';
 
   Bot.servers.forEach((server, serverID) => {
     Bot.logger.info(`[DB] startBackup: ${serverID}, size ${server.members.size}`);
@@ -24,7 +24,7 @@ const backupMembers = Bot => {
 
       const uniqueID = member.uniqueID ? member.uniqueID : `${userID}-${Date.now()}`;
 
-      db.run(sql, [uniqueID, userID, serverID, member.points], error => {
+      db.run(sql, [uniqueID, userID, serverID, member.level, member.exp, member.points, member.stars], error => {
         if (error) Bot.logger.error(`[DB] Cannot update points for ${userID}: ${error}`);
 
         processCount++;

@@ -1,5 +1,11 @@
 const isTrue = require('../helpers/isTrue');
 
+/**
+ * Game: Magic 8 Ball
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ * @param {Array} args 
+ */
 exports.run = async (Bot, message, args) => {
 
   if (!message.guild.available) return;
@@ -47,7 +53,7 @@ exports.conf = {
 
 exports.info = {
   name: '8ball',
-  description: 'Magic 8 ball.',
-  category: 'default',
+  description: 'Play a game of Magic 8 Ball.',
+  category: 'games',
   usage: '!8ball <question>'
 };

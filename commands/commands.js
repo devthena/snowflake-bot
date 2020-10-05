@@ -1,11 +1,13 @@
+const botConfig = require('../constants/botConfig');
 
+/**
+ * Displays the link of the Bot commands page
+ * @param {ClientUser} Bot 
+ * @param {Message} message 
+ */
 exports.run = async (Bot, message) => {
-
   if (!message.guild.available) return;
-
-  let commURL = 'http://snowflakebot.com/commands';
-  let reply = `For information on the bot commands, visit this link: ${commURL}`;
-
+  let reply = `For information on the bot commands, visit this link: ${botConfig.COMMANDS_URL}`;
   return message.channel.send(reply);
 };
 
@@ -18,7 +20,7 @@ exports.conf = {
 
 exports.info = {
   name: 'commands',
-  description: 'Sends the link of the commands page of the bot.',
+  description: 'Displays the link of the Bot commands page.',
   category: 'default',
   usage: '!commands'
 };

@@ -1,6 +1,11 @@
 const botConfig = require('../constants/botConfig');
 const Discord = require('discord.js');
 
+/**
+ * Displays information about the bot
+ * @param {ClientUser} Bot 
+ * @param {Array} message 
+ */
 exports.run = async (Bot, message) => {
 
   if (!message.guild.available) return;
@@ -26,7 +31,7 @@ exports.conf = {
 
 exports.info = {
   name: 'snowflake',
-  description: 'Display bot information.',
+  description: 'Displays information about the bot.',
   category: 'default',
   usage: '!snowflake'
 };

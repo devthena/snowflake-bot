@@ -1,5 +1,11 @@
 const isTrue = require('../helpers/isTrue');
 
+/**
+ * Adds a default role to a user who just joined the server
+ * @listens event:guildMemberAdd
+ * @param {ClientUser} Bot 
+ * @param {GuildMember} member 
+ */
 module.exports = (Bot, member) => {
 
   if (!member.guild.available) return;
