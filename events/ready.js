@@ -37,9 +37,6 @@ module.exports = async Bot => {
           alertStream: row.channel_alert_stream,
           highlightBoard: row.channel_highlight_board
         };
-        config.messages = {
-          alertStream: row.message_alert_stream
-        };
         config.mods = {
           alertStream: row.mod_alert_stream,
           autoAdd: row.mod_auto_add,
@@ -67,7 +64,7 @@ module.exports = async Bot => {
 
       } else {
 
-        let columns = `(server_id,owner_id,${dbConfig.MODS.join()},${dbConfig.ROLES.join()},${dbConfig.CHANNELS.join()},${dbConfig.MESSAGES.join()})`;
+        let columns = `(server_id,owner_id,${dbConfig.MODS.join()},${dbConfig.ROLES.join()},${dbConfig.CHANNELS.join()})`;
         let values = `(${guild.id},${guild.ownerID},${dbConfig.DEFAULT_VALUES})`;
 
         db.run(`INSERT INTO guilds ${columns} VALUES ${values}`, error => {

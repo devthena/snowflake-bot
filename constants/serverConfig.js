@@ -3,9 +3,6 @@ const config = {
     alertStream: '',
     highlightBoard: ''
   },
-  messages: {
-    alertStream: ''
-  },
   mods: {
     alertStream: 'false',
     autoAdd: 'true',
