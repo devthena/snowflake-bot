@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const isTrue = require('../helpers/isTrue');
+const botConfig = require('../constants/botConfig');
 
 /**
  * Tracks the number of reactions of messages for posting in highlight board
@@ -36,7 +37,7 @@ module.exports = (Bot, reaction, user) => {
 
         const botEmbed = new Discord.MessageEmbed()
           .setAuthor(reaction.message.author.username, reaction.message.author.displayAvatarURL())
-          .setColor('#FFBFFA')
+          .setColor(botConfig.COLOR)
           .setDescription(`${reaction.message.cleanContent}\n\nLink for [original message](${reaction.message.url}) in ${reaction.message.channel}`)
           .setImage(attachment)
           .setFooter(`Posted on ${reaction.message.createdAt}`);

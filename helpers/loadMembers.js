@@ -17,7 +17,12 @@ const loadMembers = (Bot, db) => {
     let sql = `SELECT * from members WHERE server_id = ${id}`;
 
     guild.members.cache.forEach(member => {
-      server.members.set(member.id, { points: 0 });
+      server.members.set(member.id, {
+        level: 0,
+        exp: 0,
+        points: 0,
+        stars: 0
+      });
     });
 
     db.each(sql, (error, row) => {
@@ -30,7 +35,10 @@ const loadMembers = (Bot, db) => {
         } else {
           server.members.set(row.user_id, {
             uniqueID: row.id,
-            points: row.points
+            level: !!row.level ? row.level : 0,
+            exp: !!row.exp ? row.exp : 0,
+            points: row.points,
+            stars: !!row.stars ? row.stars : 0
           });
         }
       }
