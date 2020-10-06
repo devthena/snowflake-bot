@@ -27,7 +27,12 @@ exports.run = async (Bot, message, args) => {
   if (message.member.id === recipient.id) recipientCopy = 'yourself. :smirk:';
 
   if (!member) {
-    member = { points: 0 };
+    member = {
+      level: 1,
+      exp: 0,
+      points: 0,
+      stars: 0
+    };
     server.members.set(recipient.id, member);
     Bot.servers.set(message.guild.id, server);
     return message.channel.send(`${message.member.displayName}, ${recipientCopy} already has 0 points. :neutral_face:`);

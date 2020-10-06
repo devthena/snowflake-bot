@@ -37,7 +37,12 @@ exports.run = async (Bot, message, args) => {
 
   let member = server.members.get(message.member.id);
   if (!member) {
-    member = { points: 0 };
+    member = {
+      level: 1,
+      exp: 0,
+      points: 0,
+      stars: 0
+    };
     server.members.set(message.member.id, member);
     Bot.servers.set(message.guild.id, server);
     return message.channel.send(notices.noPoints);
