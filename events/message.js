@@ -16,6 +16,8 @@ module.exports = (Bot, message) => {
 
   if (message.author.bot) return;
 
+  if (message.author.system) return;
+
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
@@ -41,7 +43,12 @@ module.exports = (Bot, message) => {
     const pattern = new RegExp('[A-Za-z].{2,}');
     let member = server.members.get(message.member.id);
 
-    if (!member) member = { points: 0 };
+    if (!member) member = {
+      level: 1,
+      exp: 0,
+      points: 0,
+      stars: 0
+    };
 
     words.forEach(word => {
       let match = pattern.test(word);

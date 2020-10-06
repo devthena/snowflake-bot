@@ -18,7 +18,7 @@ const loadMembers = (Bot, db) => {
 
     guild.members.cache.forEach(member => {
       server.members.set(member.id, {
-        level: 0,
+        level: 1,
         exp: 0,
         points: 0,
         stars: 0
@@ -35,10 +35,10 @@ const loadMembers = (Bot, db) => {
         } else {
           server.members.set(row.user_id, {
             uniqueID: row.id,
-            level: !!row.level ? row.level : 0,
-            exp: !!row.exp ? row.exp : 0,
+            level: row.level ? row.level : 1,
+            exp: row.exp ? row.exp : 0,
             points: row.points,
-            stars: !!row.stars ? row.stars : 0
+            stars: row.stars ? row.stars : 0
           });
         }
       }

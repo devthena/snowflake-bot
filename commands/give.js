@@ -36,7 +36,12 @@ exports.run = async (Bot, message, args) => {
 
   let giver = server.members.get(message.member.id);
   if (!giver) {
-    giver = { points: 0 };
+    giver = {
+      level: 1,
+      exp: 0,
+      points: 0,
+      stars: 0
+    };
     server.members.set(message.member.id, giver);
     Bot.servers.set(message.guild.id, server);
     return message.channel.send(notices.noPoints);
@@ -63,8 +68,16 @@ exports.run = async (Bot, message, args) => {
     server.members.set(message.member.id, giver);
   }
 
-  if (!member) member = { points: amount };
-  else member.points += amount;
+  if (!member) {
+    member = {
+      level: 1,
+      exp: 0,
+      points: amount,
+      stars: 0
+    };
+  } else {
+    member.points += amount;
+  }
 
   server.members.set(recipient.id, member);
   Bot.servers.set(message.guild.id, server);
