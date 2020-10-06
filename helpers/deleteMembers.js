@@ -1,12 +1,17 @@
+const DB_NAME = process.env.DB_NAME;
+const sqlite3 = require('sqlite3').verbose();
 const startBackup = require('./startBackup');
 
 /**
  * Deletes records for members who have left the server
- * @param {ClientUser} Bot 
- * @param {Database} db 
+ * @param {ClientUser} Bot
  * @param {Array} toDelete 
  */
-const deleteMembers = (Bot, db, toDelete) => {
+const deleteMembers = (Bot, toDelete) => {
+
+  const db = new sqlite3.Database(`./${DB_NAME}`, error => {
+    if (error) return Bot.logger.error(`[DB] deleteMembers: ${error}`);
+  });
 
   let processCount = 0;
   let sql = 'DELETE from members WHERE id = ?';

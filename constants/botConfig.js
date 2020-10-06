@@ -3,8 +3,9 @@ const config = {
   COMMANDS_URL: 'https://snowflakebot.com/commands',
   CURRENCY: ':coin:',
   CURRENCY_TEXT: 'gold',
+  LVL_MULTIPLIER: 2048,
   PREFIX: '!',
-  VERSION: '1.2.1-beta'
+  VERSION: '1.2.2'
 };
 
 module.exports = config;

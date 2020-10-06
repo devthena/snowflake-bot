@@ -1,11 +1,16 @@
+const DB_NAME = process.env.DB_NAME;
+const sqlite3 = require('sqlite3').verbose();
 const deleteMembers = require('./deleteMembers');
 
 /**
  * Creates Map variables for tracking server members data
- * @param {ClientUser} Bot 
- * @param {Database} db
+ * @param {ClientUser} Bot
  */
-const loadMembers = (Bot, db) => {
+const loadMembers = Bot => {
+
+  const db = new sqlite3.Database(`./${DB_NAME}`, error => {
+    if (error) return Bot.logger.error(`[DB] loadMembers: ${error}`);
+  });
 
   let serverCount = 0;
   let lastIndex = Bot.servers.size;
@@ -44,7 +49,12 @@ const loadMembers = (Bot, db) => {
       }
 
       serverCount++;
-      if (serverCount === lastIndex) deleteMembers(Bot, db, toDelete);
+      if (serverCount === lastIndex) {
+        db.close(error => {
+          if (error) Bot.logger.error(`[DB] loadMembers: ${error}`);
+          deleteMembers(Bot, toDelete);
+        });
+      }
     });
   });
 };

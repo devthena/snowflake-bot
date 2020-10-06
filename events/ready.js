@@ -12,7 +12,7 @@ const loadMembers = require('../helpers/loadMembers');
 module.exports = async Bot => {
   Bot.logger.info('* Snowflake is online *');
 
-  let db = new sqlite3.Database(`./${DB_NAME}`, error => {
+  const db = new sqlite3.Database(`./${DB_NAME}`, error => {
     if (error) return Bot.logger.error(`[DB] Event Ready: ${error}`);
   });
 
@@ -55,11 +55,21 @@ module.exports = async Bot => {
           db.run(`UPDATE guilds SET owner_id = ${guild.ownerID} WHERE server_id = ${guild.id}`, error => {
             if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);
             serverCount++;
-            if (serverCount === lastIndex) loadMembers(Bot, db);
+            if (serverCount === lastIndex) {
+              db.close(error => {
+                if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);
+                loadMembers(Bot);
+              });
+            }
           });
         } else {
           serverCount++;
-          if (serverCount === lastIndex) loadMembers(Bot, db);
+          if (serverCount === lastIndex) {
+            db.close(error => {
+              if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);
+              loadMembers(Bot);
+            });
+          }
         }
 
       } else {
@@ -70,7 +80,12 @@ module.exports = async Bot => {
         db.run(`INSERT INTO guilds ${columns} VALUES ${values}`, error => {
           if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);
           serverCount++;
-          if (serverCount === lastIndex) loadMembers(Bot, db);
+          if (serverCount === lastIndex) {
+            db.close(error => {
+              if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);
+              loadMembers(Bot);
+            });
+          }
         });
 
       }
