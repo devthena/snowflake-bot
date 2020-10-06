@@ -1,6 +1,15 @@
 const nodeHtmlToImage = require('node-html-to-image');
+const botConfig = require('../../constants/botConfig');
 
-const getProfileCard = async (stats, levelObj, message) => {
+/**
+ * Generate an image buffer for a user profile card
+ * @param {Object} stats 
+ * @param {Number} rank 
+ * @param {Message} message 
+ */
+const getProfileCard = async (stats, rank, message) => {
+
+  const maxExp = stats.level * botConfig.LVL_MULTIPLIER;
 
   const profileCardBuffer = await nodeHtmlToImage({
     html: `<html>
@@ -153,10 +162,10 @@ const getProfileCard = async (stats, levelObj, message) => {
       gold: stats.points,
       joinYear: message.member.joinedAt.getFullYear(),
       level: stats.level,
-      maxExp: levelObj.maxExp,
+      maxExp: maxExp,
       name: message.author.username,
-      progressWidth: levelObj.currentExp > 0 ? `${(levelObj.currentExp / levelObj.maxExp) * 100}%` : '0',
-      rank: levelObj.rank,
+      progressWidth: stats.exp > 0 ? `${(stats.exp / maxExp) * 100}%` : '0',
+      rank: rank,
       stars: stats.stars
     },
     puppeteerArgs: {

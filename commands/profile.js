@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const getExpInfo = require('../helpers/user/getExpInfo');
 const getProfileCard = require('../helpers/user/getProfileCard');
+const getRank = require('../helpers/user/getRank');
 
 /**
  * Displays the profile of a user
@@ -26,26 +26,8 @@ exports.run = async (Bot, message) => {
     Bot.servers.set(message.guild.id, server);
   }
 
-  let sortable = [];
-  server.members.forEach((obj, id) => {
-    if (obj.level > 0) sortable.push([id, obj.exp]);
-  });
-  sortable.sort((a, b) => b[1] - a[1]);
-
-  let rank = 'n/a';
-  sortable.forEach((arr, index) => {
-    if (arr[0] === message.member.id) rank = index + 1;
-  });
-
-  const expObj = getExpInfo(member.level);
-
-  const levelObj = {
-    currentExp: member.exp - expObj.expPrev,
-    maxExp: expObj.expNext,
-    rank: rank
-  }
-
-  const profileCard = await getProfileCard(member, levelObj, message);
+  const rank = getRank(message.member.id, server.members);
+  const profileCard = await getProfileCard(member, rank, message);
   const attachment = new Discord.MessageAttachment(profileCard, 'profile.png');
   message.channel.send(attachment);
 };
