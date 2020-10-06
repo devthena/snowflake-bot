@@ -4,7 +4,7 @@ const config = {
   CURRENCY: ':coin:',
   CURRENCY_TEXT: 'gold',
   PREFIX: '!',
-  VERSION: '1.2.1-alpha'
+  VERSION: '1.2.1-beta'
 };
 
 module.exports = config;

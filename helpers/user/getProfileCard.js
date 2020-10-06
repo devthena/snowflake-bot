@@ -158,6 +158,9 @@ const getProfileCard = async (stats, levelObj, message) => {
       progressWidth: levelObj.currentExp > 0 ? `${(levelObj.currentExp / levelObj.maxExp) * 100}%` : '0',
       rank: levelObj.rank,
       stars: stats.stars
+    },
+    puppeteerArgs: {
+      args: ['--no-sandbox']
     }
   });
 
