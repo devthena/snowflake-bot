@@ -3,6 +3,7 @@ const botConfig = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
+const updateLevel = require('../helpers/user/updateLevel');
 
 /**
  * Tracks the number of reactions of messages for posting in highlight board
@@ -27,7 +28,8 @@ module.exports = (Bot, reaction, user) => {
 
   member.exp += expAddends.reactionAdd;
 
-  server.members.set(user.id, member);
+  const updatedMember = updateLevel(member);
+  server.members.set(user.id, updatedMember);
   Bot.servers.set(reaction.message.guild.id, server);
 
   if (isTrue(server.mods.highlightBoard)) {
@@ -45,7 +47,8 @@ module.exports = (Bot, reaction, user) => {
 
         author.exp += expAddends.highlight;
 
-        server.members.set(reaction.message.member.id, author);
+        const updatedAuthor = updateLevel(author);
+        server.members.set(reaction.message.member.id, updatedAuthor);
         Bot.servers.set(reaction.message.guild.id, server);
 
         let attachment = null;

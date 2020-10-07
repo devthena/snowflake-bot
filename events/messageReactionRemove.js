@@ -1,3 +1,4 @@
+const botConfig = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 
@@ -20,8 +21,16 @@ module.exports = (Bot, reaction, user) => {
   if (!server) return;
 
   let member = server.members.get(user.id);
-  if (!member) member = JSON.parse(JSON.stringify(memberConfig));
-  else member.exp += expAddends.reactionRemove;
+  if (!member) {
+    member = JSON.parse(JSON.stringify(memberConfig));
+  } else {
+    if (member.exp > 0) {
+      member.exp += expAddends.reactionRemove;
+    } else if (member.level > 1) {
+      member.level -= 1;
+      member.exp = (member.level * botConfig.LVL_MULTIPLIER) + expAddends.reactionRemove;
+    }
+  }
 
   server.members.set(user.id, member);
   Bot.servers.set(reaction.message.guild.id, server);

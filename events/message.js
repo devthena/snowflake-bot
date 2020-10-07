@@ -3,6 +3,7 @@ const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
 const hasPermission = require('../helpers/hasPermission');
+const updateLevel = require('../helpers/user/updateLevel');
 
 /**
  * Runs commands, add points to users, and tracks messages for the highlight board
@@ -60,7 +61,8 @@ module.exports = (Bot, message) => {
       member.exp += expAddends.message;
     }
 
-    server.members.set(message.member.id, member);
+    const updatedMember = updateLevel(member);
+    server.members.set(message.member.id, updatedMember);
     Bot.servers.set(message.guild.id, server);
 
   } else {
