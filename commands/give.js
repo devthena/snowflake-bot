@@ -1,4 +1,5 @@
 const botConfig = require('../constants/botConfig');
+const memberConfig = require('../constants/memberConfig');
 
 /**
  * Give an amount of points to a specific member
@@ -36,12 +37,7 @@ exports.run = async (Bot, message, args) => {
 
   let giver = server.members.get(message.member.id);
   if (!giver) {
-    giver = {
-      level: 1,
-      exp: 0,
-      points: 0,
-      stars: 0
-    };
+    giver = JSON.parse(JSON.stringify(memberConfig));
     server.members.set(message.member.id, giver);
     Bot.servers.set(message.guild.id, server);
     return message.channel.send(notices.noPoints);
@@ -54,7 +50,6 @@ exports.run = async (Bot, message, args) => {
   if (amount > 10000) return message.channel.send(notices.invalidMax);
 
   let recipient = message.mentions.members.first();
-  let member = server.members.get(recipient.id);
   let recipientCopy = `${recipient.displayName}`;
 
   if (message.member.id === recipient.id) recipientCopy = 'yourself. :smirk:';
@@ -68,16 +63,10 @@ exports.run = async (Bot, message, args) => {
     server.members.set(message.member.id, giver);
   }
 
-  if (!member) {
-    member = {
-      level: 1,
-      exp: 0,
-      points: amount,
-      stars: 0
-    };
-  } else {
-    member.points += amount;
-  }
+  let member = server.members.get(recipient.id);
+  if (!member) member = JSON.parse(JSON.stringify(memberConfig));
+
+  member.points += amount;
 
   server.members.set(recipient.id, member);
   Bot.servers.set(message.guild.id, server);

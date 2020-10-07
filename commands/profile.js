@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const memberConfig = require('../constants/memberConfig');
 const getProfileCard = require('../helpers/user/getProfileCard');
 const getRank = require('../helpers/user/getRank');
 
@@ -16,12 +17,7 @@ exports.run = async (Bot, message) => {
 
   let member = server.members.get(message.member.id);
   if (!member) {
-    member = {
-      level: 1,
-      exp: 0,
-      points: 0,
-      stars: 0
-    };
+    member = JSON.parse(JSON.stringify(memberConfig));
     server.members.set(message.member.id, member);
     Bot.servers.set(message.guild.id, server);
   }

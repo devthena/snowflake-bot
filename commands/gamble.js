@@ -1,5 +1,6 @@
-const isTrue = require('../helpers/isTrue');
 const botConfig = require('../constants/botConfig');
+const memberConfig = require('../constants/memberConfig');
+const isTrue = require('../helpers/isTrue');
 
 /**
  * Game: Double or Nothing
@@ -37,12 +38,7 @@ exports.run = async (Bot, message, args) => {
 
   let member = server.members.get(message.member.id);
   if (!member) {
-    member = {
-      level: 1,
-      exp: 0,
-      points: 0,
-      stars: 0
-    };
+    member = JSON.parse(JSON.stringify(memberConfig));
     server.members.set(message.member.id, member);
     Bot.servers.set(message.guild.id, server);
     return message.channel.send(notices.noPoints);
