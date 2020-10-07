@@ -11,13 +11,15 @@ const memberConfig = require('../constants/memberConfig');
  */
 module.exports = (Bot, reaction, user) => {
 
-  if (reaction.message.channel.type !== 'text') return;
+  const message = reaction.message;
 
-  if (!reaction.message.guild.available) return;
+  if (message.channel.type !== 'text') return;
 
-  if (reaction.message.author.bot || user.bot || reaction.message.author.system) return;
+  if (!message.guild.available) return;
 
-  const server = Bot.servers.get(reaction.message.guild.id);
+  if (message.author.bot || user.bot || message.author.system) return;
+
+  const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
   let member = server.members.get(user.id);
@@ -33,5 +35,5 @@ module.exports = (Bot, reaction, user) => {
   }
 
   server.members.set(user.id, member);
-  Bot.servers.set(reaction.message.guild.id, server);
+  Bot.servers.set(message.guild.id, server);
 };

@@ -61,7 +61,7 @@ module.exports = (Bot, message) => {
       member.exp += expAddends.message;
     }
 
-    const updatedMember = updateLevel(member);
+    const updatedMember = updateLevel(member, message.member.displayName, message.guild.channels.cache);
     server.members.set(message.member.id, updatedMember);
     Bot.servers.set(message.guild.id, server);
 

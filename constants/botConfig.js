@@ -1,4 +1,5 @@
 const config = {
+  CHANNEL: 'snowflake',
   COLOR: '#FFBFFA',
   COMMANDS_URL: 'https://snowflakebot.com/commands',
   CURRENCY: ':coin:',
