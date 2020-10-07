@@ -1,5 +1,6 @@
 const DB_NAME = process.env.DB_NAME;
 const sqlite3 = require('sqlite3').verbose();
+const memberConfig = require('../constants/memberConfig');
 const deleteMembers = require('./deleteMembers');
 
 /**
@@ -22,12 +23,7 @@ const loadMembers = Bot => {
     let sql = `SELECT * from members WHERE server_id = ${id}`;
 
     guild.members.cache.forEach(member => {
-      server.members.set(member.id, {
-        level: 1,
-        exp: 0,
-        points: 0,
-        stars: 0
-      });
+      server.members.set(member.id, JSON.parse(JSON.stringify(memberConfig)));
     });
 
     db.each(sql, (error, row) => {

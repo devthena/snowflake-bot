@@ -1,4 +1,5 @@
 const botConfig = require('../constants/botConfig');
+const memberConfig = require('../constants/memberConfig');
 
 /**
  * Displays the current amount of points a member has
@@ -17,12 +18,7 @@ exports.run = async (Bot, message) => {
 
   let member = server.members.get(message.member.id);
   if (!member) {
-    member = {
-      level: 1,
-      exp: 0,
-      points: 0,
-      stars: 0
-    };
+    member = JSON.parse(JSON.stringify(memberConfig));
     server.members.set(message.member.id, member);
     Bot.servers.set(message.guild.id, server);
     return message.channel.send(`${message.member.displayName}, you do not have any ${currencyText} yet. :neutral_face:`);

@@ -1,4 +1,6 @@
 const botConfig = require('../constants/botConfig');
+const expAddends = require('../constants/expAddends');
+const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
 const hasPermission = require('../helpers/hasPermission');
 
@@ -41,14 +43,9 @@ module.exports = (Bot, message) => {
 
     const words = message.content.split(/ +/g);
     const pattern = new RegExp('[A-Za-z].{2,}');
-    let member = server.members.get(message.member.id);
 
-    if (!member) member = {
-      level: 1,
-      exp: 0,
-      points: 0,
-      stars: 0
-    };
+    let member = server.members.get(message.member.id);
+    if (!member) member = JSON.parse(JSON.stringify(memberConfig));
 
     words.forEach(word => {
       let match = pattern.test(word);
@@ -56,6 +53,12 @@ module.exports = (Bot, message) => {
         member.points++;
       }
     });
+
+    if (message.attachments.first()) {
+      member.exp += expAddends.attachment;
+    } else {
+      member.exp += expAddends.message;
+    }
 
     server.members.set(message.member.id, member);
     Bot.servers.set(message.guild.id, server);

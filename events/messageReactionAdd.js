@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
-const isTrue = require('../helpers/isTrue');
 const botConfig = require('../constants/botConfig');
+const expAddends = require('../constants/expAddends');
+const memberConfig = require('../constants/memberConfig');
+const isTrue = require('../helpers/isTrue');
 
 /**
  * Tracks the number of reactions of messages for posting in highlight board
@@ -15,10 +17,18 @@ module.exports = (Bot, reaction, user) => {
 
   if (!reaction.message.guild.available) return;
 
-  if (reaction.message.author.bot || user.bot) return;
+  if (reaction.message.author.bot || user.bot || reaction.message.author.system) return;
 
   const server = Bot.servers.get(reaction.message.guild.id);
   if (!server) return;
+
+  let member = server.members.get(user.id);
+  if (!member) member = JSON.parse(JSON.stringify(memberConfig));
+
+  member.exp += expAddends.reactionAdd;
+
+  server.members.set(user.id, member);
+  Bot.servers.set(reaction.message.guild.id, server);
 
   if (isTrue(server.mods.highlightBoard)) {
     if (!server.messageTrackIds) return;
@@ -29,6 +39,14 @@ module.exports = (Bot, reaction, user) => {
       const highlightBoardChannel = reaction.message.guild.channels.cache.find(channel => channel.name.includes(server.channels.highlightBoard));
 
       if (highlightBoardChannel) {
+
+        let author = server.members.get(reaction.message.member.id);
+        if (!author) author = JSON.parse(JSON.stringify(memberConfig));
+
+        author.exp += expAddends.highlight;
+
+        server.members.set(reaction.message.member.id, author);
+        Bot.servers.set(reaction.message.guild.id, server);
 
         let attachment = null;
         if (reaction.message.attachments.first()) {
