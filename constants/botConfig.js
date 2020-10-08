@@ -6,7 +6,7 @@ const config = {
   CURRENCY_TEXT: 'gold',
   LVL_MULTIPLIER: 2048,
   PREFIX: '!',
-  VERSION: '1.2.5'
+  VERSION: '1.2.6'
 };
 
 module.exports = config;
