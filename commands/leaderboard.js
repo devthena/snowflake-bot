@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const botConfig = require('../constants/botConfig');
 
 /**
- * Displays a list of members with the highest amount of points
+ * Displays a list of members with the highest level and exp
  * @param {ClientUser} Bot 
  * @param {Message} message 
  */
@@ -16,19 +16,18 @@ exports.run = async (Bot, message) => {
 
   let sortable = [];
   server.members.forEach((obj, id) => {
-    if (obj.points > 0) sortable.push([id, obj.level, obj.points]);
+    if (obj.level > 1 || obj.exp > 0) sortable.push([id, obj.level, obj.exp, obj.points]);
   });
 
   sortable.sort((a, b) => {
-    return b[2] - a[2];
+    const aValue = (a[1] * botConfig.LVL_MULTIPLIER) + a[2];
+    const bValue = (b[1] * botConfig.LVL_MULTIPLIER) + b[2];
+    return bValue - aValue;
   });
-
-  const currency = botConfig.CURRENCY;
-  const currencyText = botConfig.CURRENCY_TEXT;
 
   let botEmbed = new Discord.MessageEmbed()
     .setTitle(':trident: Server Leaderboard :trident:')
-    .setDescription(`Here are the users with the most ${currencyText}!`)
+    .setDescription(`Here are the top users with the highest level and exp!`)
     .setColor(botConfig.COLOR);
 
   let limit = Math.min(sortable.length, 5);
@@ -36,9 +35,7 @@ exports.run = async (Bot, message) => {
 
     let arr = sortable[i];
     let user = message.guild.members.cache.get(arr[0]);
-    let level = arr[1];
-    let points = arr[2];
-    const value = `${currency}: ${points} | Level: ${level}`;
+    const value = `Level: ${arr[1]} | Exp: ${arr[2]} | Gold: ${arr[3]}`;
 
     switch (i) {
       case 0:
@@ -68,7 +65,7 @@ exports.conf = {
 
 exports.info = {
   name: 'leaderboard',
-  description: 'Display a list of members with the highest amount of points.',
+  description: 'Display a list of members with the highest level and exp.',
   category: 'default',
   usage: '!leaderboard'
 };
