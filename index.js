@@ -12,7 +12,7 @@ const readdir = promisify(require('fs').readdir);
 const Discord = require('discord.js');
 
 // configure settings for rendering web pages
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 app.set('views', __dirname + '/web/views');
 app.use(express.static(__dirname + '/web/public'));
 

@@ -1,17 +1,63 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
-@import 'colors';
 @import 'variables';
 @import 'header';
-@import 'home';
+@import 'app';
+@import 'commands';
+@import 'faq';
 @import 'dashboard';
 @import 'server';
 @import 'footer';
 
 /* -------------- GLOBAL ------------- */
 html, body {
-  background-color: $purple;
   color: $white;
   font-family: $font-family;
   font-size: 16px;
   margin: 0;
+}
+
+body {
+  background-color: $purple;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+h1 {
+  font-size: 26px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+button {
+  background: transparent;
+  border: solid 1px $pink;
+  border-radius: 5px;
+  color: $white;
+  cursor: pointer;
+  font-family: $font-family;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 5px 10px;
+  outline: 0;
+  text-transform: uppercase;
+
+  &:disabled {
+    border: solid 1px $light-grey;
+    color: $light-grey;
+    cursor: default;
+  }
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
 }

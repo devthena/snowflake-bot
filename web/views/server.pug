@@ -1,0 +1,111 @@
+.container
+  .box
+    h1 #{server.name}
+    p
+      span Status: 
+      if server.available
+        span Available 
+      else
+        span Unavailable 
+      span (#{server.memberCount} Members)
+    #settings(data-server-id=server.id)
+      .save-box
+        p.save-notice
+        button(disabled).save Save Changes
+      .features
+        // Moderator
+        section
+          .switch-info
+            .info
+              h3 Moderator
+              span Let the bot allow this role to use admin commands like !clear
+          .feature
+            label Moderator Role:
+            input(type="text" name="roles:moderator" value=server.roles.moderator)
+        // Auto-Add Role
+        section
+          .switch-info
+            .switch-box
+              if server.mods.autoAdd === "true"
+                input(type="checkbox" class="switch" name="autoAdd" checked)
+              else
+                input(type="checkbox" class="switch" name="autoAdd")
+              include ./switch.pug
+            .info
+              h3 Auto-Add Role
+              span Let the bot automatically add a role to a new member
+          .feature
+            label New Member Role:
+            input(type="text" name="roles:autoAdd" value=server.roles.autoAdd)
+        // Channel Optins
+        section
+          .switch-info
+            .switch-box
+              if server.mods.optins === "true"
+                input(type="checkbox" class="switch" name="optins" checked)
+              else
+                input(type="checkbox" class="switch" name="optins")
+              include ./switch.pug
+            .info
+              h3 Channel Optins
+              span Let users add/remove roles specifically made for notifying them in special channels
+          .feature
+            label Valid Optin Roles:
+            input(type="text" name="roles:optins" value=server.roles.optins placeholder="Enter comma-separated roles...")
+        // Game: Double or Nothing
+        section
+          .switch-info
+            .switch-box
+              if server.mods.gameGamble === "true"
+                input(type="checkbox" class="switch" name="gameGamble" checked)
+              else
+                input(type="checkbox" class="switch" name="gameGamble")
+              include ./switch.pug
+            .info
+              h3 Game: Double or Nothing
+              span Let members gamble their points
+        // Game: Magic 8 Ball
+        section
+          .switch-info
+            .switch-box
+              if server.mods.game8Ball === "true"
+                input(type="checkbox" class="switch" name="game8Ball" checked)
+              else
+                input(type="checkbox" class="switch" name="game8Ball")
+              include ./switch.pug
+            .info
+              h3 Game: Magic 8 Ball
+              span Let members ask the bot like Magic 8 Ball
+        // Highlight Board
+        section
+          .switch-info
+            .switch-box
+              if server.mods.highlightBoard === "true"
+                input(type="checkbox" class="switch" name="highlightBoard" checked)
+              else
+                input(type="checkbox" class="switch" name="highlightBoard")
+              include ./switch.pug
+            .info
+              h3 Highlight Board
+              span Let the bot repost messages that get a certain number of reactions
+          .feature
+            label Highlight Channel:
+            input(type="text" name="channels:highlightBoard" value=server.channels.highlightBoard)
+        // Stream Alerts
+        section
+          .switch-info
+            .switch-box
+              if server.mods.alertStream === "true"
+                input(type="checkbox" class="switch" name="alertStream" checked)
+              else
+                input(type="checkbox" class="switch" name="alertStream")
+              include ./switch.pug
+            .info
+              h3 Stream Alerts
+              span Let the bot announce when you go live
+          .feature
+            label Stream Alert Channel:
+            input(type="text" name="channels:alertStream" value=server.channels.alertStream)
+      .save-box
+        p.save-notice
+        button(disabled).save Save Changes

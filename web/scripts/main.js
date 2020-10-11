@@ -9,57 +9,50 @@ $(document).ready(function () {
   var pathname = window.location.pathname;
   switch (pathname) {
     case '/commands':
-      $('.link-commands').addClass('selected');
+      $('.nav-commands').addClass('selected');
       break;
     case '/faq':
-      $('.link-faq').addClass('selected');
+      $('.nav-faq').addClass('selected');
+      break;
+    case '/dashboard':
+      $('.nav-profile').addClass('selected');
       break;
   }
 
   // listeners for redirecting
 
-  $('.logo-text').click(function () {
-    window.location.reload();
+  $('.logo').click(function () {
+    window.location = '/';
   });
 
-  $('.snow-login').click(function (e) {
+  $('.login').click(function (e) {
     e.preventDefault();
     window.location = '/auth/discord';
   });
 
-  $('.snow-logout').click(function (e) {
+  $('.logout').click(function (e) {
     e.preventDefault();
     window.location = '/logout';
   });
 
   $('.server').click(function (e) {
-    var serverID = $(e.currentTarget).attr('id');
-    window.location = '/dashboard/' + serverID;
-  });
-
-  $('.btn-dash').click(function (e) {
-    window.location = '/dashboard/';
+    var serverId = e.currentTarget.dataset.serverId;
+    window.location = '/dashboard/' + serverId;
   });
 
   // listeners for server settings updates
 
   $('.switch').click(function (e) {
-
-    var $switch = $(e.currentTarget);
-    var name = $switch.attr('name');
-    var $el = $('.switch-box').find('.' + name);
-
-    $el.animate({ height: 'toggle' });
-    $('.btn-save').attr('disabled', false);
+    $('.save').attr('disabled', false);
   });
 
   $('input,textarea').keyup(function (e) {
-    $('.btn-save').attr('disabled', false);
+    $('.save').attr('disabled', false);
   });
 
-  $('.btn-save').click(function (e) {
+  $('.save').click(function (e) {
     e.preventDefault();
-    $('.btn-save').attr('disabled', true);
+    $('.save').attr('disabled', true);
 
     // get values from input checkboxes
     var switches = $('.switch');
@@ -74,22 +67,22 @@ $(document).ready(function () {
     setFormValues('textarea');
 
     // build the parameters for api call
-    var guildID = $('.view-server').prop('id');
-    var data = {
-      id: guildID,
+    var el = document.getElementById('settings');
+    var serverData = {
+      id: el.dataset.serverId,
       updates: serverUpdates
     };
 
     $.post(
       '/api/server/update',
-      data,
+      serverData,
       function (data, status, xhr) {
         if (data.success) {
-          notifyServer('green', 'Successfully updated server settings');
+          notifyServer('#008000', 'Successfully updated server settings!');
         } else if (data.error) {
-          notifyServer('red', data.error);
+          notifyServer('#DC143C', data.error);
         } else {
-          notifyServer('red', 'Something went wrong. Please try again later.');
+          notifyServer('#DC143C', 'Something went wrong. Please try again later.');
         }
       }
     );
@@ -109,8 +102,8 @@ $(document).ready(function () {
   }
 
   function notifyServer(color, message) {
-    $('.server-notif').css('color', color);
-    $('.server-notif').text(message);
-    $('.server-notif').fadeIn(500).delay(2000).fadeOut(500);
+    $('.save-notice').css('color', color);
+    $('.save-notice').text(message);
+    $('.save-notice').fadeIn(500).delay(2000).fadeOut(500);
   }
 });

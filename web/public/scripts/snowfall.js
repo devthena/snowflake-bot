@@ -1,10 +1,14 @@
+/**
+ * Modified from the original Codepen:
+ * https://codepen.io/tmrDevelops/pen/PPgjwz
+ */
+
 $(document).ready(function () {
 
-  var $home = $('.view-home');
   var c = $('#snowCanvas').get(0);
   var ctx = c.getContext('2d');
-  var w = c.width = $home.innerWidth();
-  var h = c.height = window.innerHeight - 170;
+  var w = c.width = $('#app').innerWidth();
+  var h = c.height = window.innerHeight - ($('header').innerHeight() + $('footer').innerHeight());
   var bg = '#181423';
 
   function Snowfall() {
@@ -61,10 +65,30 @@ $(document).ready(function () {
     }
   }
 
-  // window.addEventListener('resize',function(){
-  //     c.width = w = $home.innerWidth();
-  //     c.height = h = $home.innerHeight();
-  // });
+  /**
+   * Taken from this article:
+   * https://davidwalsh.name/javascript-debounce-function
+   */
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function () {
+      var context = this, args = arguments;
+      var later = function () {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+
+  window.addEventListener('resize', debounce(function () {
+    c.width = w = c.width = $('#app').innerWidth();
+    c.height = h = window.innerHeight - ($('header').innerHeight() + $('footer').innerHeight());
+    Snowfall();
+  }, 250));
 
   Snowfall();
 });

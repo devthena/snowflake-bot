@@ -50,15 +50,12 @@ module.exports = (Bot, message) => {
 
     words.forEach(word => {
       let match = pattern.test(word);
-      if (match) {
-        member.points++;
-      }
+      if (match) member.points++;
     });
 
-    if (message.attachments.first()) {
-      member.exp += expAddends.attachment;
-    } else {
-      member.exp += expAddends.message;
+    if (!/bot-/.test(message.channel.name)) {
+      if (words.length > 1) member.exp += expAddends.message;
+      if (message.attachments.first()) member.exp += expAddends.attachment;
     }
 
     const updatedMember = updateLevel(member, message.member.displayName, message.guild.channels.cache);
