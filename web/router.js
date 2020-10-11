@@ -3,6 +3,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const DB_NAME = process.env.DB_NAME;
 const SCOPES = ['identify'];
+const SESSION_SECRET = process.env.SESSION_SECRET;
 const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
 // const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
 
@@ -11,8 +12,6 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const DiscordStrategy = require('passport-discord').Strategy;
-
-const activeUsers = new Map();
 
 module.exports = (app, Bot) => {
 
@@ -34,7 +33,7 @@ module.exports = (app, Bot) => {
   }, fetchUserData));
 
   app.use(session({
-    secret: 'athenabliss',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false
   }));
@@ -44,79 +43,108 @@ module.exports = (app, Bot) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  // render: home page
+  // render: main page
   app.get('/', (req, res) => {
-    res.render('home');
+    if (req.isAuthenticated()) {
+      var user = req.session.passport.user;
+      res.render('index', {
+        type: 'landing',
+        profile: user.profile
+      });
+    } else {
+      res.render('index', { type: 'landing' });
+    }
   });
 
   // render: commands page
   app.get('/commands', (req, res) => {
-    res.render('commands');
+    if (req.isAuthenticated()) {
+      var user = req.session.passport.user;
+      res.render('index', {
+        type: 'commands',
+        profile: user.profile
+      });
+    } else {
+      res.render('index', { type: 'commands' });
+    }
   });
 
   // render: faq page
   app.get('/faq', (req, res) => {
-    res.render('faq');
+    if (req.isAuthenticated()) {
+      var user = req.session.passport.user;
+      res.render('index', {
+        type: 'faq',
+        profile: user.profile
+      });
+    } else {
+      res.render('index', { type: 'faq' });
+    }
   });
 
   // render: dashboard page
   app.get('/dashboard', checkAuth, (req, res) => {
-
-    if (req.session.passport.user.isRegistered) {
-
-      var userID = req.session.passport.user.id;
-      var activeUser = activeUsers.get(userID);
-      res.render('admin/dashboard', activeUser);
-
+    if (req.isAuthenticated()) {
+      var user = req.session.passport.user;
+      res.render('index', {
+        type: 'dashboard',
+        profile: user.profile,
+        servers: user.servers,
+        isRegistered: user.isRegistered
+      });
     } else {
-      req.logout();
-      res.redirect('/unregistered');
+      res.render('index', { type: 'landing' });
     }
   });
 
   //render: server page
   app.get('/dashboard/:id', checkAuth, (req, res) => {
 
-    if (req.session.passport.user.isRegistered) {
+    if (req.isAuthenticated()) {
 
-      var userID = req.session.passport.user.id;
-      var activeUser = activeUsers.get(userID);
-      var serverID = req.params.id;
+      var user = req.session.passport.user;
 
-      var currentServer = null;
-      var currentGuild = activeUser.guilds.find(function (guild) { return guild.id === serverID });
+      if (user.isRegistered) {
 
-      if (currentGuild) {
-        currentServer = activeUser.servers.find(function (server) { return currentGuild.id === serverID });
-      }
+        var serverID = req.params.id;
+        var selectedServer = user.servers.find(server => server.id === serverID);
 
-      if (currentServer) {
-        res.render('admin/server', {
-          profile: activeUser.profile,
-          guild: currentGuild,
-          server: currentServer
-        });
-      } else {
-        var error = {
-          headline: 'Server Not Found',
-          message: 'Please contact Athena regarding this issue.'
+        if (selectedServer) {
+
+          res.render('index', {
+            type: 'server',
+            profile: user.profile,
+            server: selectedServer
+          });
+
+        } else {
+
+          res.render('index', {
+            type: 'error',
+            profile: user.profile,
+            headline: 'Server Not Found',
+            message: 'Please contact Athena regarding this issue.'
+          });
+
         }
-        res.render('error', error);
+
+      } else {
+        req.logout();
+        res.redirect('/unregistered');
       }
 
     } else {
-      req.logout();
-      res.redirect('/unregistered');
+      res.render('index', { type: 'landing' });
     }
   });
 
   // render: unregistered page
   app.get('/unregistered', (req, res) => {
-    var error = {
+    res.render('index', {
+      type: 'error',
       headline: 'Well, this is awkward...',
-      message: 'Only registered users are able to access the dashboard. If you think this is a mistake, please contact Athena. :)'
-    };
-    res.render('error', error);
+      message: 'Only registered users are able to access the dashboard. If you think this is a mistake, please contact Athena.'
+    });
   });
 
   // user: login
@@ -124,7 +152,7 @@ module.exports = (app, Bot) => {
   app.get('/auth/discord/callback', passport.authenticate('discord',
     { failureRedirect: '/' }),
     function (req, res) {
-      res.redirect('/dashboard')
+      res.redirect('/dashboard');
     }
   );
 
@@ -144,35 +172,36 @@ module.exports = (app, Bot) => {
   function fetchUserData(accessToken, refreshToken, profile, done) {
 
     var serverList = []; // server info list
-    var guildList = [];  // bot guild list
-    var user = { id: profile.id, isRegistered: false };
+    var user = { profile: profile };
 
     Bot.guilds.cache.forEach(guild => {
       if (guild.ownerID === profile.id) {
         var server = Bot.servers.get(guild.id);
-        if (server) serverList.push(server);
-        guildList.push(guild);
+        if (server) {
+          serverList.push({
+            id: guild.id,
+            name: guild.name,
+            available: guild.available,
+            iconImage: guild.iconURL() || null,
+            memberCount: guild.memberCount,
+            channels: server.channels,
+            mods: server.mods,
+            roles: server.roles
+          });
+        }
       }
     });
 
     var discordTag = `${profile.username}#${profile.discriminator}`;
+    Bot.logger.info(`[WEB] User logged in: ${discordTag}`);
 
-    if (guildList.length > 0) {
-
-      Bot.logger.info(`[WEB] User found: ${discordTag}`);
-
-      var activeUser = {
-        profile: profile,
-        guilds: guildList,
-        servers: serverList
-      };
+    if (serverList.length > 0) {
 
       user.isRegistered = true;
-      activeUsers.set(profile.id, activeUser);
+      user.servers = serverList;
       return done(null, user);
 
     } else {
-      Bot.logger.warn(`[WEB] User not registered: ${discordTag}`);
       return done(null, user);
     }
   }

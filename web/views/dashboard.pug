@@ -1,0 +1,15 @@
+.container
+  .box
+    h1 Hello, #{profile.username}!
+    if isRegistered
+      p Snowflake is currently serving #{servers.length} of your server(s).
+      .dashboard
+        .servers
+          each server in servers
+            .server(data-server-id=server.id)
+              if server.iconImage
+                img(src=server.iconImage)
+              else
+                img(src="../../images/discord-logo.png")
+              h2 #{server.name}
+              p (#{server.memberCount} members)

@@ -1,0 +1,15 @@
+header
+  p.logo
+    span.pink SNOWFLAKE
+    span BOT
+  ul
+    li.nav-commands
+      a(href="/commands") COMMANDS
+    li.nav-faq
+      a(href="/faq") FAQ
+    if profile
+      li.nav-profile
+        a(href="/dashboard") #{profile.username}
+      li: button.logout LOGOUT
+    else
+      li: button.login LOGIN

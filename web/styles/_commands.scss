@@ -1,0 +1,19 @@
+/* -------------- COMMANDS ------------- */
+.commands {
+  border: 1px solid #FFFFFF;
+  margin-top: 20px;
+
+  section {
+    border-bottom: 1px solid #FFFFFF;
+    padding: 15px;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  p {
+    line-height: 20px;
+    margin: 0;
+  }
+}
