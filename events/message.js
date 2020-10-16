@@ -54,8 +54,15 @@ module.exports = (Bot, message) => {
     });
 
     if (!/bot-/.test(message.channel.name)) {
+
       if (words.length > 1) member.exp += expAddends.message;
       if (message.attachments.first()) member.exp += expAddends.attachment;
+
+      const hasSubscriberRole = message.member.roles.cache.find(role => role.name.toLowerCase().includes('subscriber'));
+      const hasNitroBoosterRole = message.member.roles.cache.find(role => role.name.toLowerCase().includes('nitro'));
+
+      if (hasSubscriberRole) member.exp += expAddends.subscriber;
+      if (hasNitroBoosterRole) member.exp += expAddends.nitroBooster;
     }
 
     const updatedMember = updateLevel(member, message.member.displayName, message.guild.channels.cache);

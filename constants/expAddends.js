@@ -3,7 +3,9 @@ const addends = {
   message: 2,
   reactionAdd: 1,
   reactionRemove: -1,
-  highlight: 25
+  highlight: 25,
+  subscriber: 1,
+  nitroBooster: 2
 };
 
 module.exports = addends;

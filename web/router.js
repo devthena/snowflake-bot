@@ -4,8 +4,8 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const DB_NAME = process.env.DB_NAME;
 const SCOPES = ['identify'];
 const SESSION_SECRET = process.env.SESSION_SECRET;
-// const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
-const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
+const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
+// const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
 
 const passport = require('passport');
 const bodyParser = require('body-parser');
