@@ -4,8 +4,8 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const DB_NAME = process.env.DB_NAME;
 const SCOPES = ['identify'];
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
-// const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
+// const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
+const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
 
 const passport = require('passport');
 const bodyParser = require('body-parser');
@@ -62,6 +62,7 @@ module.exports = (app, Bot) => {
       var user = req.session.passport.user;
       res.render('index', {
         type: 'commands',
+        metaTitle: 'Snowflake Bot | Commands',
         profile: user.profile
       });
     } else {
@@ -75,6 +76,7 @@ module.exports = (app, Bot) => {
       var user = req.session.passport.user;
       res.render('index', {
         type: 'faq',
+        metaTitle: 'Snowflake Bot | FAQ',
         profile: user.profile
       });
     } else {
@@ -88,6 +90,7 @@ module.exports = (app, Bot) => {
       var user = req.session.passport.user;
       res.render('index', {
         type: 'dashboard',
+        metaTitle: 'Snowflake Bot | Dashboard',
         profile: user.profile,
         servers: user.servers,
         isRegistered: user.isRegistered
@@ -113,6 +116,7 @@ module.exports = (app, Bot) => {
 
           res.render('index', {
             type: 'server',
+            metaTitle: 'Snowflake Bot | Server',
             profile: user.profile,
             server: selectedServer
           });
