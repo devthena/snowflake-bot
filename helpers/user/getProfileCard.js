@@ -1,5 +1,6 @@
 const nodeHtmlToImage = require('node-html-to-image');
 const botConfig = require('../../constants/botConfig');
+const monthMap = require('../../constants/monthMap');
 
 /**
  * Generate an image buffer for a user profile card
@@ -15,23 +16,24 @@ const getProfileCard = async (stats, rank, message) => {
     html: `<html>
       <head>
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         body {
           background: radial-gradient(#F9F9F9, #C6E2FF);
           border: 2px solid silver;
           color: #1B1B1B;
           display: flex;
-          font-family: sans-serif;
+          font-family: 'Poppins', sans-serif;
           padding: 10px 15px;
           position: relative;
           width: 500px;
-          height: 143px;
+          height: 145px;
         }
         p {
           margin: 0;
         }
         .avatar {
           align-items: center;
-          background: linear-gradient(to bottom left, #1B1B1B, white, #1B1B1B);
+          background: linear-gradient(to bottom left, #1B1B1B, #FFFFFF, #1B1B1B);
           border-radius: 50%;
           display: flex;
           justify-content: center;
@@ -44,39 +46,40 @@ const getProfileCard = async (stats, rank, message) => {
           height: 84px;
         }
         .rank {
-          margin-top: 3px;
           text-align: center;
         }
         .rank h1 {
           font-size: 28px;
-          font-weight: 700;
+          font-weight: 600;
           margin: 0;
         }
         .rank p {
           font-size: 12px;
+          margin-top: -5px;
         }
         .info {
           padding-left: 20px;
           width: 100%;
         }
         .name {
-          font-size: 18px;
-          font-weight: 700;
+          font-size: 24px;
+          font-weight: 600;
         }
         .name span {
-          font-size: 14px;
-          font-weight: 300;
+          font-size: 16px;
+          font-weight: 400;
         }
         .membership {
           font-size: 12px;
+          margin-top: -5px;
         }
         .stats {
-          padding: 15px 0 10px;
+          padding: 10px 0 0;
         }
         .gold, .star {
           display: flex;
           align-items: center;
-          font-weight: 700;
+          font-weight: 600;
         }
         .gold img,
         .star img {
@@ -84,7 +87,7 @@ const getProfileCard = async (stats, rank, message) => {
           width: 20px;
         }
         .star {
-          margin-top: 5px;
+          margin-top: 2px;
         }
         .next-level {
           font-size: 12px;
@@ -92,9 +95,8 @@ const getProfileCard = async (stats, rank, message) => {
         }
         .progress-bar {
           border: 1px solid #1B1B1B;
-          background: white;
-          border-radius: 5px;
-          margin-top: 5px;
+          background: #FFFFFF;
+          border-radius: 8px;
           width: 100%;
           height: 15px;
           overflow: hidden;
@@ -106,7 +108,7 @@ const getProfileCard = async (stats, rank, message) => {
         }
         .level {
           position: absolute;
-          top: 5px;
+          top: 0;
           right: 15px;
           text-align: center;
         }
@@ -116,6 +118,7 @@ const getProfileCard = async (stats, rank, message) => {
         }
         .level p {
           font-size: 12px;
+          margin-top: -8px;
         }
         </style>
       </head>
@@ -131,7 +134,7 @@ const getProfileCard = async (stats, rank, message) => {
         </div>
         <div class="info">
           <p class="name">{{name}}<span>#{{discriminator}}</span></p>
-          <p class="membership">MEMBER SINCE {{joinYear}}</p>
+          <p class="membership">MEMBER SINCE {{joinMonth}} {{joinYear}}</p>
           <div class="stats">
             <div class="gold">
               <img src="https://discordapp.com/assets/11b9d8164d204c7fd48a88a515745c1d.svg" />
@@ -160,6 +163,7 @@ const getProfileCard = async (stats, rank, message) => {
       discriminator: message.author.discriminator,
       exp: stats.exp,
       gold: stats.points,
+      joinMonth: monthMap[message.member.joinedAt.getMonth()],
       joinYear: message.member.joinedAt.getFullYear(),
       level: stats.level,
       maxExp: maxExp,

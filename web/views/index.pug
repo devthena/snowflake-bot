@@ -1,7 +1,10 @@
 doctype html
 html
   head
-    title="Snowflake Bot"
+    if metaTitle
+      title #{metaTitle}
+    else
+      title="Snowflake Bot"
     meta(name="description" content="A private Discord bot for the AthenaUS and AikoBliss servers.")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     link(rel="icon" type="image/jpg" href="../images/snowflake.jpg")
