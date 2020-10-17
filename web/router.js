@@ -45,43 +45,38 @@ module.exports = (app, Bot) => {
 
   // render: main page
   app.get('/', (req, res) => {
+    var payload = { type: 'landing' };
     if (req.isAuthenticated()) {
       var user = req.session.passport.user;
-      res.render('index', {
-        type: 'landing',
-        profile: user.profile
-      });
-    } else {
-      res.render('index', { type: 'landing' });
+      payload.profile = user.profile;
     }
+    res.render('index', payload);
   });
 
   // render: commands page
   app.get('/commands', (req, res) => {
+    var payload = {
+      type: 'commands',
+      metaTitle: 'Snowflake Bot | Commands'
+    };
     if (req.isAuthenticated()) {
       var user = req.session.passport.user;
-      res.render('index', {
-        type: 'commands',
-        metaTitle: 'Snowflake Bot | Commands',
-        profile: user.profile
-      });
-    } else {
-      res.render('index', { type: 'commands' });
+      payload.profile = user.profile;
     }
+    res.render('index', payload);
   });
 
   // render: faq page
   app.get('/faq', (req, res) => {
+    var payload = {
+      type: 'faq',
+      metaTitle: 'Snowflake Bot | FAQ'
+    };
     if (req.isAuthenticated()) {
       var user = req.session.passport.user;
-      res.render('index', {
-        type: 'faq',
-        metaTitle: 'Snowflake Bot | FAQ',
-        profile: user.profile
-      });
-    } else {
-      res.render('index', { type: 'faq' });
+      payload.profile = user.profile;
     }
+    res.render('index', payload);
   });
 
   // render: dashboard page
@@ -96,7 +91,7 @@ module.exports = (app, Bot) => {
         isRegistered: user.isRegistered
       });
     } else {
-      res.render('index', { type: 'landing' });
+      res.redirect('/');
     }
   });
 
@@ -138,7 +133,7 @@ module.exports = (app, Bot) => {
       }
 
     } else {
-      res.render('index', { type: 'landing' });
+      res.redirect('/');
     }
   });
 
