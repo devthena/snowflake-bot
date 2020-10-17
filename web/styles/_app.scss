@@ -6,12 +6,11 @@
 
 #snowCanvas {
   position: fixed;
-  top: 0;
   z-index: -1;
 }
 
 .app-box {
-  min-height: #{'calc(100vh - 144px)'};
+  min-height: #{'calc(100vh - 152px)'};
   width: 100%;
 }
 
@@ -40,7 +39,7 @@
 
 @media (min-width: 768px) {
   .app-box {
-    min-height: #{'calc(100vh - 122px)'};
+    min-height: #{'calc(100vh - 134px)'};
   }
 
   .container {
