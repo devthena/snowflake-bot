@@ -18,7 +18,7 @@ const getProfileCard = async (stats, rank, message) => {
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         body {
-          background: radial-gradient(#F9F9F9, #C6E2FF);
+          background: linear-gradient(#F9F9F9, {{roleHexColor}});
           border: 2px solid silver;
           color: #1B1B1B;
           display: flex;
@@ -170,6 +170,7 @@ const getProfileCard = async (stats, rank, message) => {
       name: message.author.username,
       progressWidth: stats.exp > 0 ? `${(stats.exp / maxExp) * 100}%` : '0',
       rank: rank,
+      roleHexColor: message.member.displayHexColor,
       stars: stats.stars
     },
     puppeteerArgs: {
