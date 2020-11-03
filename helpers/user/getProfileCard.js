@@ -18,7 +18,7 @@ const getProfileCard = async (stats, rank, message) => {
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         body {
-          background: linear-gradient(#F9F9F9, {{roleHexColor}});
+          background: linear-gradient(#F9F9F9, {{roleHexColor}} 35%);
           border: 2px solid silver;
           color: #1B1B1B;
           display: flex;
