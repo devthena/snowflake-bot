@@ -44,13 +44,14 @@ module.exports = (Bot, reaction, user) => {
 
       if (highlightBoardChannel) {
 
-        let author = server.members.get(message.member.id);
+        let author = server.members.get(message.author.id);
         if (!author) author = JSON.parse(JSON.stringify(memberConfig));
 
         author.exp += expAddends.highlight;
 
-        const updatedAuthor = updateLevel(author, message.member.displayName, message.guild.channels.cache);
-        server.members.set(message.member.id, updatedAuthor);
+        let displayName = message.member ? message.member.displayName : message.author.username;
+        const updatedAuthor = updateLevel(author, displayName, message.guild.channels.cache);
+        server.members.set(message.author.id, updatedAuthor);
         Bot.servers.set(message.guild.id, server);
 
         let attachment = null;
