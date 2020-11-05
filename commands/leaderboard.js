@@ -1,6 +1,7 @@
 
 const Discord = require('discord.js');
 const botConfig = require('../constants/botConfig');
+const sortByRank = require('../helpers/sortByRank');
 
 /**
  * Displays a list of members with the highest level and exp
@@ -14,16 +15,7 @@ exports.run = async (Bot, message) => {
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
-  let sortable = [];
-  server.members.forEach((obj, id) => {
-    if (obj.level > 1 || obj.exp > 0) sortable.push([id, obj.level, obj.exp, obj.points]);
-  });
-
-  sortable.sort((a, b) => {
-    const aValue = (a[1] * botConfig.LVL_MULTIPLIER) + a[2];
-    const bValue = (b[1] * botConfig.LVL_MULTIPLIER) + b[2];
-    return bValue - aValue;
-  });
+  const sortable = sortByRank(server.members);
 
   let botEmbed = new Discord.MessageEmbed()
     .setTitle(':trident: Server Leaderboard :trident:')
