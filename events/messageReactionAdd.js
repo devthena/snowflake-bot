@@ -35,10 +35,34 @@ module.exports = (Bot, reaction, user) => {
   Bot.servers.set(message.guild.id, server);
 
   if (isTrue(server.mods.highlightBoard)) {
-    if (!server.messageTrackIds) return;
-    if (server.messageTrackIds && server.messageTrackIds.indexOf(message.id) < 0) return;
 
-    if (reaction.count >= 5) {
+    if (reaction.count === 1) {
+
+      const hourTS = 3600000;
+      const currentTS = Date.now();
+      const diffTS = currentTS - message.createdTimestamp;
+
+      if (diffTS > hourTS) return;
+
+      if (!server.messageTrackIds) {
+        server.messageTrackIds = [];
+        server.messageTimers = new Map();
+      }
+
+      if (server.messageTrackIds.indexOf(message.id) < 0) {
+        server.messageTrackIds.push(message.id);
+        let timer = setTimeout(() => {
+          let index = server.messageTrackIds.indexOf(message.id);
+          server.messageTrackIds.splice(index, 1);
+          server.messageTimers.delete(message.id);
+        }, diffTS);
+        server.messageTimers.set(message.id, timer);
+      }
+
+    } else if (reaction.count >= 5) {
+
+      if (!server.messageTrackIds) return;
+      if (server.messageTrackIds.indexOf(message.id) < 0) return;
 
       const highlightBoardChannel = message.guild.channels.cache.find(channel => channel.name.includes(server.channels.highlightBoard));
 

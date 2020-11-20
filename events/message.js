@@ -1,7 +1,6 @@
 const botConfig = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
-const isTrue = require('../helpers/isTrue');
 const hasPermission = require('../helpers/hasPermission');
 const updateLevel = require('../helpers/user/updateLevel');
 
@@ -23,22 +22,6 @@ module.exports = (Bot, message) => {
 
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
-
-  if (isTrue(server.mods.highlightBoard)) {
-    if (!server.messageTrackIds) {
-      server.messageTrackIds = [];
-      server.messageTimers = new Map();
-    }
-    if (server.messageTrackIds.indexOf(message.id) < 0) {
-      server.messageTrackIds.push(message.id);
-      let timer = setTimeout(() => {
-        let index = server.messageTrackIds.indexOf(message.id);
-        server.messageTrackIds.splice(index, 1);
-        server.messageTimers.delete(message.id);
-      }, 3600000);
-      server.messageTimers.set(message.id, timer);
-    }
-  }
 
   if (message.content.indexOf(botConfig.PREFIX) !== 0 && message.member) {
 
