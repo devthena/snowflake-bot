@@ -7,7 +7,7 @@ const config = {
   LOG_CHANNEL: 'bot-logs',
   LVL_MULTIPLIER: 2048,
   PREFIX: '!',
-  VERSION: '1.3.2'
+  VERSION: '1.3.3'
 };
 
 module.exports = config;
