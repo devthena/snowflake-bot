@@ -80,7 +80,10 @@ module.exports = (Bot, reaction, user) => {
 
         let attachment = null;
         if (message.attachments.first()) {
-          attachment = message.attachments.first().url;
+          const attachmentUrl = message.attachments.first().url;
+          if (!/SPOILER_/.test(attachmentUrl)) {
+            attachment = attachmentUrl;
+          }
         }
 
         const botEmbed = new Discord.MessageEmbed()
