@@ -55,7 +55,7 @@ module.exports = (Bot, reaction, user) => {
           let index = server.messageTrackIds.indexOf(message.id);
           server.messageTrackIds.splice(index, 1);
           server.messageTimers.delete(message.id);
-        }, diffTS);
+        }, (hourTS - diffTS));
         server.messageTimers.set(message.id, timer);
       }
 
