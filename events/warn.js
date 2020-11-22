@@ -1,8 +1,12 @@
+const botConfig = require('../constants/botConfig');
+const serverLog = require('../helpers/serverLog');
+
 /**
  * Logs general warnings received by the Bot
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {String} info 
  */
 module.exports = async (Bot, info) => {
-  Bot.logger.warn(`[SYS] General Warning: ${info}`);
+  let logEvent = `Info: warn Event\nWarning: ${info}`;
+  serverLog(Bot, botConfig.NAME, logEvent);
 };

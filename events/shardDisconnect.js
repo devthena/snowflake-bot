@@ -1,7 +1,7 @@
 /**
  * Logs disconnection errors received by the Bot
  * @listens event:shardDisconnect
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {CloseEvent} event 
  * @param {Number} shardId 
  */

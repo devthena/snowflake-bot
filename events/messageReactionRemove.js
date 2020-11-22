@@ -5,7 +5,7 @@ const memberConfig = require('../constants/memberConfig');
 /**
  * Removes EXP for users who remove their reactions
  * @listens event:messageReactionRemove
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {MessageReaction} reaction 
  * @param {User} user 
  */

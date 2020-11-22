@@ -15,15 +15,24 @@ exports.run = async (Bot, message) => {
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
-  let member = server.members.get(message.member.id);
-  if (!member) {
-    member = JSON.parse(JSON.stringify(memberConfig));
-    server.members.set(message.member.id, member);
+  let memberId = message.member.id;
+  let member = message.member;
+
+  if (message.mentions.members.size > 0) {
+    const mention = message.mentions.members.first()
+    memberId = mention.id;
+    member = await message.guild.members.fetch(mention.id);
+  }
+
+  let memberStats = server.members.get(memberId);
+  if (!memberStats) {
+    memberStats = JSON.parse(JSON.stringify(memberConfig));
+    server.members.set(memberId, memberStats);
     Bot.servers.set(message.guild.id, server);
   }
 
-  const rank = getRank(message.member.id, server.members);
-  const profileCard = await getProfileCard(member, rank, message);
+  const rank = getRank(memberId, server.members);
+  const profileCard = await getProfileCard(memberStats, rank, member);
   const attachment = new Discord.MessageAttachment(profileCard, 'profile.png');
   message.channel.send(attachment);
 };

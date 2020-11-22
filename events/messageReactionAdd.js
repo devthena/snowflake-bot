@@ -8,7 +8,7 @@ const updateLevel = require('../helpers/user/updateLevel');
 /**
  * Tracks the number of reactions of messages for posting in highlight board
  * @listens event:messageReactionAdd
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {MessageReaction} reaction 
  * @param {User} user 
  */
@@ -79,17 +79,20 @@ module.exports = (Bot, reaction, user) => {
         Bot.servers.set(message.guild.id, server);
 
         let attachment = null;
+        let description = `${message.cleanContent}\n\nLink for [original message](${message.url}) in ${message.channel}`;
         if (message.attachments.first()) {
           const attachmentUrl = message.attachments.first().url;
           if (!/SPOILER_/.test(attachmentUrl)) {
             attachment = attachmentUrl;
+          } else {
+            description += 'Note: Contains SPOILER Image';
           }
         }
 
         const botEmbed = new Discord.MessageEmbed()
           .setAuthor(message.author.username, message.author.displayAvatarURL())
           .setColor(botConfig.COLOR)
-          .setDescription(`${message.cleanContent}\n\nLink for [original message](${message.url}) in ${message.channel}`)
+          .setDescription(description)
           .setImage(attachment)
           .setFooter(`Posted on ${message.createdAt}`);
         highlightBoardChannel.send(botEmbed);
