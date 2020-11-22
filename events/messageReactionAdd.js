@@ -85,7 +85,7 @@ module.exports = (Bot, reaction, user) => {
           if (!/SPOILER_/.test(attachmentUrl)) {
             attachment = attachmentUrl;
           } else {
-            description += 'Note: Contains SPOILER Image';
+            description += `\nNote: Contains SPOILER Image`;
           }
         }
 
