@@ -6,9 +6,9 @@ const monthMap = require('../../constants/monthMap');
  * Generate an image buffer for a user profile card
  * @param {Object} stats 
  * @param {Number} rank 
- * @param {Message} message 
+ * @param {GuildMember} member
  */
-const getProfileCard = async (stats, rank, message) => {
+const getProfileCard = async (stats, rank, member) => {
 
   const maxExp = stats.level * botConfig.LVL_MULTIPLIER;
 
@@ -159,18 +159,18 @@ const getProfileCard = async (stats, rank, message) => {
       </body>
     </html>`,
     content: {
-      avatar: message.author.displayAvatarURL(),
-      discriminator: message.author.discriminator,
+      avatar: member.user.displayAvatarURL(),
+      discriminator: member.user.discriminator,
       exp: stats.exp,
       gold: stats.points,
-      joinMonth: monthMap[message.member.joinedAt.getMonth()],
-      joinYear: message.member.joinedAt.getFullYear(),
+      joinMonth: monthMap[member.joinedAt.getMonth()],
+      joinYear: member.joinedAt.getFullYear(),
       level: stats.level,
       maxExp: maxExp,
-      name: message.author.username,
+      name: member.user.username,
       progressWidth: stats.exp > 0 ? `${(stats.exp / maxExp) * 100}%` : '0',
       rank: rank,
-      roleHexColor: message.member.displayHexColor,
+      roleHexColor: member.displayHexColor,
       stars: stats.stars
     },
     puppeteerArgs: {
