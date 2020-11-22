@@ -7,7 +7,7 @@ const updateLevel = require('../helpers/user/updateLevel');
 /**
  * Runs commands, add points to users, and tracks messages for the highlight board
  * @listens event:message
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  */
 module.exports = (Bot, message) => {

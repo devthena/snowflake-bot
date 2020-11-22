@@ -8,7 +8,7 @@ const updateLevel = require('../helpers/user/updateLevel');
 /**
  * Tracks the number of reactions of messages for posting in highlight board
  * @listens event:messageReactionAdd
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {MessageReaction} reaction 
  * @param {User} user 
  */

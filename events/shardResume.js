@@ -1,6 +1,6 @@
 /**
  * Logs information when connection resumes
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Number} shardId 
  * @param {Number} replayedEvents 
  */

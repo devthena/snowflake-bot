@@ -7,7 +7,7 @@ const loadMembers = require('../helpers/loadMembers');
 /**
  * Creates Map variables for tracking server data
  * @listens event:ready
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  */
 module.exports = async Bot => {
   Bot.logger.info('* Snowflake is online *');

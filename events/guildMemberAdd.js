@@ -1,9 +1,10 @@
 const isTrue = require('../helpers/isTrue');
+const serverLog = require('../helpers/serverLog');
 
 /**
  * Adds a default role to a user who just joined the server
  * @listens event:guildMemberAdd
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {GuildMember} member 
  */
 module.exports = (Bot, member) => {
@@ -20,12 +21,16 @@ module.exports = (Bot, member) => {
     if (autoAddRole) {
       member.roles.add(autoAddRole)
         .then(function () {
-          Bot.logger.info(`[SYS] Added role ${server.roles.autoAdd} to ${member.user.username}`);
+          let logEvent = `${member.user.username}#${member.user.discriminator} aka ${member.displayName} has been given the ${server.roles.autoAdd} role.`;
+          logEvent += `\nMember ID: ${member.id}`;
+          serverLog(Bot, member.guild.name, logEvent);
         }).catch(function (error) {
-          Bot.logger.error(`[SYS] guildMemberAdd: ${error}`);
+          let logEvent = `Error: guildMemberAdd Event\n${JSON.stringify(error)}`;
+          serverLog(Bot, member.guild.name, logEvent);
         });
     } else {
-      Bot.logger.error('[SYS] guildMemberAdd: Specified auto-add role does not exist');
+      let logEvent = `Error: Auto-add role specified does not exist.`;
+      serverLog(Bot, member.guild.name, logEvent);
     }
   }
 

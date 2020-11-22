@@ -6,6 +6,7 @@ const config = {
   CURRENCY_TEXT: 'gold',
   LOG_CHANNEL: 'bot-logs',
   LVL_MULTIPLIER: 2048,
+  NAME: 'Snowflake Bot',
   PREFIX: '!',
   VERSION: '1.3.4'
 };
