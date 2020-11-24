@@ -36,7 +36,7 @@ module.exports = (Bot, reaction, user) => {
 
   if (isTrue(server.mods.highlightBoard)) {
 
-    if (reaction.count === 1) {
+    if (reaction.count === 1 && message.reactions.cache.size === 1) {
 
       const hourTS = 3600000;
       const currentTS = Date.now();
