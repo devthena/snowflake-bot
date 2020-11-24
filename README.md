@@ -27,12 +27,13 @@ The web application tied to this still needs a lot of refactoring but the Discor
 * !commands - display the URL for the commands list
 * !gamble {number} - a game with 50/50 chance to double {number} user points or lose it
 * !give {@user} {number} - transfer {number} user points to another user
-* !leaderboard - display the top 5 users with the highest user points
 * !optin {role} - adds a role to the user, useful for notifications for movie nights
 * !optout {role} - removes a role from the user
 * !points - display the current user points a user has
 * !snowflake - display the bot information
 * !take {@user} {number} - take {number} user points from a user (admin only)
+* !topcoin - display a list of users with the highest points
+* !toprank - display a list of users with the highest level
 
 ### References
 * Guide in developing a Discord Bot using Discord.js - https://discordjs.guide

@@ -18,8 +18,8 @@ exports.run = async (Bot, message) => {
   const sortable = sortByRank(server.members);
 
   let botEmbed = new Discord.MessageEmbed()
-    .setTitle(':trident: Server Leaderboard :trident:')
-    .setDescription(`Here are the top users with the highest level and exp!`)
+    .setTitle(':trident: ----- Server Top Rank ----- :trident:')
+    .setDescription(`Here are the users with the highest level!`)
     .setColor(botConfig.COLOR);
 
   let limit = Math.min(sortable.length, 5);
@@ -56,8 +56,8 @@ exports.conf = {
 };
 
 exports.info = {
-  name: 'leaderboard',
+  name: 'toprank',
   description: 'Display a list of members with the highest level and exp.',
   category: 'default',
-  usage: '!leaderboard'
+  usage: '!toprank'
 };
