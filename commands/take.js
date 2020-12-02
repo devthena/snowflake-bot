@@ -57,6 +57,6 @@ exports.conf = {
 exports.info = {
   name: 'take',
   description: 'Take an amount of points from a specific member.',
-  category: 'default',
+  category: 'admin',
   usage: '!take <@user> <amount>'
 };

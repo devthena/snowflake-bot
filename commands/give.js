@@ -83,6 +83,6 @@ exports.conf = {
 exports.info = {
   name: 'give',
   description: 'Give an amount of points to a specific member.',
-  category: 'default',
+  category: 'user',
   usage: '!give <@user> <amount>'
 };

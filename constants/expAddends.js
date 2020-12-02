@@ -5,7 +5,8 @@ const addends = {
   reactionRemove: -1,
   highlight: 25,
   subscriber: 1,
-  nitroBooster: 2
+  nitroBooster: 2,
+  starred: 100
 };
 
 module.exports = addends;

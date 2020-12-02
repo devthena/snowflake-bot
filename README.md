@@ -23,17 +23,18 @@ The web application tied to this still needs a lot of refactoring but the Discor
 
 ### Default Commands
 * !8ball - a mini game patterned from Magic 8 Ball
-* !clear {number} - delete {number} amount of messages not older than two weeks (admin only)
-* !commands - display the URL for the commands list
+* !clear {number} - deletes {number} amount of messages not older than two weeks (admin only)
+* !commands - displays the URL for the commands list
 * !gamble {number} - a game with 50/50 chance to double {number} user points or lose it
-* !give {@user} {number} - transfer {number} user points to another user
+* !give {@user} {number} - transfers {number} user points to another user
 * !optin {role} - adds a role to the user, useful for notifications for movie nights
 * !optout {role} - removes a role from the user
-* !points - display the current user points a user has
-* !snowflake - display the bot information
-* !take {@user} {number} - take {number} user points from a user (admin only)
-* !topcoin - display a list of users with the highest points
-* !toprank - display a list of users with the highest level
+* !points - displays the current user points a user has
+* !snowflake - displays the bot information
+* !star {@user} - gives a star (as an endorsement) to a user
+* !take {@user} {number} - takes {number} user points from a user (admin only)
+* !topcoin - displays a list of users with the highest points
+* !toprank - displays a list of users with the highest level
 
 ### References
 * Guide in developing a Discord Bot using Discord.js - https://discordjs.guide

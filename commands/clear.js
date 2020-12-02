@@ -41,6 +41,6 @@ exports.conf = {
 exports.info = {
   name: 'clear',
   description: 'Deletes a number of messages in a specific channel.',
-  category: 'default',
+  category: 'admin',
   usage: '!clear <count>'
 };
