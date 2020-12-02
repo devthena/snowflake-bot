@@ -37,6 +37,6 @@ exports.conf = {
 exports.info = {
   name: 'points',
   description: 'Displays the current amount of points a member has.',
-  category: 'default',
+  category: 'user',
   usage: '!points'
 };

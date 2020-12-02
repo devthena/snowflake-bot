@@ -47,6 +47,6 @@ exports.conf = {
 exports.info = {
   name: 'profile',
   description: 'Displays the profile of a user.',
-  category: 'default',
+  category: 'user',
   usage: '!profile'
 };

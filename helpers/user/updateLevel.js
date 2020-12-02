@@ -1,9 +1,11 @@
 const botConfig = require('../../constants/botConfig');
 
-let state = {
-  lastMessage: ''
-};
-
+/**
+ * Adjusts the level and exp values of a member
+ * @param {Object} member 
+ * @param {String} displayName 
+ * @param {Collection} guildChannels 
+ */
 const updateLevel = (member, displayName, guildChannels) => {
 
   let updatedMember = JSON.parse(JSON.stringify(member));
@@ -13,13 +15,7 @@ const updateLevel = (member, displayName, guildChannels) => {
     updatedMember.level = member.level + 1;
     updatedMember.exp = member.exp - totalExp;
     const botChannel = guildChannels.find(channel => channel.name.includes(botConfig.CHANNEL));
-    if (botChannel) {
-      const message = `${displayName} has advanced to level ${updatedMember.level}! :gem:`;
-      if (state.lastMessage != message) {
-        botChannel.send(message);
-        state.lastMessage = message;
-      }
-    }
+    if (botChannel) botChannel.send(`${displayName} has advanced to level ${updatedMember.level}! :gem:`);
   }
 
   return updatedMember;
