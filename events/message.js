@@ -13,22 +13,19 @@ const updateLevel = require('../helpers/user/updateLevel');
 module.exports = (Bot, message) => {
 
   if (message.channel.type !== 'text') return;
-
   if (!message.guild.available) return;
-
   if (message.author.bot) return;
-
   if (message.author.system) return;
 
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
-  if (message.content.indexOf(botConfig.PREFIX) !== 0 && message.member) {
+  if (message.content.indexOf(botConfig.PREFIX) !== 0) {
 
     const words = message.content.split(/ +/g);
     const pattern = new RegExp('[A-Za-z].{2,}');
 
-    let member = server.members.get(message.member.id);
+    let member = message.member ? server.members.get(message.member.id) : null;
     if (!member) member = JSON.parse(JSON.stringify(memberConfig));
 
     words.forEach(word => {
@@ -61,18 +58,21 @@ module.exports = (Bot, message) => {
     if (!command) return;
     if (!command.conf.enabled) return;
 
-    if (hasPermission(message, command.conf.permitLevel, server.roles)) {
+    let member = message.member ? server.members.get(message.member.id) : null;
+    if (!member) member = JSON.parse(JSON.stringify(memberConfig));
 
-      if (Bot.cooldowns.indexOf(command.info.name) < 0) {
+    const permResponse = hasPermission(message, member, command.conf.permitLevel, server.roles);
+    if (typeof permResponse === 'string') return message.channel.send(permResponse);
 
-        command.run(Bot, message, args);
-        Bot.cooldowns.push(command.info.name);
+    if (Bot.cooldowns.indexOf(command.info.name) < 0) {
 
-        setTimeout(function () {
-          let commIndex = Bot.cooldowns.indexOf(command.info.name);
-          Bot.cooldowns.splice(commIndex, 1);
-        }, command.conf.cooldown * 1000);
-      }
+      command.run(Bot, message, args);
+      Bot.cooldowns.push(command.info.name);
+
+      setTimeout(function () {
+        let commIndex = Bot.cooldowns.indexOf(command.info.name);
+        Bot.cooldowns.splice(commIndex, 1);
+      }, command.conf.cooldown * 1000);
     }
   }
 };
