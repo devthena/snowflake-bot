@@ -1,9 +1,25 @@
 /* -------------- FAQ ------------- */
-.questions {
-  border: 1px solid #FFFFFF;
-  margin-top: 20px;
 
-  section {
+.box.faq {
+
+  h1 {
+    margin: 20px 0 20px;
+  
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .questions {
+    border: 1px solid #FFFFFF;
+    margin-top: 20px;
+  }
+
+  .levelGrid {
+    border: 1px solid #FFFFFF;
+  }
+
+  section, .row {
     border-bottom: 1px solid #FFFFFF;
     padding: 15px;
 
@@ -12,8 +28,25 @@
     }
   }
 
+  .row {
+    display: flex;
+    padding: 0;
+  }
+
   p {
     line-height: 20px;
     margin: 0;
+  }
+
+  .action {
+    flex-grow: 2;
+    padding: 8px 15px;
+  }
+
+  .addend {
+    border-left: 1px solid #FFFFFF;
+    padding: 8px 15px;
+    text-align: center;
+    width: 150px;
   }
 }
