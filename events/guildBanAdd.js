@@ -1,4 +1,3 @@
-const memberConfig = require('../constants/memberConfig');
 const serverLog = require('../helpers/serverLog');
 
 /**
@@ -18,7 +17,6 @@ module.exports = (Bot, guild, user) => {
   logEvent += `\nMember ID: ${user.id}`;
   serverLog(Bot, guild.name, logEvent);
 
-  const defaultMember = JSON.parse(JSON.stringify(memberConfig));
-  server.members.set(user.id, defaultMember);
+  server.members.delete(user.id);
   Bot.servers.set(guild.id, server);
 };
