@@ -34,15 +34,26 @@ exports.run = async (Bot, message, args) => {
   });
 
   if (filteredMembers) {
+    let processedCount = 0;
     filteredMembers.forEach(member => {
       let nickname = format.replace('name', member.user.username);
       member.setNickname(nickname)
-        .then(() => { updatedCount++; })
-        .catch(error => Bot.logger.error(error));
+        .then(() => {
+          processedCount++;
+          updatedCount++;
+          if (processedCount === filteredMembers.size) {
+            message.channel.send(`Total ${type} found: ${filteredMembers.size}. Total ${type} updated: ${updatedCount}`);
+          }
+        })
+        .catch(error => {
+          processedCount++;
+          Bot.logger.error(error);
+          if (processedCount === filteredMembers.size) {
+            message.channel.send(`Total ${type} found: ${filteredMembers.size}. Total ${type} updated: ${updatedCount}`);
+          }
+        });
     });
   }
-
-  message.channel.send(`Total ${type} updated: ${updatedCount}`);
 };
 
 exports.conf = {
