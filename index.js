@@ -20,19 +20,27 @@ const Bot = new Discord.Client({ disableEveryone: false });
 
 // add the helper functions specific to the bot
 const loadCommand = require('./helpers/loadCommand');
+const loadPokemon = require('./helpers/pokemon/loadPokemon');
+const loadTrainers = require('./helpers/pokemon/loadTrainers');
 
 Bot.cooldowns = new Array();
 Bot.commands = new Map();
 Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
+Bot.pokemon = new Map();
+Bot.pokemonByRarity = new Map();
 Bot.servers = new Map();
+Bot.trainers = new Map();
 
 require('./web/router')(app, Bot);
 
 const initBot = async () => {
 
+  // load the pokemon and trainers information
+  loadPokemon(Bot);
+  loadTrainers(Bot);
+
   // load the command files
   const commandFiles = await readdir('./commands/');
-
   commandFiles.forEach(fn => {
     if (!fn.endsWith(".js")) return;
     loadCommand(Bot, fn);
@@ -40,7 +48,6 @@ const initBot = async () => {
 
   // load the bot event files
   const eventFiles = await readdir('./events/');
-
   eventFiles.forEach(file => {
     const eventName = file.split('.')[0];
     const event = require(`./events/${file}`);
