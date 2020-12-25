@@ -3,7 +3,7 @@
  * @param {String} value 
  */
 const isTrue = value => {
-  return ['true', '1', true, 1].indexOf(value) >= 0;
+  return ['true', '1', true, 1].includes(value);
 };
 
 module.exports = isTrue;
