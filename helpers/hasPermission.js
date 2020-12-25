@@ -29,6 +29,10 @@ const hasPermission = (message, member, permitLevel, serverRoles) => {
         return !!moderatorRole || error;
       }
       return error;
+    case 'L1':
+      // User Experience 1 Minimum for Level 1
+      error = 'You need to have at least 1 EXP to use this command.';
+      return (member.exp > 0 || member.level > 1) || error;
     case 'L2':
       // User Level 2 Minimum
       error = 'You need to be at least level 2 to use this command.';

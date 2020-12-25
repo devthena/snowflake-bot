@@ -21,7 +21,7 @@ const loadPokemon = Bot => {
 
       Bot.pokemon.set(row.dex_id, {
         name: row.name,
-        types: row.types.split(','),
+        types: row.types,
         generation: row.generation,
         genderRatio: JSON.parse(row.gender_ratio),
         hpMax: row.hp_max,

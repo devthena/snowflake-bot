@@ -10,6 +10,7 @@ const groupPokemon = Bot => {
   let veryRare = [];
   let legendary = [];
   let mythical = [];
+  let nocturnal = [];
 
   Bot.pokemon.forEach((obj, id) => {
     switch (obj.rarity) {
@@ -31,16 +32,17 @@ const groupPokemon = Bot => {
       default:
         common.push(id);
     }
+    if (/dark/.test(obj.types) || /ghost/.test(obj.types)) nocturnal.push(id);
   });
 
-  Bot.pokemonByRarity.set('C', common);
-  Bot.pokemonByRarity.set('U', uncommon);
-  Bot.pokemonByRarity.set('R', rare);
-  Bot.pokemonByRarity.set('V', veryRare);
-  Bot.pokemonByRarity.set('L', legendary);
-  Bot.pokemonByRarity.set('M', mythical);
+  Bot.pokemonGroups.set('C', common);
+  Bot.pokemonGroups.set('U', uncommon);
+  Bot.pokemonGroups.set('R', rare);
+  Bot.pokemonGroups.set('V', veryRare);
+  Bot.pokemonGroups.set('L', legendary);
+  Bot.pokemonGroups.set('M', mythical);
+  Bot.pokemonGroups.set('N', nocturnal);
 
-  Bot.logger.info(`[DB] groupPokemon: C - ${common.length} | U - ${uncommon.length} | R - ${rare.length} | V - ${veryRare.length} | L - ${legendary.length} | M - ${mythical.length}`);
 };
 
 module.exports = groupPokemon;
