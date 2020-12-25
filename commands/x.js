@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const botConfig = require('../constants/botConfig');
 const pokeConstants = require('../constants/pokemon');
 const trainerConfig = require('../constants/trainerConfig');
+const getPokeballStatus = require('../helpers/pokemon/getPokeballStatus');
 const randomIndex = require('../helpers/randomIndex');
 const reactX = require('../helpers/pokemon/reactX');
 const weightedRandom = require('../helpers/weightedRandom');
@@ -23,10 +24,12 @@ exports.run = async (Bot, message) => {
   const notices = {
     invalidMax: `${message.member.displayName}, you have no more space in your dex to add more pokemon. You can either expand your !dex limit or !release one of your pokemon.`,
     noMultipleExplore: `${message.member.displayName}, there's still a wild pokemon in front of you! React above to catch it or run away.`,
-    noPokeballs: `${message.member.displayName}, you are out of pokeballs! :( You can check the !shop if they have more stock you can buy.`
+    noPokeballs: `${message.member.displayName}, you are out of pokeballs! You can buy from the \`!shop\` if they have some available.`
   };
 
-  if (Bot.exploring.has(message.author.id)) return message.channel.send(notices.noMultipleExplore);
+  let isExploring = false;
+  Bot.exploring.forEach(obj => { if (obj.trainerId === message.author.id) isExploring = true; });
+  if (isExploring) return message.delete().then(() => message.channel.send(notices.noMultipleExplore));
 
   let trainer = Bot.trainers.get(message.author.id);
   if (!trainer) trainer = JSON.parse(JSON.stringify(trainerConfig));
@@ -46,7 +49,7 @@ exports.run = async (Bot, message) => {
       filteredRarityGroup = rarityGroup.filter(id => !pokeConstants.EXCLUSIVES[athenaId].includes(id));
       break;
     case athenaId:
-      filteredRarityGroup = rarityGroup.filter(id => !pokeConstants.EXCLUSIVES[athenaId].includes(id));
+      filteredRarityGroup = rarityGroup.filter(id => !pokeConstants.EXCLUSIVES[aikoId].includes(id));
       break;
   }
 
@@ -70,51 +73,48 @@ exports.run = async (Bot, message) => {
     embedImage = rngPokemon.sprites.animated[rngGender];
   }
 
-  const pokemonDetails = `Rarity: ${pokeConstants.RARITY[rngRarity]} | Gender: ${rngGender || 'N/A'}`;
-  const pokeballStatus = `Poke Balls: ${trainer.pokeballs.pokeball} | Great Balls: ${trainer.pokeballs.greatball} | Ultra Balls: ${trainer.pokeballs.ultraball}`;
-  const embedFooter = `${pokemonDetails}\n\n${pokeballStatus}`;
+  const pokemonDetails = `Rarity: ${pokeConstants.RARITY[rngRarity]} | Gender: ${rngGender ? pokeConstants.GENDER[rngGender] : 'N/A'}`;
 
   let botEmbed = new Discord.MessageEmbed()
-    .setAuthor(`${message.member.displayName} found a wild ${rngPokemon.name}!`, message.author.displayAvatarURL())
-    .setDescription('Catch it or run away by reacting an emoji below')
+    .setAuthor(message.member.displayName, message.author.displayAvatarURL())
+    .setTitle(`You found a wild ${rngPokemon.name}!`)
+    .setDescription('Catch it or run away by reacting below.')
     .setImage(embedImage)
     .setThumbnail(embedIcon)
     .setColor(botConfig.COLOR)
-    .setFooter(embedFooter);
+    .setFooter(`${pokemonDetails}\n\n${getPokeballStatus(trainer)}`);
 
-  return message.channel.send(botEmbed)
-    .then(sent => {
+  return message.channel.send(botEmbed).then(sent => {
 
-      reactX(sent, trainer);
+    reactX(Bot, sent, trainer);
 
-      const xTimer = setTimeout(() => {
+    const xTimer = setTimeout(() => {
 
-        sent.reactions.removeAll();
+      sent.reactions.removeAll();
 
-        let ranEmbed = new Discord.MessageEmbed()
-          .setAuthor(`${message.member.displayName}, the wild ${rngPokemon.name} has fled!`, message.author.displayAvatarURL())
-          .setDescription('Tip: You have 25 seconds to react before a pokemon runs away.')
-          .setThumbnail(embedIcon)
-          .setColor(botConfig.COLOR)
-          .setFooter(`Pokemon seen on ${sent.createdAt}`);
+      botEmbed.setTitle(`The wild ${rngPokemon.name} has fled!`)
+      botEmbed.setDescription('Tip: You have 30 seconds to react before a pokemon runs away.')
+      botEmbed.setImage(null);
+      botEmbed.setFooter(`Pokemon seen on ${sent.createdAt}`);
 
-        sent.edit(ranEmbed);
+      sent.edit(botEmbed);
 
-        Bot.exploring.delete(message.author.id);
+      Bot.exploring.delete(sent.id);
 
-      }, pokeConstants.COOLDOWNS.EXPLORE);
+    }, pokeConstants.COOLDOWNS.EXPLORE);
 
-      Bot.exploring.set(message.author.id, {
-        attempts: 0,
-        dexId: rngDexId,
-        gender: rngGender,
-        botEmbed: botEmbed,
-        pokemon: rngPokemon,
-        timer: xTimer,
-        trainerId: message.author.id
-      });
-
+    Bot.exploring.set(sent.id, {
+      attempts: 0,
+      dexId: rngDexId,
+      gender: rngGender,
+      botEmbed: botEmbed,
+      pokemon: rngPokemon,
+      timer: xTimer,
+      trainerId: message.author.id,
+      trainerName: message.member.displayName
     });
+
+  });
 };
 
 exports.conf = {

@@ -1,10 +1,10 @@
 const config = {
   pokeballs: {
-    pokeball: 1,
+    pokeball: 3,
     greatball: 0,
     ultraball: 0,
     masterball: 0,
-    total: 1
+    total: 3
   },
   bagLimit: 15,
   dexLimit: 30,

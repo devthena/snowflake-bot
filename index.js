@@ -23,14 +23,16 @@ const loadCommand = require('./helpers/loadCommand');
 const loadPokemon = require('./helpers/pokemon/loadPokemon');
 const loadTrainers = require('./helpers/pokemon/loadTrainers');
 
-Bot.cooldowns = new Array();
+Bot.cooldowns = [];
 Bot.commands = new Map();
 Bot.exploring = new Map();
-Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.pokemon = new Map();
+Bot.pokemonEmojis = {};
 Bot.pokemonGroups = new Map();
 Bot.servers = new Map();
 Bot.trainers = new Map();
+
+Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 
 require('./web/router')(app, Bot);
 

@@ -1,5 +1,6 @@
-const dbConfig = require('../constants/dbConfig');
 const DB_NAME = process.env.DB_NAME;
+const dbConfig = require('../constants/dbConfig');
+const pokeConstants = require('../constants/pokemon');
 const serverConfig = require('../constants/serverConfig');
 const sqlite3 = require('sqlite3').verbose();
 const loadMembers = require('../helpers/loadMembers');
@@ -10,7 +11,14 @@ const loadMembers = require('../helpers/loadMembers');
  * @param {Client} Bot 
  */
 module.exports = async Bot => {
+
   Bot.logger.info('* Snowflake is online *');
+
+  Bot.emojis.cache.forEach(emoji => {
+    if (pokeConstants.VALID_EMOJIS.includes(emoji.name)) {
+      Bot.pokemonEmojis[emoji.name] = emoji;
+    }
+  });
 
   const db = new sqlite3.Database(`./${DB_NAME}`, error => {
     if (error) return Bot.logger.error(`[DB] Event Ready: ${error}`);

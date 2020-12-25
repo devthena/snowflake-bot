@@ -2,27 +2,16 @@ const pokeConstants = require('../../constants/pokemon');
 
 /**
  * Updates the reactions for the explore embed
+ * @param {Client} Bot
  * @param {Message} message
  * @param {Object} trainer
  */
-const reactX = (message, trainer) => {
+const reactX = (Bot, message, trainer) => {
 
-  if (trainer.pokeballs.pokeball) {
-    const pokeballEmoji = message.guild.emojis.cache.find(emoji => emoji.name === pokeConstants.REACTS.POKEBALL);
-    if (pokeballEmoji) message.react(pokeballEmoji);
-  }
-  if (trainer.pokeballs.greatball) {
-    const greatballEmoji = message.guild.emojis.cache.find(emoji => emoji.name === pokeConstants.REACTS.GREATBALL);
-    if (greatballEmoji) message.react(greatballEmoji);
-  }
-  if (trainer.pokeballs.ultraball) {
-    const ultraballEmoji = message.guild.emojis.cache.find(emoji => emoji.name === pokeConstants.REACTS.ULTRABALL);
-    if (ultraballEmoji) message.react(ultraballEmoji);
-  }
-  if (trainer.pokeballs.masterball) {
-    const masterballEmoji = message.guild.emojis.cache.find(emoji => emoji.name === pokeConstants.REACTS.MASTERBALL)
-    if (masterballEmoji) message.react(masterballEmoji);
-  }
+  if (trainer.pokeballs.pokeball) message.react(Bot.pokemonEmojis[pokeConstants.REACTS.POKEBALL]);
+  if (trainer.pokeballs.greatball) message.react(Bot.pokemonEmojis[pokeConstants.REACTS.GREATBALL]);
+  if (trainer.pokeballs.ultraball) message.react(Bot.pokemonEmojis[pokeConstants.REACTS.ULTRABALL]);
+  if (trainer.pokeballs.masterball) message.react(Bot.pokemonEmojis[pokeConstants.REACTS.MASTERBALL]);
 
   message.react(pokeConstants.REACT_UNI.CANCEL);
 };

@@ -1,11 +1,22 @@
+const ballBonus = {
+  pokeball: 1,
+  greatball: 1.5,
+  ultraball: 2
+};
+
 const cooldowns = {
   BAG: 20000,
   DEX: 20000,
-  EXPLORE: 25000
+  EXPLORE: 30000
 };
 
 const eveningHour = 18;
 const morningHour = 6;
+
+const gender = {
+  female: 'Female',
+  male: 'Male'
+};
 
 const rarity = {
   C: 'Common',
@@ -33,7 +44,7 @@ const reactUnicodes = {
 };
 
 const spriteIconUrl = 'https://img.pokemondb.net/sprites/sword-shield/icon/';
-const validBalls = ['pokeball', 'greatball', 'ultraball', 'masterball'];
+const validEmojis = ['pokeball', 'greatball', 'ultraball', 'masterball'];
 
 const weightedRarity = {
   C: 0.3448, // x10
@@ -60,14 +71,16 @@ const serverExclusives = {
 }
 
 module.exports = {
+  BALL_BONUS: ballBonus,
   COOLDOWNS: cooldowns,
   EVENING_HOUR: eveningHour,
   EXCLUSIVES: serverExclusives,
+  GENDER: gender,
   ICON_URL: spriteIconUrl,
   MORNING_HOUR: morningHour,
   RARITY: rarity,
   REACTS: reacts,
   REACT_UNI: reactUnicodes,
-  VALID_BALLS: validBalls,
+  VALID_EMOJIS: validEmojis,
   WEIGHTED_RARITY: weightedRarity
 };

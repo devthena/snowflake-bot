@@ -3,10 +3,12 @@ const botConfig = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
+const handleInteractX = require('../helpers/pokemon/handleInteractX');
 const updateLevel = require('../helpers/user/updateLevel');
 
 /**
  * Tracks the number of reactions of messages for posting in highlight board
+ * Handles the user actions when interacting for the pokemon collection game
  * @listens event:messageReactionAdd
  * @param {Client} Bot 
  * @param {MessageReaction} reaction 
@@ -20,10 +22,18 @@ module.exports = (Bot, reaction, user) => {
 
   if (!message.guild.available) return;
 
-  if (message.author.bot || user.bot || message.author.system) return;
+  if (user.bot || message.author.system) return;
 
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
+
+  const exploreData = Bot.exploring.get(message.id);
+
+  if (message.author.bot && exploreData) {
+    return handleInteractX(Bot, reaction, user, exploreData);
+  }
+
+  if (message.author.bot) return;
 
   let member = server.members.get(user.id);
   if (!member) member = JSON.parse(JSON.stringify(memberConfig));
