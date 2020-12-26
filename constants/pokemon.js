@@ -18,6 +18,16 @@ const gender = {
   male: 'Male'
 };
 
+const limitIncreases = {
+  BAG: 3,
+  DEX: 1
+};
+
+const expandCosts = {
+  BAG: 1500,
+  DEX: 1250
+};
+
 const rarity = {
   C: 'Common',
   U: 'Uncommon',
@@ -79,8 +89,10 @@ module.exports = {
   COOLDOWNS: cooldowns,
   EVENING_HOUR: eveningHour,
   EXCLUSIVES: serverExclusives,
+  EXPAND_COSTS: expandCosts,
   GENDER: gender,
   ICON_URL: spriteIconUrl,
+  LIMIT_INC: limitIncreases,
   MORNING_HOUR: morningHour,
   RARITY: rarity,
   REACTS: reacts,

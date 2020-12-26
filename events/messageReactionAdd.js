@@ -3,6 +3,7 @@ const botConfig = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
+const handleInteractBag = require('../helpers/pokemon/handleInteractBag');
 const handleInteractX = require('../helpers/pokemon/handleInteractX');
 const updateLevel = require('../helpers/user/updateLevel');
 
@@ -27,13 +28,16 @@ module.exports = (Bot, reaction, user) => {
   const server = Bot.servers.get(message.guild.id);
   if (!server) return;
 
-  const exploreData = Bot.exploring.get(message.id);
+  if (message.author.bot) {
 
-  if (message.author.bot && exploreData) {
-    return handleInteractX(Bot, reaction, user, exploreData);
+    const exploreData = Bot.exploring.get(message.id);
+    if (exploreData && exploreData.trainerId === user.id) return handleInteractX(Bot, reaction, user, exploreData);
+
+    const browseData = Bot.browsing.get(message.id);
+    if (browseData && browseData.trainerId === user.id) return handleInteractBag(Bot, reaction, user, browseData);
+
+    return;
   }
-
-  if (message.author.bot) return;
 
   let member = server.members.get(user.id);
   if (!member) member = JSON.parse(JSON.stringify(memberConfig));

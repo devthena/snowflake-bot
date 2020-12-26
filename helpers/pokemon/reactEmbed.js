@@ -14,7 +14,7 @@ const reactEmbed = (type, message, data) => {
       message.react(REACTS_UNI.CONFIRM);
       break;
     case 'expand':
-      message.react(REACTS_UNI.EXPAND)
+      message.react(REACTS_UNI.EXPAND);
       break;
     case 'x':
       if (data.pokeballs.pokeball) message.react(data.emojis.get(REACTS.POKEBALL));

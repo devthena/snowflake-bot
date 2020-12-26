@@ -40,6 +40,12 @@ exports.run = async (Bot, message) => {
   items += `\n\n${Bot.pokemonEmojis.get(REACTS.MASTERBALL)} Master Ball: ${trainer.pokeballs.masterball}`;
   items += `\n\n${pokeConstants.UI.LINE}`;
 
+  let cost = `Cost: ${pokeConstants.EXPAND_COSTS.BAG}  |  Limit Increase: ${pokeConstants.LIMIT_INC.BAG}`;
+  let embedFooter = `Expand your bag limit by reacting below.\n${cost}`;
+  if (member.points < pokeConstants.EXPAND_COSTS.BAG) {
+    embedFooter = `Expansion ${cost}`;
+  }
+
   const botEmbed = new Discord.MessageEmbed()
     .setTitle(`${message.member.displayName} Inventory`)
     .setDescription(items)
@@ -47,11 +53,12 @@ exports.run = async (Bot, message) => {
     .setColor(botConfig.COLOR)
     .addField('Total:', `${trainer.pokeballs.total} / ${trainer.bagLimit} Items`, true)
     .addField('Gold:', `${member.points} ${botConfig.CURRENCY}`, true)
-    .setFooter(`Pay to expand your bag limit by reacting below.`);
+    .setFooter(embedFooter);
 
   message.channel.send(botEmbed).then(sent => {
 
-    reactEmbed('expand', sent);
+    if (member.points < pokeConstants.EXPAND_COSTS.BAG) reactEmbed('', sent);
+    else reactEmbed('expand', sent);
 
     const bagTimer = setTimeout(() => {
 
@@ -59,8 +66,8 @@ exports.run = async (Bot, message) => {
       Bot.browsing.delete(sent.id);
 
       botEmbed.spliceFields(0, 2);
-      botEmbed.setDescription(`${pokeConstants.UI.LINE}\nYour bag is now closed.\n${pokeConstants.UI.LINE}`)
-      botEmbed.setFooter('Tip: Your bag automatically closes in 20s.');
+      botEmbed.setDescription(`${pokeConstants.UI.LINE}\nYour bag is now closed.\n${pokeConstants.UI.LINE}`);
+      botEmbed.setFooter('Tip: You have 20s to react before your bag closes.');
 
       sent.edit(botEmbed);
 
