@@ -3,7 +3,7 @@ const trainerConfig = require('../../constants/trainerConfig');
 const addPokemon = require('./addPokemon');
 const catchPokemon = require('./catchPokemon');
 const getPokeballStatus = require('../pokemon/getPokeballStatus');
-const reactX = require('./reactX');
+const reactEmbed = require('./reactEmbed');
 
 /**
  * Update the message embed based on the user's reacted emoji
@@ -20,7 +20,7 @@ const handleInteractX = (Bot, reaction, user, exploreData) => {
 
   message.reactions.removeAll();
 
-  if (reaction.emoji.name === pokeConstants.REACT_UNI.CANCEL) {
+  if (reaction.emoji.name === pokeConstants.REACTS_UNI.CANCEL) {
 
     clearTimeout(exploreData.timer);
     Bot.exploring.delete(message.id);
@@ -70,7 +70,8 @@ const handleInteractX = (Bot, reaction, user, exploreData) => {
       embed.setDescription('You can try again or run away by reacting below.');
       embed.setFooter(`${pokemonDetails}\n\n${getPokeballStatus(trainer)}`);
 
-      return message.edit(embed).then(() => reactX(Bot, message, trainer));
+      const reactParams = { emojis: Bot.pokemonEmojis, pokeballs: trainer.pokeballs };
+      return message.edit(embed).then(() => reactEmbed('x', message, reactParams));
     }
 
     clearTimeout(exploreData.timer);

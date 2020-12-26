@@ -46,6 +46,10 @@ const reactUnicodes = {
 const spriteIconUrl = 'https://img.pokemondb.net/sprites/sword-shield/icon/';
 const validEmojis = ['pokeball', 'greatball', 'ultraball', 'masterball'];
 
+const ui = {
+  LINE: '-----------------------------------'
+};
+
 const weightedRarity = {
   C: 0.3448, // x10
   U: 0.2759, // x8
@@ -80,7 +84,8 @@ module.exports = {
   MORNING_HOUR: morningHour,
   RARITY: rarity,
   REACTS: reacts,
-  REACT_UNI: reactUnicodes,
+  REACTS_UNI: reactUnicodes,
+  UI: ui,
   VALID_EMOJIS: validEmojis,
   WEIGHTED_RARITY: weightedRarity
 };

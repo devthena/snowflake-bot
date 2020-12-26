@@ -1,4 +1,5 @@
-const pokeConstants = require('../../constants/pokemon');
+const BALL_BONUS = require('../../constants/pokemon').BALL_BONUS;
+const REACTS = require('../../constants/pokemon').REACTS;
 const randomIndex = require('../randomIndex');
 
 /**
@@ -8,17 +9,17 @@ const randomIndex = require('../randomIndex');
  */
 const catchPokemon = (ballType, data) => {
 
-  if (ballType === pokeConstants.REACTS.MASTERBALL) return true;
+  if (ballType === REACTS.MASTERBALL) return true;
 
-  const partial = (3 * data.pokemon.hpMax - 2) * data.pokemon.catchRate * pokeConstants.BALL_BONUS[ballType];
+  const partial = (3 * data.pokemon.hpMax - 2) * data.pokemon.catchRate * BALL_BONUS[ballType];
   const modifiedCatchRate = partial / (3 * data.pokemon.hpMax);
 
   let n = null;
   switch (ballType) {
-    case pokeConstants.REACTS.ULTRABALL:
+    case REACTS.ULTRABALL:
       n = randomIndex(1, 150);
       break;
-    case pokeConstants.REACTS.GREATBALL:
+    case REACTS.GREATBALL:
       n = randomIndex(1, 200);
       break;
     default:

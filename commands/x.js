@@ -6,7 +6,7 @@ const pokeConstants = require('../constants/pokemon');
 const trainerConfig = require('../constants/trainerConfig');
 const getPokeballStatus = require('../helpers/pokemon/getPokeballStatus');
 const randomIndex = require('../helpers/randomIndex');
-const reactX = require('../helpers/pokemon/reactX');
+const reactEmbed = require('../helpers/pokemon/reactEmbed');
 const weightedRandom = require('../helpers/weightedRandom');
 
 /**
@@ -22,9 +22,9 @@ exports.run = async (Bot, message) => {
   if (!server) return;
 
   const notices = {
-    invalidMax: `${message.member.displayName}, you have no more space in your dex to add more pokemon. You can either expand your !dex limit or !release one of your pokemon.`,
-    noMultipleExplore: `${message.member.displayName}, there's still a wild pokemon in front of you! React above to catch it or run away.`,
-    noPokeballs: `${message.member.displayName}, you are out of pokeballs! You can buy from the \`!shop\` if they have some available.`
+    invalidMax: `${message.member.displayName}, you have no more space in your dex to add new pokemon. Either expand your \`!dex\` limit or \`!release\` one of your pokemon.`,
+    noMultipleExplore: `${message.member.displayName}, there's still a wild pokemon in front of you!`,
+    noPokeballs: `${message.member.displayName}, you are out of pokeballs! Check the \`!shop\` to buy more.`
   };
 
   let isExploring = false;
@@ -32,7 +32,10 @@ exports.run = async (Bot, message) => {
   if (isExploring) return message.delete().then(() => message.channel.send(notices.noMultipleExplore));
 
   let trainer = Bot.trainers.get(message.author.id);
-  if (!trainer) trainer = JSON.parse(JSON.stringify(trainerConfig));
+  if (!trainer) {
+    trainer = JSON.parse(JSON.stringify(trainerConfig));
+    Bot.trainers.set(message.author.id, trainer);
+  }
 
   if (trainer.dexTotal === trainer.dexLimit) return message.channel.send(notices.invalidMax);
   if (!trainer.pokeballs.total) return message.channel.send(notices.noPokeballs);
@@ -86,32 +89,31 @@ exports.run = async (Bot, message) => {
 
   return message.channel.send(botEmbed).then(sent => {
 
-    reactX(Bot, sent, trainer);
+    const reactParams = { emojis: Bot.pokemonEmojis, pokeballs: trainer.pokeballs };
+    reactEmbed('x', sent, reactParams);
 
     const xTimer = setTimeout(() => {
 
       sent.reactions.removeAll();
+      Bot.exploring.delete(sent.id);
 
       botEmbed.setTitle(`The wild ${rngPokemon.name} has fled!`)
-      botEmbed.setDescription('Tip: You have 30 seconds to react before a pokemon runs away.')
+      botEmbed.setDescription('Tip: You have 30s to react before a pokemon runs away.')
       botEmbed.setImage(null);
       botEmbed.setFooter(`Pokemon seen on ${sent.createdAt}`);
 
       sent.edit(botEmbed);
 
-      Bot.exploring.delete(sent.id);
-
     }, pokeConstants.COOLDOWNS.EXPLORE);
 
     Bot.exploring.set(sent.id, {
       attempts: 0,
+      botEmbed: botEmbed,
       dexId: rngDexId,
       gender: rngGender,
-      botEmbed: botEmbed,
       pokemon: rngPokemon,
       timer: xTimer,
-      trainerId: message.author.id,
-      trainerName: message.member.displayName
+      trainerId: message.author.id
     });
 
   });

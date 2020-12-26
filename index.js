@@ -25,11 +25,14 @@ const loadTrainers = require('./helpers/pokemon/loadTrainers');
 
 Bot.cooldowns = [];
 Bot.commands = new Map();
+Bot.servers = new Map();
+
+// pokemon collection game
+Bot.browsing = new Map();
 Bot.exploring = new Map();
 Bot.pokemon = new Map();
-Bot.pokemonEmojis = {};
+Bot.pokemonEmojis = new Map();
 Bot.pokemonGroups = new Map();
-Bot.servers = new Map();
 Bot.trainers = new Map();
 
 Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
