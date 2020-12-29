@@ -28,7 +28,8 @@ Bot.commands = new Map();
 Bot.servers = new Map();
 
 // pokemon collection game
-Bot.browsing = new Map();
+Bot.browsingBag = new Map();
+Bot.browsingDex = new Map();
 Bot.exploring = new Map();
 Bot.pokemon = new Map();
 Bot.pokemonEmojis = new Map();

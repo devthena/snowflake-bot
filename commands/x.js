@@ -97,10 +97,12 @@ exports.run = async (Bot, message) => {
       sent.reactions.removeAll();
       Bot.exploring.delete(sent.id);
 
+      const seen = new Date(sent.createdTimestamp);
+
       botEmbed.setTitle(`The wild ${rngPokemon.name} has fled!`)
       botEmbed.setDescription('Tip: You have 30s to react before a pokemon runs away.')
       botEmbed.setImage(null);
-      botEmbed.setFooter(`Pokemon seen on ${sent.createdAt}`);
+      botEmbed.setFooter(`National Dex # ${rngDexId} | Pokemon seen at ${seen.getHours()}:${seen.getMinutes()}:${seen.getSeconds()} UTC`);
 
       sent.edit(botEmbed);
 

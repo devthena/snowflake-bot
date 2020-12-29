@@ -10,6 +10,7 @@ const cooldowns = {
   EXPLORE: 30000
 };
 
+const dexPageLimit = 10;
 const eveningHour = 18;
 const morningHour = 6;
 
@@ -50,7 +51,10 @@ const reacts = {
 const reactUnicodes = {
   CANCEL: '❎',
   CONFIRM: '✅',
-  EXPAND: '↔'
+  EXPAND: '↔',
+  HASH: '#⃣',
+  NEXT: '▶',
+  PREV: '◀'
 };
 
 const spriteIconUrl = 'https://img.pokemondb.net/sprites/sword-shield/icon/';
@@ -70,13 +74,13 @@ const weightedRarity = {
 
 const aikoExclusives = [
   '004', '006', '054', '063', '093', '094', '134', '143', '144', '150',
-  '162', '175', '182', '183', '199', '212', '216', '242', '249', '251',
+  '162', '175', '182', '183', '196', '199', '212', '216', '242', '249', '251',
   '281', '298', '300', '312', '315', '327', '358', '384', '385'
 ];
 const athenaExclusives = [
   '001', '009', '037', '040', '079', '113', '123', '136', '148', '151',
   '155', '164', '172', '194', '197', '215', '226', '231', '243', '250',
-  '258', '282', '296', '311', '325', '351', '353', '363', '380', '383'
+  '258', '282', '296', '311', '325', '301', '353', '363', '380', '383'
 ];
 
 const serverExclusives = {
@@ -94,6 +98,7 @@ module.exports = {
   ICON_URL: spriteIconUrl,
   LIMIT_INC: limitIncreases,
   MORNING_HOUR: morningHour,
+  PAGE_LIMIT: dexPageLimit,
   RARITY: rarity,
   REACTS: reacts,
   REACTS_UNI: reactUnicodes,

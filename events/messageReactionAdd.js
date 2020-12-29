@@ -4,6 +4,7 @@ const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
 const handleInteractBag = require('../helpers/pokemon/handleInteractBag');
+const handleInteractDex = require('../helpers/pokemon/handleInteractDex');
 const handleInteractX = require('../helpers/pokemon/handleInteractX');
 const updateLevel = require('../helpers/user/updateLevel');
 
@@ -33,8 +34,11 @@ module.exports = (Bot, reaction, user) => {
     const exploreData = Bot.exploring.get(message.id);
     if (exploreData && exploreData.trainerId === user.id) return handleInteractX(Bot, reaction, user, exploreData);
 
-    const browseData = Bot.browsing.get(message.id);
-    if (browseData && browseData.trainerId === user.id) return handleInteractBag(Bot, reaction, user, browseData);
+    const bagData = Bot.browsingBag.get(message.id);
+    if (bagData && bagData.trainerId === user.id) return handleInteractBag(Bot, reaction, user, bagData);
+
+    const dexData = Bot.browsingDex.get(message.id);
+    if (dexData && dexData.trainerId === user.id) return handleInteractDex(Bot, reaction, user, dexData);
 
     return;
   }

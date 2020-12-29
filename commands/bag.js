@@ -18,7 +18,7 @@ exports.run = async (Bot, message) => {
   if (!server) return;
 
   let isBrowsing = false;
-  Bot.browsing.forEach(obj => { if (obj.trainerId === message.author.id) isBrowsing = true; });
+  Bot.browsingBag.forEach(obj => { if (obj.trainerId === message.author.id) isBrowsing = true; });
   if (isBrowsing) {
     return message.delete().then(() => {
       message.channel.send(`${message.member.displayName}, your bag is already open!`)
@@ -47,7 +47,7 @@ exports.run = async (Bot, message) => {
   }
 
   const botEmbed = new Discord.MessageEmbed()
-    .setTitle(`${message.member.displayName} Inventory`)
+    .setTitle(`${message.member.displayName}'s Bag`)
     .setDescription(items)
     .setThumbnail(message.author.displayAvatarURL())
     .setColor(botConfig.COLOR)
@@ -63,7 +63,7 @@ exports.run = async (Bot, message) => {
     const bagTimer = setTimeout(() => {
 
       sent.reactions.removeAll();
-      Bot.browsing.delete(sent.id);
+      Bot.browsingBag.delete(sent.id);
 
       botEmbed.spliceFields(0, 2);
       botEmbed.setDescription(`${pokeConstants.UI.LINE}\nYour bag is now closed.\n${pokeConstants.UI.LINE}`);
@@ -73,7 +73,7 @@ exports.run = async (Bot, message) => {
 
     }, pokeConstants.COOLDOWNS.BAG);
 
-    Bot.browsing.set(sent.id, {
+    Bot.browsingBag.set(sent.id, {
       botEmbed: botEmbed,
       timer: bagTimer,
       trainerId: message.author.id

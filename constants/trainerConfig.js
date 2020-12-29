@@ -1,21 +1,23 @@
 const config = {
   pokeballs: {
-    pokeball: 3,
+    pokeball: 50,
     greatball: 0,
     ultraball: 0,
     masterball: 0,
-    total: 3
+    total: 50
   },
-  bagLimit: 15,
-  dexLimit: 30,
-  dexGen1: {},
-  dexGen2: {},
-  dexGen3: {},
-  dexGen4: {},
-  dexGen5: {},
-  dexGen6: {},
-  dexGen7: {},
-  dexGen8: {},
+  pokedex: {
+    gen1: {},
+    gen2: {},
+    gen3: {},
+    gen4: {},
+    gen5: {},
+    gen6: {},
+    gen7: {},
+    gen8: {}
+  },
+  bagLimit: 50,
+  dexLimit: 25,
   dexTotal: 0,
   obtainedTotal: 0
 };

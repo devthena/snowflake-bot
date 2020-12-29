@@ -13,7 +13,14 @@ const reactEmbed = (type, message, data) => {
     case 'confirm':
       message.react(REACTS_UNI.CONFIRM);
       break;
+    case 'dex':
+      if (data.page > 1) message.react(REACTS_UNI.PREV);
+      if (data.page !== data.totalPages) message.react(REACTS_UNI.NEXT);
+      message.react(REACTS_UNI.CANCEL);
+      message.react(REACTS_UNI.EXPAND);
+      break;
     case 'expand':
+      message.react(REACTS_UNI.CANCEL);
       message.react(REACTS_UNI.EXPAND);
       break;
     case 'x':
@@ -21,9 +28,8 @@ const reactEmbed = (type, message, data) => {
       if (data.pokeballs.greatball) message.react(data.emojis.get(REACTS.GREATBALL));
       if (data.pokeballs.ultraball) message.react(data.emojis.get(REACTS.ULTRABALL));
       if (data.pokeballs.masterball) message.react(data.emojis.get(REACTS.MASTERBALL));
+      message.react(REACTS_UNI.CANCEL);
   };
-
-  message.react(REACTS_UNI.CANCEL);
 };
 
 module.exports = reactEmbed;

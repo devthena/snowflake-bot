@@ -7,15 +7,16 @@
  */
 const addPokemon = (Bot, data, trainer) => {
 
-  const gen = `dexGen${data.pokemon.generation}`;
+  const gen = `gen${data.pokemon.generation}`;
 
-  if (trainer[gen].hasOwnProperty(data.dexId)) {
+  if (trainer.pokedex[gen].hasOwnProperty(data.dexId)) {
 
-    trainer[gen][data.dexId].total += 1;
+    trainer.pokedex[gen][data.dexId].total += 1;
 
   } else {
 
-    trainer[gen][data.dexId] = {
+    trainer.pokedex[gen][data.dexId] = {
+      name: data.pokemon.name,
       genderless: 0,
       female: 0,
       male: 0,
@@ -27,14 +28,14 @@ const addPokemon = (Bot, data, trainer) => {
   trainer.dexTotal += 1;
 
   if (data.gender) {
-    trainer[gen][data.dexId][data.gender] += 1;
+    trainer.pokedex[gen][data.dexId][data.gender] += 1;
   } else {
-    trainer[gen][data.dexId].genderless += 1;
+    trainer.pokedex[gen][data.dexId].genderless += 1;
   }
 
   Bot.trainers.set(data.trainerId, trainer);
 
-  return `You now have a total of ${trainer[gen][data.dexId].total} ${data.pokemon.name} in your dex.`;
+  return `You now have a total of ${trainer.pokedex[gen][data.dexId].total} ${data.pokemon.name} in your dex.`;
 };
 
 module.exports = addPokemon;
