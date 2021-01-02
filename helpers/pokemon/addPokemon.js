@@ -17,7 +17,7 @@ const addPokemon = (Bot, data, trainer) => {
 
     trainer.pokedex[gen][data.dexId] = {
       name: data.pokemon.name,
-      genderless: 0,
+      default: 0,
       female: 0,
       male: 0,
       total: 1
@@ -27,10 +27,16 @@ const addPokemon = (Bot, data, trainer) => {
 
   trainer.dexTotal += 1;
 
-  if (data.gender) {
+  if (data.variation) {
+    if (!trainer.pokedex[gen][data.dexId][data.variation]) {
+      trainer.pokedex[gen][data.dexId][data.variation] = 1;
+    } else {
+      trainer.pokedex[gen][data.dexId][data.variation] += 1;
+    }
+  } else if (data.gender) {
     trainer.pokedex[gen][data.dexId][data.gender] += 1;
   } else {
-    trainer.pokedex[gen][data.dexId].genderless += 1;
+    trainer.pokedex[gen][data.dexId].default += 1;
   }
 
   Bot.trainers.set(data.trainerId, trainer);

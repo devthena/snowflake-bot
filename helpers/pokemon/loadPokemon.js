@@ -27,6 +27,7 @@ const loadPokemon = Bot => {
         hpMax: row.hp_max,
         rarity: row.rarity,
         catchRate: row.catch_rate,
+        variations: row.variations,
         sprites: JSON.parse(row.sprites)
       });
 

@@ -41,7 +41,7 @@ exports.run = async (Bot, message) => {
   if (!trainer.pokeballs.total) return message.channel.send(notices.noPokeballs);
 
   const member = server.members.get(message.author.id);
-  const rngRarity = member.level > 1 ? weightedRandom(pokeConstants.WEIGHTED_RARITY) : 'C';
+  const rngRarity = (member.level > 1 && trainer.obtainedTotal > 10) ? weightedRandom(pokeConstants.WEIGHTED_RARITY) : 'C';
 
   const nocturnalGroup = Bot.pokemonGroups.get('N');
   const rarityGroup = Bot.pokemonGroups.get(rngRarity);
@@ -69,6 +69,14 @@ exports.run = async (Bot, message) => {
     rngGender = weightedRandom({ male: (rngPokemon.genderRatio.male / 100), female: (rngPokemon.genderRatio.female / 100) });
   }
 
+  let rngVariation = null;
+  let inPokedex = trainer.pokedex[`gen${rngPokemon.generation}`][rngDexId];
+  if (rngPokemon.variations && inPokedex && inPokedex.total > 0) {
+    let varPool = ['default'].concat(rngPokemon.variations.split(','));
+    let varIndex = randomIndex(0, varPool.length);
+    if (varIndex > 0) rngVariation = varPool[varIndex];
+  }
+
   let embedIcon = `${pokeConstants.ICON_URL}${rngPokemon.sprites.icon}`;
   let embedImage = rngPokemon.sprites.animated.default;
 
@@ -76,7 +84,12 @@ exports.run = async (Bot, message) => {
     embedImage = rngPokemon.sprites.animated[rngGender];
   }
 
-  const pokemonDetails = `Rarity: ${pokeConstants.RARITY[rngRarity]} | Gender: ${rngGender ? pokeConstants.GENDER[rngGender] : 'N/A'}`;
+  if (rngVariation && rngPokemon.sprites.animated.hasOwnProperty(rngVariation)) {
+    embedImage = rngPokemon.sprites.animated[rngVariation];
+  }
+
+  let pokemonDetails = `Rarity: ${pokeConstants.RARITY[rngRarity]} | Gender: ${rngGender ? pokeConstants.GENDER[rngGender] : 'N/A'}`;
+  if (rngVariation) pokemonDetails += ` | Variation: ${pokeConstants.VARIATIONS[rngVariation]}`;
 
   let botEmbed = new Discord.MessageEmbed()
     .setAuthor(message.member.displayName, message.author.displayAvatarURL())
@@ -115,7 +128,8 @@ exports.run = async (Bot, message) => {
       gender: rngGender,
       pokemon: rngPokemon,
       timer: xTimer,
-      trainerId: message.author.id
+      trainerId: message.author.id,
+      variation: rngVariation
     });
 
   });
