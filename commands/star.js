@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+const botConfig = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 const updateLevel = require('../helpers/user/updateLevel');
@@ -15,7 +17,7 @@ exports.run = async (Bot, message) => {
   if (!server) return;
 
   const notices = {
-    invalidMax: `${message.member.displayName} you can only give one star per day. :)`,
+    invalidMax: `${message.member.displayName}, you can only give one star per day. :)`,
     invalidSelf: `${message.member.displayName}, you can't give yourself a star, goob. :)`,
     noTag: `${message.member.displayName}, you have to tag the person you want to give a star to. :)`
   };
@@ -26,7 +28,8 @@ exports.run = async (Bot, message) => {
 
   const member = server.members.get(message.member.id);
   const mention = message.mentions.members.first();
-  const today = new Date().getDay() + 1;
+  const now = new Date();
+  const today = `${now.getMonth()}-${now.getDay()}`;
 
   if (message.member.id === mention.id) return message.channel.send(notices.invalidSelf);
   if (member.lastStar === today) return message.channel.send(notices.invalidMax);
@@ -44,7 +47,12 @@ exports.run = async (Bot, message) => {
 
   Bot.servers.set(message.guild.id, server);
 
-  message.channel.send(`${message.member.displayName} has given a star to ${mention.displayName}! :sparkles:`);
+  let botEmbed = new Discord.MessageEmbed()
+    .setDescription(`:sparkles: ${mention.displayName} received a star from ${message.member.displayName}! :sparkles:\n\nThey also got +100 EXP as a bonus. :)`)
+    .setColor(botConfig.COLOR)
+    .setFooter(`Star given at ${now}`);
+
+  return message.channel.send(botEmbed);
 };
 
 exports.conf = {
