@@ -2,6 +2,7 @@ const pokeConstants = require('../../constants/pokemon');
 const trainerConfig = require('../../constants/trainerConfig');
 const addPokemon = require('./addPokemon');
 const catchPokemon = require('./catchPokemon');
+const getFormattedTime = require('./getFormattedTime');
 const getPokeballStatus = require('../pokemon/getPokeballStatus');
 const reactEmbed = require('./reactEmbed');
 
@@ -29,7 +30,7 @@ const handleInteractX = (Bot, reaction, user, data) => {
     embed.setTitle(`You ran away from the wild ${data.pokemon.name}!`);
     embed.setDescription('Tip: Some pokemon are nocturnal and only show up at night.');
     embed.setImage(null);
-    embed.setFooter(`National Dex # ${data.dexId} | Pokemon seen at ${seen.getHours()}:${seen.getMinutes()}:${seen.getSeconds()} UTC`);
+    embed.setFooter(`National Dex # ${data.dexId} | Pokemon seen at ${getFormattedTime(seen)}`);
 
     return message.edit(embed);
   }
@@ -55,7 +56,7 @@ const handleInteractX = (Bot, reaction, user, data) => {
 
       embed.setTitle(`Congrats, you caught a ${data.pokemon.name}!`);
       embed.setDescription(description);
-      embed.setFooter(`National Dex # ${data.dexId} | Pokemon caught at ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} UTC`);
+      embed.setFooter(`National Dex # ${data.dexId} | Pokemon caught at ${getFormattedTime(now)}`);
 
       return message.edit(embed);
     }
@@ -82,7 +83,7 @@ const handleInteractX = (Bot, reaction, user, data) => {
     embed.setTitle(`The wild ${data.pokemon.name} ran away!`);
     embed.setDescription('Tip: You have up to 3 attempts to catch a wild pokemon.');
     embed.setImage(null);
-    embed.setFooter(`National Dex # ${data.dexId} | Pokemon seen at ${seen.getHours()}:${seen.getMinutes()}:${seen.getSeconds()} UTC`);
+    embed.setFooter(`National Dex # ${data.dexId} | Pokemon seen at ${getFormattedTime(seen)}`);
 
     return message.edit(embed);
   }

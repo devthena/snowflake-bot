@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const botConfig = require('../constants/botConfig');
 const pokeConstants = require('../constants/pokemon');
 const trainerConfig = require('../constants/trainerConfig');
+const getFormattedTime = require('../helpers/pokemon/getFormattedTime');
 const getPokeballStatus = require('../helpers/pokemon/getPokeballStatus');
 const randomIndex = require('../helpers/randomIndex');
 const reactEmbed = require('../helpers/pokemon/reactEmbed');
@@ -88,12 +89,18 @@ exports.run = async (Bot, message) => {
     embedImage = rngPokemon.sprites.animated[rngVariation];
   }
 
+  let embedTitle = `You found a wild ${rngPokemon.name}!`;
+  let dexPokemon = trainer.pokedex[`gen${rngPokemon.generation}`][rngDexId];
+  if (dexPokemon && dexPokemon.total > 0) {
+    embedTitle += ` ${Bot.pokemonEmojis.get('pokeball')}`;
+  }
+
   let pokemonDetails = `Rarity: ${pokeConstants.RARITY[rngRarity]} | Gender: ${rngGender ? pokeConstants.GENDER[rngGender] : 'N/A'}`;
   if (rngVariation) pokemonDetails += ` | Variation: ${pokeConstants.VARIATIONS[rngVariation]}`;
 
   let botEmbed = new Discord.MessageEmbed()
-    .setAuthor(message.member.displayName, message.author.displayAvatarURL())
-    .setTitle(`You found a wild ${rngPokemon.name}!`)
+    .setAuthor(`${message.member.displayName} Exploring`, message.author.displayAvatarURL())
+    .setTitle(embedTitle)
     .setDescription('Catch it or run away by reacting below.')
     .setImage(embedImage)
     .setThumbnail(embedIcon)
@@ -115,7 +122,7 @@ exports.run = async (Bot, message) => {
       botEmbed.setTitle(`The wild ${rngPokemon.name} has fled!`)
       botEmbed.setDescription('Tip: You have 30s to react before a pokemon runs away.')
       botEmbed.setImage(null);
-      botEmbed.setFooter(`National Dex # ${rngDexId} | Pokemon seen at ${seen.getHours()}:${seen.getMinutes()}:${seen.getSeconds()} UTC`);
+      botEmbed.setFooter(`National Dex # ${rngDexId} | Pokemon seen at ${getFormattedTime(seen)}`);
 
       sent.edit(botEmbed);
 
