@@ -29,6 +29,13 @@ const expandCosts = {
   DEX: 1250
 };
 
+const shopPrices = {
+  pokeball: 200,
+  greatball: 600,
+  ultraball: 1200,
+  masterball: 10000
+};
+
 const rarity = {
   C: 'Common',
   U: 'Uncommon',
@@ -57,6 +64,7 @@ const reactUnicodes = {
   PREV: '◀'
 };
 
+const shopIconUrl = 'https://cdn.discordapp.com/attachments/798738516632535060/798738596957913118/mart.png';
 const spriteIconUrl = 'https://img.pokemondb.net/sprites/sword-shield/icon/';
 const validEmojis = ['pokeball', 'greatball', 'ultraball', 'masterball'];
 
@@ -167,6 +175,8 @@ module.exports = {
   RARITY: rarity,
   REACTS: reacts,
   REACTS_UNI: reactUnicodes,
+  SHOP_ICON_URL: shopIconUrl,
+  SHOP_PRICES: shopPrices,
   UI: ui,
   VALID_EMOJIS: validEmojis,
   VARIATIONS: variations,

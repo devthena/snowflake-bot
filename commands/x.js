@@ -92,7 +92,7 @@ exports.run = async (Bot, message) => {
   let embedTitle = `You found a wild ${rngPokemon.name}!`;
   let dexPokemon = trainer.pokedex[`gen${rngPokemon.generation}`][rngDexId];
   if (dexPokemon && dexPokemon.total > 0) {
-    embedTitle += ` ${Bot.pokemonEmojis.get('pokeball')}`;
+    embedTitle += ` ${Bot.pokemonEmojis.get(pokeConstants.REACTS.POKEBALL)}`;
   }
 
   let pokemonDetails = `Rarity: ${pokeConstants.RARITY[rngRarity]} | Gender: ${rngGender ? pokeConstants.GENDER[rngGender] : 'N/A'}`;
