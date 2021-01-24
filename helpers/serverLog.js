@@ -25,7 +25,7 @@ const log = (Bot, name, logEvent) => {
         .setDescription(logEvent)
         .setColor(botConfig.COLOR);
 
-      return message.channel.send(botEmbed);
+      return logChannel.send(botEmbed);
     }
   }
 };
