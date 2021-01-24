@@ -13,6 +13,8 @@ const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const DiscordStrategy = require('passport-discord').Strategy;
 
+const serverLog = require('../helpers/serverLog');
+
 module.exports = (app, Bot) => {
 
   passport.serializeUser(function (user, done) {
@@ -192,7 +194,14 @@ module.exports = (app, Bot) => {
     });
 
     var discordTag = `${profile.username}#${profile.discriminator}`;
-    Bot.logger.info(`[WEB] User logged in: ${discordTag}`);
+
+    let logEvent = {
+      author: 'Snowflake Web',
+      message: `User Log In: ${discordTag}\nDiscord User ID: ${profile.id}`,
+      footer: new Date()
+    };
+
+    serverLog(Bot, logEvent);
 
     if (serverList.length > 0) {
 

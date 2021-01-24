@@ -13,9 +13,13 @@ module.exports = (Bot, guild, user) => {
   const server = Bot.servers.get(guild.id);
   if (!server) return;
 
-  let logEvent = `${user.username}#${user.discriminator} has been banned from the server.`;
-  logEvent += `\nMember ID: ${user.id}`;
-  serverLog(Bot, guild.name, logEvent);
+  let logEvent = {
+    author: guild.name,
+    authorIcon: guild.iconURL(),
+    message: `${user.tag} has been banned from the server.`,
+    footer: `Discord User ID: ${user.id}`
+  };
+  serverLog(Bot, logEvent);
 
   server.members.delete(user.id);
   Bot.servers.set(guild.id, server);

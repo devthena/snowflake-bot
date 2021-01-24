@@ -8,6 +8,9 @@ const serverLog = require('../helpers/serverLog');
  * @param {Object} error 
  */
 module.exports = async (Bot, error) => {
-  let logEvent = `Info: error Event\nError: ${JSON.stringify(error)}`;
-  serverLog(Bot, botConfig.NAME, logEvent);
+  let logEvent = {
+    author: botConfig.NAME,
+    message: `Info: error Event\nError: ${JSON.stringify(error)}`
+  };
+  serverLog(Bot, logEvent);
 };

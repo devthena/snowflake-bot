@@ -5,10 +5,9 @@ const logServerId = process.env.LOG_SERVER_ID;
 /**
  * Log events in a Discord server
  * @param {Client} Bot
- * @param {String} name
  * @param {String} logEvent 
  */
-const log = (Bot, name, logEvent) => {
+const log = (Bot, logEvent) => {
 
   const logServer = Bot.guilds.cache.get(logServerId);
 
@@ -21,9 +20,11 @@ const log = (Bot, name, logEvent) => {
     if (logServer.available && logChannel) {
 
       let botEmbed = new Discord.MessageEmbed()
-        .setAuthor(`Server: ${name}`)
-        .setDescription(logEvent)
+        .setAuthor(`${logEvent.author} Server`, `${logEvent.authorIcon || ''}`)
+        .setDescription(logEvent.message)
         .setColor(botConfig.COLOR);
+      
+      if(logEvent.footer) botEmbed.setFooter(logEvent.footer);
 
       return logChannel.send(botEmbed);
     }
