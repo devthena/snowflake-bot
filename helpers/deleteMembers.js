@@ -1,6 +1,7 @@
 const DB_NAME = process.env.DB_NAME;
 const LOCAL = process.env.LOCAL;
 const sqlite3 = require('sqlite3').verbose();
+const isTrue = require('./isTrue');
 const startBackup = require('./startBackup');
 
 /**
@@ -28,7 +29,7 @@ const deleteMembers = (Bot, toDelete) => {
         if (processCount === toDelete.length) {
           db.close(error => {
             if (error) Bot.logger.error(`[DB] deleteMembers: ${error}`);
-            if (!LOCAL) startBackup(Bot);
+            if (!isTrue(LOCAL)) startBackup(Bot);
           });
         }
       });
@@ -37,7 +38,7 @@ const deleteMembers = (Bot, toDelete) => {
   } else {
     db.close(error => {
       if (error) Bot.logger.error(`[DB] deleteMembers: ${error}`);
-      if (!LOCAL) startBackup(Bot);
+      if (!isTrue(LOCAL)) startBackup(Bot);
     });
   }
 };

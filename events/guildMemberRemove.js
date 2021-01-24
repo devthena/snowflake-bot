@@ -14,9 +14,13 @@ module.exports = (Bot, member) => {
   const server = Bot.servers.get(member.guild.id);
   if (!server) return;
 
-  let logEvent = `${member.user.username}#${member.user.discriminator} aka ${member.displayName} has left the server.`;
-  logEvent += `\nMember ID: ${member.id}`;
-  serverLog(Bot, member.guild.name, logEvent);
+  let logEvent = {
+    author: member.guild.name,
+    authorIcon: member.guild.iconURL(),
+    message: `${member.user.tag} aka ${member.displayName} has left the server.`,
+    footer: `Discord User ID: ${member.id}`
+  };
+  serverLog(Bot, logEvent);
 
   const defaultMember = JSON.parse(JSON.stringify(memberConfig));
   server.members.set(member.id, defaultMember);
