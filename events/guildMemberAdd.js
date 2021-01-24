@@ -18,19 +18,24 @@ module.exports = (Bot, member) => {
 
     const autoAddRole = member.guild.roles.cache.find(role => role.name.includes(server.roles.autoAdd));
 
+    let logEvent = {
+      author: member.guild.name,
+      authorIcon: member.guild.iconURL()
+    };
+
     if (autoAddRole) {
       member.roles.add(autoAddRole)
         .then(function () {
-          let logEvent = `${member.user.username}#${member.user.discriminator} aka ${member.displayName} has been given the ${server.roles.autoAdd} role.`;
-          logEvent += `\nMember ID: ${member.id}`;
-          serverLog(Bot, member.guild.name, logEvent);
+          logEvent.message = `${member.user.tag} aka ${member.displayName} has been given the ${server.roles.autoAdd} role.`;
+          logEvent.footer = `Discord User ID: ${member.id}`;
+          serverLog(Bot, logEvent);
         }).catch(function (error) {
-          let logEvent = `Error: guildMemberAdd Event\n${JSON.stringify(error)}`;
-          serverLog(Bot, member.guild.name, logEvent);
+          logEvent.message = `Error: guildMemberAdd Event\n${JSON.stringify(error)}`;
+          serverLog(Bot, logEvent);
         });
     } else {
-      let logEvent = `Error: Auto-add role specified does not exist.`;
-      serverLog(Bot, member.guild.name, logEvent);
+      logEvent.message = `Error: Auto-add role specified does not exist.`;
+      serverLog(Bot, logEvent);
     }
   }
 
