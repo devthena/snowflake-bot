@@ -30,7 +30,7 @@ module.exports = (Bot, reaction, user) => {
 
   member.exp += expAddends.reactionAdd;
 
-  const updatedMember = updateLevel(member, user.username, message.guild.channels.cache);
+  const updatedMember = updateLevel(member, user.username, message.guild.channels);
   server.members.set(user.id, updatedMember);
   Bot.servers.set(message.guild.id, server);
 
@@ -74,7 +74,7 @@ module.exports = (Bot, reaction, user) => {
         author.exp += expAddends.highlight;
 
         let displayName = message.member ? message.member.displayName : message.author.username;
-        const updatedAuthor = updateLevel(author, displayName, message.guild.channels.cache);
+        const updatedAuthor = updateLevel(author, displayName, message.guild.channels);
         server.members.set(message.author.id, updatedAuthor);
         Bot.servers.set(message.guild.id, server);
 
