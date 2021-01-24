@@ -14,7 +14,9 @@ const updateLevel = (member, displayName, guildChannels) => {
   if (member.exp >= totalExp) {
     updatedMember.level = member.level + 1;
     updatedMember.exp = member.exp - totalExp;
-    const botChannel = guildChannels.find(channel => channel.name.includes(botConfig.CHANNEL));
+    const botChannel = guildChannels.cache.find(channel => {
+      return channel.name.includes(botConfig.CHANNEL) && channel.isText();
+    });
     if (botChannel) botChannel.send(`${displayName} has advanced to level ${updatedMember.level}! :gem:`);
   }
 

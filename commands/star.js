@@ -42,7 +42,7 @@ exports.run = async (Bot, message) => {
 
   recipient.stars += 1;
   recipient.exp += expAddends.starred;
-  const updatedRecipient = updateLevel(recipient, mention.displayName, message.guild.channels.cache);
+  const updatedRecipient = updateLevel(recipient, mention.displayName, message.guild.channels);
   server.members.set(mention.id, updatedRecipient);
 
   Bot.servers.set(message.guild.id, server);
