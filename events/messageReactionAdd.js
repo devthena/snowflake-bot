@@ -84,9 +84,11 @@ module.exports = (Bot, reaction, user) => {
         if(message.embeds.length > 0) {
 
           let embed = message.embeds[0];
-          if(embed) imageUrl = embed.thumbnail.url;
+          if(embed) imageUrl = embed.thumbnail ? embed.thumbnail.url : embed.image;
 
-        } else if (message.attachments.first()) {
+        }
+        
+        if (!imageUrl && message.attachments.first()) {
           
           const attachmentUrl = message.attachments.first().url;
           if (!/SPOILER_/.test(attachmentUrl)) {
