@@ -1,6 +1,6 @@
 {
   "name": "snowflake-bot",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "A Discord bot for AthenaUS and AikoBliss servers",
   "main": "index.js",
   "scripts": {
