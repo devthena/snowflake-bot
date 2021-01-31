@@ -96,12 +96,21 @@ module.exports = (Bot, reaction, user) => {
         server.members.set(message.author.id, updatedAuthor);
         Bot.servers.set(message.guild.id, server);
 
-        let attachment = null;
+        let imageUrl = null;
         let description = `${message.cleanContent}\n\nLink for [original message](${message.url}) in ${message.channel}`;
-        if (message.attachments.first()) {
+
+        if(message.embeds.length > 0) {
+
+          let embed = message.embeds[0];
+          if(embed) imageUrl = embed.thumbnail ? embed.thumbnail.url : embed.image;
+
+        }
+        
+        if (!imageUrl && message.attachments.first()) {
+          
           const attachmentUrl = message.attachments.first().url;
           if (!/SPOILER_/.test(attachmentUrl)) {
-            attachment = attachmentUrl;
+            imageUrl = attachmentUrl;
           } else {
             description += `\nNote: Contains SPOILER Image`;
           }
@@ -111,7 +120,7 @@ module.exports = (Bot, reaction, user) => {
           .setAuthor(message.author.username, message.author.displayAvatarURL())
           .setColor(botConfig.COLOR)
           .setDescription(description)
-          .setImage(attachment)
+          .setImage(imageUrl)
           .setFooter(`Posted on ${message.createdAt}`);
         highlightBoardChannel.send(botEmbed);
       }
