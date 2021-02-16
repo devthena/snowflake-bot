@@ -50,7 +50,7 @@ exports.run = async (Bot, message) => {
   let botEmbed = new Discord.MessageEmbed()
     .setDescription(`:sparkles: ${mention.displayName} received a star from ${message.member.displayName}! :sparkles:\n\nThey also got +100 EXP as a bonus. :)`)
     .setColor(botConfig.COLOR)
-    .setFooter(`Star given at ${now}`);
+    .setFooter(`Star given on ${now}`);
 
   return message.channel.send(botEmbed);
 };
