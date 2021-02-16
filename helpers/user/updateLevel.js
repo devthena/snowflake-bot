@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const botConfig = require('../../constants/botConfig');
 
 /**
@@ -17,7 +18,15 @@ const updateLevel = (member, displayName, guildChannels) => {
     const botChannel = guildChannels.cache.find(channel => {
       return channel.name.includes(botConfig.CHANNEL) && channel.isText();
     });
-    if (botChannel) botChannel.send(`${displayName} has advanced to level ${updatedMember.level}! :gem:`);
+
+    if (botChannel) {
+      let botEmbed = new Discord.MessageEmbed()
+        .setTitle('Level Up!')
+        .setDescription(`:gem: ${displayName} has advanced to level ${updatedMember.level}! :gem:`)
+        .setColor(botConfig.COLOR);
+
+      return message.channel.send(botEmbed);
+    }
   }
 
   return updatedMember;

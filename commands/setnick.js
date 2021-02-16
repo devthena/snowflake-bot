@@ -20,7 +20,7 @@ exports.run = async (Bot, message, args) => {
   let filteredMembers = message.guild.members.cache.filter(member => {
 
     const hasSubscriberRole = member.roles.cache.find(role => role.name.toLowerCase().includes('subscriber'));
-    const hasNitroBoosterRole = member.roles.cache.find(role => role.name.toLowerCase().includes('nitro'));
+    const hasNitroBoosterRole = member.premiumSince;
     const hasT2T3Role = member.roles.cache.find(role => role.name.toLowerCase().includes('tier 2') || role.name.toLowerCase().includes('tier 3'));
 
     switch (type) {
