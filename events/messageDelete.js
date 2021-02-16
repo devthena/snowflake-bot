@@ -7,6 +7,8 @@ const serverLog = require('../helpers/serverLog');
  */
 module.exports = (Bot, message) => {
 
+  if (/bot-/.test(message.channel.name)) return;
+
   const text = message.cleanContent.length > 0 ? message.cleanContent : null;
   const attached = message.attachments.first();
 
