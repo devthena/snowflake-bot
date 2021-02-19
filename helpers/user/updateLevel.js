@@ -25,7 +25,7 @@ const updateLevel = (member, displayName, guildChannels) => {
         .setDescription(`:gem: ${displayName} has advanced to level ${updatedMember.level}! :gem:`)
         .setColor(botConfig.COLOR);
 
-      return message.channel.send(botEmbed);
+      return botChannel.send(botEmbed);
     }
   }
 
