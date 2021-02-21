@@ -36,6 +36,11 @@ module.exports = (Bot, reaction, user) => {
 
   if (isTrue(server.mods.highlightBoard)) {
 
+    const highlightIgnoreList = server.channels.highlightIgnore.split(',');
+    const highlightIgnoreChannel = highlightIgnoreList.find(keyword => message.channel.name.includes(keyword));
+
+    if (highlightIgnoreChannel) return;
+
     if (reaction.count === 1 && message.reactions.cache.size === 1) {
 
       const hourTS = 3600000;

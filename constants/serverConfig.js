@@ -1,7 +1,8 @@
 const config = {
   channels: {
     alertStream: '',
-    highlightBoard: ''
+    highlightBoard: '',
+    highlightIgnore: ''
   },
   mods: {
     alertStream: 'false',
