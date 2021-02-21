@@ -48,7 +48,8 @@ exports.run = async (Bot, message) => {
   Bot.servers.set(message.guild.id, server);
 
   let botEmbed = new Discord.MessageEmbed()
-    .setDescription(`:sparkles: ${mention.displayName} received a star from ${message.member.displayName}! :sparkles:\n\nThey also got +100 EXP as a bonus. :)`)
+    .setTitle('Daily Star Sent!')
+    .setDescription(`${mention.displayName} got a star from ${message.member.displayName}!\n\nThey also got +100 EXP as a bonus. :sparkles:`)
     .setColor(botConfig.COLOR)
     .setFooter(`Star given on ${now}`);
 
