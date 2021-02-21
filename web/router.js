@@ -237,7 +237,7 @@ module.exports = (app, Bot) => {
 
     var stringMods = `mod_alert_stream = ?, mod_auto_add = ?, mod_game_8ball = ?, mod_game_gamble = ?, mod_highlight_board = ?, mod_optins = ?`;
     var stringRoles = `role_auto_add = ?, role_moderator = ?, role_optins = ?`;
-    var stringChannels = `channel_alert_stream = ?, channel_highlight_board = ?`;
+    var stringChannels = `channel_alert_stream = ?, channel_highlight_board = ?, channel_highlight_ignore`;
     var sql = `UPDATE guilds SET ${stringMods}, ${stringRoles}, ${stringChannels} WHERE server_id = ?`;
 
     var stringValues = [
@@ -252,6 +252,7 @@ module.exports = (app, Bot) => {
       serverUpdates.roles.optins,
       serverUpdates.channels.alertStream,
       serverUpdates.channels.highlightBoard,
+      serverUpdates.channels.highlightIgnore,
       serverID
     ];
 

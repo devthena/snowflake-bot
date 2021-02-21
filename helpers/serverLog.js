@@ -24,6 +24,7 @@ const log = (Bot, logEvent) => {
         .setDescription(logEvent.message)
         .setColor(botConfig.COLOR);
       
+      if(logEvent.thumbnail) botEmbed.setThumbnail(logEvent.thumbnail);
       if(logEvent.footer) botEmbed.setFooter(logEvent.footer);
 
       return logChannel.send(botEmbed);
