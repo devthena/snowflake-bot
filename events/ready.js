@@ -35,7 +35,8 @@ module.exports = async Bot => {
 
         config.channels = {
           alertStream: row.channel_alert_stream,
-          highlightBoard: row.channel_highlight_board
+          highlightBoard: row.channel_highlight_board,
+          highlightIgnore: row.channel_highlight_ignore
         };
         config.mods = {
           alertStream: row.mod_alert_stream,

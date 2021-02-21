@@ -50,8 +50,8 @@
               h3 Channel Optins
               span Let users add/remove roles specifically made for notifying them in special channels
           .feature
-            label Valid Optin Roles:
-            input(type="text" name="roles:optins" value=server.roles.optins placeholder="Enter comma-separated roles...")
+            label Valid Optin Roles (comma-separated):
+            input(type="text" name="roles:optins" value=server.roles.optins)
         // Game: Double or Nothing
         section
           .switch-info
@@ -91,6 +91,9 @@
           .feature
             label Highlight Channel:
             input(type="text" name="channels:highlightBoard" value=server.channels.highlightBoard)
+          .feature
+            label Do-Not-Highlight Channels (comma-separated):
+            input(type="text" name="channels:highlightIgnore" value=server.channels.highlightIgnore)
         // Stream Alerts
         section
           .switch-info
