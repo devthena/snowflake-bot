@@ -21,11 +21,11 @@ const updateLevel = (member, displayName, guildChannels) => {
 
     if (botChannel) {
       let botEmbed = new Discord.MessageEmbed()
-        .setTitle('Level Up!')
-        .setDescription(`:gem: ${displayName} has advanced to level ${updatedMember.level}! :gem:`)
+        .setTitle('User Level Up!')
+        .setDescription(`${displayName} advanced to level ${updatedMember.level}! :gem:`)
         .setColor(botConfig.COLOR);
 
-      return message.channel.send(botEmbed);
+      return botChannel.send(botEmbed);
     }
   }
 
