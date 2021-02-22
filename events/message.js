@@ -45,7 +45,7 @@ module.exports = (Bot, message) => {
       if (hasNitroBoosterRole) member.exp += expAddends.nitroBooster;
     }
 
-    const updatedMember = updateLevel(member, message.member.displayName, message.guild.channels);
+    const updatedMember = updateLevel(member, message.member.nickname, message.guild.channels);
     server.members.set(message.member.id, updatedMember);
     Bot.servers.set(message.guild.id, server);
 
