@@ -4,10 +4,10 @@ const botConfig = require('../../constants/botConfig');
 /**
  * Adjusts the level and exp values of a member
  * @param {Object} member 
- * @param {String} displayName 
+ * @param {String} nickname 
  * @param {Collection} guildChannels 
  */
-const updateLevel = (member, displayName, guildChannels) => {
+const updateLevel = (member, nickname, guildChannels) => {
 
   let updatedMember = JSON.parse(JSON.stringify(member));
   const totalExp = member.level * botConfig.LVL_MULTIPLIER;
@@ -22,10 +22,10 @@ const updateLevel = (member, displayName, guildChannels) => {
     if (botChannel) {
       let botEmbed = new Discord.MessageEmbed()
         .setTitle('User Level Up!')
-        .setDescription(`${displayName} advanced to level ${updatedMember.level}! :gem:`)
+        .setDescription(`${ nickname } advanced to level ${ updatedMember.level }! :gem:`)
         .setColor(botConfig.COLOR);
 
-      return botChannel.send(botEmbed);
+      botChannel.send(botEmbed);
     }
   }
 
