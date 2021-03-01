@@ -1,9 +1,11 @@
-const botConfig = require('../constants/botConfig');
+const LOCAL = process.env.LOCAL;
 const Discord = require('discord.js');
+const botConfig = require('../constants/botConfig');
+const isTrue = require('../helpers/isTrue');
 
 /**
  * Displays information about the bot
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Array} message 
  */
 exports.run = async (Bot, message) => {
@@ -23,7 +25,7 @@ exports.run = async (Bot, message) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 5,
   permitLevel: 0

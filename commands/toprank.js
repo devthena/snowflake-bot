@@ -1,11 +1,12 @@
-
+const LOCAL = process.env.LOCAL;
 const Discord = require('discord.js');
 const botConfig = require('../constants/botConfig');
+const isTrue = require('../helpers/isTrue');
 const sortByRank = require('../helpers/sortByRank');
 
 /**
  * Displays a list of members with the highest level and exp
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  */
 exports.run = async (Bot, message) => {
@@ -49,7 +50,7 @@ exports.run = async (Bot, message) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 5,
   permitLevel: 0

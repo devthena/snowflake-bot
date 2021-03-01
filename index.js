@@ -19,12 +19,13 @@ app.use(express.static(__dirname + '/web/public'));
 const Bot = new Discord.Client({ disableEveryone: false });
 
 // add the helper functions specific to the bot
+const isTrue = require('./helpers/isTrue');
 const loadCommand = require('./helpers/loadCommand');
 const loadPokemon = require('./helpers/pokemon/loadPokemon');
 const loadTrainers = require('./helpers/pokemon/loadTrainers');
 
-Bot.cooldowns = [];
 Bot.commands = new Map();
+Bot.isLocal = isTrue(process.env.LOCAL);
 Bot.servers = new Map();
 
 // pokemon collection game

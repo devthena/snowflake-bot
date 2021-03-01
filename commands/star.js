@@ -1,12 +1,14 @@
+const LOCAL = process.env.LOCAL;
 const Discord = require('discord.js');
 const botConfig = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
+const isTrue = require('../helpers/isTrue');
 const updateLevel = require('../helpers/user/updateLevel');
 
 /**
  * Adds a star (as a form of endorsement) to a mentioned user
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  */
 exports.run = async (Bot, message) => {
@@ -57,7 +59,7 @@ exports.run = async (Bot, message) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 5,
   permitLevel: 'L2'
