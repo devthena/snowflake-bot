@@ -1,11 +1,13 @@
+const LOCAL = process.env.LOCAL;
 const Discord = require('discord.js');
 const memberConfig = require('../constants/memberConfig');
 const getProfileCard = require('../helpers/user/getProfileCard');
 const getRank = require('../helpers/user/getRank');
+const isTrue = require('../helpers/isTrue');
 
 /**
  * Displays the profile of a user
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  */
 exports.run = async (Bot, message) => {
@@ -38,7 +40,7 @@ exports.run = async (Bot, message) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 5,
   permitLevel: 0

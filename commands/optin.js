@@ -1,8 +1,10 @@
+
+const LOCAL = process.env.LOCAL;
 const isTrue = require('../helpers/isTrue');
 
 /**
  * Adds a specific opt role to a member
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  * @param {Array} args 
  */
@@ -56,7 +58,7 @@ exports.run = async (Bot, message, args) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 3,
   permitLevel: 0

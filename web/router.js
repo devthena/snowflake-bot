@@ -5,7 +5,7 @@ const DB_NAME = process.env.DB_NAME;
 const SCOPES = ['identify'];
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
-// const REDIRECT_URI = process.env.AUTH_REDIRECT_URI_LOCAL;
+const REDIRECT_URI_LOCAL = process.env.AUTH_REDIRECT_URI_LOCAL;
 
 const passport = require('passport');
 const bodyParser = require('body-parser');
@@ -29,7 +29,7 @@ module.exports = (app, Bot) => {
 
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    callbackURL: REDIRECT_URI,
+    callbackURL: Bot.isLocal ? REDIRECT_URI_LOCAL : REDIRECT_URI,
     scope: SCOPES
 
   }, fetchUserData));

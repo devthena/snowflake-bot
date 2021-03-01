@@ -1,10 +1,11 @@
+const LOCAL = process.env.LOCAL;
 const botConfig = require('../constants/botConfig');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
 
 /**
  * Game: Double or Nothing
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  * @param {Array} args 
  */
@@ -120,7 +121,7 @@ exports.run = async (Bot, message, args) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 3,
   permitLevel: 0

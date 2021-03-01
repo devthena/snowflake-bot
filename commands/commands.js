@@ -1,8 +1,10 @@
+const LOCAL = process.env.LOCAL;
 const botConfig = require('../constants/botConfig');
+const isTrue = require('../helpers/isTrue');
 
 /**
  * Displays the link of the Bot commands page
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  */
 exports.run = async (Bot, message) => {
@@ -12,7 +14,7 @@ exports.run = async (Bot, message) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 5,
   permitLevel: 0
