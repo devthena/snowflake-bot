@@ -1,6 +1,9 @@
+const LOCAL = process.env.LOCAL;
+const isTrue = require('../helpers/isTrue');
+
 /**
  * Deletes a number of messages in a specific channel
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  * @param {Array} args 
  */
@@ -32,7 +35,7 @@ exports.run = async (Bot, message, args) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 5,
   permitLevel: 9

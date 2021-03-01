@@ -64,6 +64,9 @@
             .info
               h3 Game: Double or Nothing
               span Let members gamble their points
+          .feature
+            label Win Percentage:
+            input(type="text" name="settings:gamblePercent" value=server.settings.gamblePercent)
         // Game: Magic 8 Ball
         section
           .switch-info

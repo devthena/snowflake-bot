@@ -20,9 +20,10 @@ const Bot = new Discord.Client({ disableEveryone: false });
 
 // add the helper functions specific to the bot
 const loadCommand = require('./helpers/loadCommand');
+const isTrue = require('./helpers/isTrue');
 
-Bot.cooldowns = new Array();
 Bot.commands = new Map();
+Bot.isLocal = isTrue(process.env.LOCAL);
 Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.servers = new Map();
 

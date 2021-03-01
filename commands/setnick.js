@@ -1,3 +1,6 @@
+const LOCAL = process.env.LOCAL;
+const isTrue = require('../helpers/isTrue');
+
 /**
  * Sets the nickname of users with specific roles using a certain format
  * @param {Client} Bot 
@@ -57,7 +60,7 @@ exports.run = async (Bot, message, args) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 5,
   permitLevel: 11

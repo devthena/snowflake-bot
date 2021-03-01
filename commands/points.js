@@ -1,9 +1,11 @@
+const LOCAL = process.env.LOCAL;
 const botConfig = require('../constants/botConfig');
 const memberConfig = require('../constants/memberConfig');
+const isTrue = require('../helpers/isTrue');
 
 /**
  * Displays the current amount of points a member has
- * @param {ClientUser} Bot 
+ * @param {Client} Bot 
  * @param {Message} message 
  */
 exports.run = async (Bot, message) => {
@@ -28,7 +30,7 @@ exports.run = async (Bot, message) => {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: !isTrue(LOCAL),
   aliases: [],
   cooldown: 3,
   permitLevel: 0
