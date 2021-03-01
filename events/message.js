@@ -64,14 +64,16 @@ module.exports = (Bot, message) => {
     const permResponse = hasPermission(message, member, command.conf.permitLevel, server.roles);
     if (typeof permResponse === 'string') return message.channel.send(permResponse);
 
-    if (Bot.cooldowns.indexOf(command.info.name) < 0) {
+    if (server.cooldowns.indexOf(command.info.name) < 0) {
 
       command.run(Bot, message, args);
-      Bot.cooldowns.push(command.info.name);
+      server.cooldowns.push(command.info.name);
+      Bot.servers.set(message.guild.id, server);
 
       setTimeout(function () {
-        let commIndex = Bot.cooldowns.indexOf(command.info.name);
-        Bot.cooldowns.splice(commIndex, 1);
+        let commIndex = server.cooldowns.indexOf(command.info.name);
+        server.cooldowns.splice(commIndex, 1);
+        Bot.servers.set(message.guild.id, server);
       }, command.conf.cooldown * 1000);
     }
   }

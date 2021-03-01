@@ -23,6 +23,8 @@ module.exports = async Bot => {
 
     let blankMap = new Map();
     let config = JSON.parse(JSON.stringify(serverConfig));
+
+    config.cooldowns = [];
     config.members = blankMap;
 
     let sql = `SELECT * FROM guilds WHERE server_id = ${guild.id}`;
