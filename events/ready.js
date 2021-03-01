@@ -53,6 +53,9 @@ module.exports = async Bot => {
           moderator: row.role_moderator,
           optins: row.role_optins
         };
+        config.settings = {
+          gamblePercent: parseInt(row.settings_gamble_percent, 10)
+        }
 
         if (guild.ownerID !== row.owner_id) {
           db.run(`UPDATE guilds SET owner_id = ${guild.ownerID} WHERE server_id = ${guild.id}`, error => {

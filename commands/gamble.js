@@ -2,6 +2,7 @@ const LOCAL = process.env.LOCAL;
 const botConfig = require('../constants/botConfig');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
+const weightedRandom = require('../helpers/weightedRandom');
 
 /**
  * Game: Double or Nothing
@@ -22,15 +23,16 @@ exports.run = async (Bot, message, args) => {
 
   const notices = {
     invalidInput: `You can only gamble an amount of your ${currencyText}, 'all', or 'half'. :wink:`,
-    invalidMax: `Ahhh that's too much! You can only gamble a max of 100000 ${currency}.`,
     invalidNegative: `You should gamble at least 1 ${currency}, goob. :wink:`,
-    lostAll: `${message.member.displayName} lost all of their ${currencyText}. :sob:`,
-    noPoints: `Sorry ${message.member.displayName}, you have no ${currencyText} to gamble. :frowning:`,
+    lostAll: `${message.member.displayName} lost all of their ${currencyText}. :money_with_wings:`,
+    noPoints: `Sorry ${message.member.displayName}, you have no ${currencyText} to gamble. :neutral_face:`,
     notEnough: `Sorry ${message.member.displayName}, you don't have that many ${currencyText} to gamble. :neutral_face:`
   };
 
   let allIn = false;
   let gambleHalf = false;
+
+  const probability = { win: (server.settings.gamblePercent / 100), loss: (1 - (server.settings.gamblePercent / 100)) };
 
   if (args[0] === 'all') allIn = true;
   else if (args[0] === 'half') gambleHalf = true;
@@ -45,79 +47,69 @@ exports.run = async (Bot, message, args) => {
     return message.channel.send(notices.noPoints);
   }
 
-  let points = parseInt(member.points, 10);
+  const points = parseInt(member.points, 10);
+
+  if (points < 1) return message.channel.send(notices.noPoints);
+
+  const result = weightedRandom(probability);
 
   if (allIn) {
 
-    let result = Math.floor(Math.random() * 2);
-    let allPoints = parseInt(member.points, 10);
-
-    if (allPoints < 1) return message.channel.send(notices.noPoints);
-
-    if (result) {
-      member.points += allPoints;
+    if (result === 'win') {
+      member.points += points;
       server.members.set(message.member.id, member);
       Bot.servers.set(message.guild.id, server);
-      message.channel.send(`${message.member.displayName} won ${allPoints} ${currency} and now has ${member.points} ${currency}! :sparkles:`);
-    } else {
-      member.points -= member.points;
-      server.members.set(message.member.id, member);
-      Bot.servers.set(message.guild.id, server);
-      message.channel.send(notices.lostAll);
+      return message.channel.send(`${message.member.displayName} won ${points} :moneybag: and now has ${member.points} ${currency}! :sparkles:`);
     }
-    return;
+    
+    member.points = 0;
+    server.members.set(message.member.id, member);
+    Bot.servers.set(message.guild.id, server);
+    return message.channel.send(notices.lostAll);
 
-  } else if (gambleHalf) {
+  }
+  
+  if (gambleHalf) {
 
-    let result = Math.floor(Math.random() * 2);
-    let allPoints = parseInt(member.points, 10);
+    const halfPoints = Math.round(points / 2);
 
-    if (allPoints < 1) return message.channel.send(notices.noPoints);
-
-    let halfPoints = Math.round(allPoints / 2);
-
-    if (result) {
+    if (result === 'win') {
       member.points += halfPoints;
       server.members.set(message.member.id, member);
       Bot.servers.set(message.guild.id, server);
-      message.channel.send(`${message.member.displayName} won ${halfPoints} ${currency} and now has ${member.points} ${currency}!`);
-    } else {
-      member.points -= halfPoints;
-      server.members.set(message.member.id, member);
-      Bot.servers.set(message.guild.id, server);
-      message.channel.send(`${message.member.displayName} lost half of their ${currencyText} and now has ${member.points} ${currency}.`);
+      return message.channel.send(`${message.member.displayName} won ${halfPoints} :moneybag: and now has ${member.points} ${currency}!`);
     }
-    return;
+    
+    member.points -= halfPoints;
+    server.members.set(message.member.id, member);
+    Bot.servers.set(message.guild.id, server);
+    return message.channel.send(`${message.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${member.points} ${currency}.`);
   }
 
   let count = parseInt(args[0], 10);
   if (!count || count < 1) return message.channel.send(notices.invalidNegative);
-  else if (count > 100000) return message.channel.send(notices.invalidMax);
 
   if (points > 0) {
 
     if (count <= points) {
 
-      let result = Math.floor(Math.random() * 2);
-
-      if (result) {
+      if (result === 'win') {
         member.points += count;
         server.members.set(message.member.id, member);
         Bot.servers.set(message.guild.id, server);
-        message.channel.send(`${message.member.displayName} won ${count} ${currency} and now has ${member.points} ${currency}!`);
-      } else {
-        member.points -= count;
-        server.members.set(message.member.id, member);
-        Bot.servers.set(message.guild.id, server);
-        message.channel.send(`${message.member.displayName} lost ${count} ${currency} and now has ${member.points} ${currency}.`);
+        return message.channel.send(`${message.member.displayName} won ${count} :moneybag: and now has ${member.points} ${currency}!`);
       }
-
-    } else {
-      return message.channel.send(notices.notEnough);
+      
+      member.points -= count;
+      server.members.set(message.member.id, member);
+      Bot.servers.set(message.guild.id, server);
+      return message.channel.send(`${message.member.displayName} lost ${count} :money_with_wings: and now has ${member.points} ${currency}.`);
     }
-  } else {
-    return message.channel.send(notices.noPoints);
+    
+    return message.channel.send(notices.notEnough);
   }
+  
+  return message.channel.send(notices.noPoints);
 };
 
 exports.conf = {

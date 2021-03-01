@@ -16,6 +16,9 @@ const config = {
     autoAdd: '',
     moderator: '',
     optins: ''
+  },
+  settings: {
+    gamblePercent: 50
   }
 };
 

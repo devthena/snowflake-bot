@@ -187,7 +187,8 @@ module.exports = (app, Bot) => {
             memberCount: guild.memberCount,
             channels: server.channels,
             mods: server.mods,
-            roles: server.roles
+            roles: server.roles,
+            settings: server.settings
           });
         }
       }
@@ -222,9 +223,10 @@ module.exports = (app, Bot) => {
     var isSuccess = false;
     var errorMessage = null;
 
+    serverInfo.channels = serverUpdates.channels;
     serverInfo.mods = serverUpdates.mods;
     serverInfo.roles = serverUpdates.roles;
-    serverInfo.channels = serverUpdates.channels;
+    serverInfo.settings = serverUpdates.settings;
 
     // update the server Map
     Bot.servers.set(serverID, serverInfo);
@@ -235,12 +237,16 @@ module.exports = (app, Bot) => {
       Bot.logger.info('[DB] Established connection to database (web.js - api/server/update)');
     });
 
+    var stringChannels = `channel_alert_stream = ?, channel_highlight_board = ?, channel_highlight_ignore = ?`;
     var stringMods = `mod_alert_stream = ?, mod_auto_add = ?, mod_game_8ball = ?, mod_game_gamble = ?, mod_highlight_board = ?, mod_optins = ?`;
     var stringRoles = `role_auto_add = ?, role_moderator = ?, role_optins = ?`;
-    var stringChannels = `channel_alert_stream = ?, channel_highlight_board = ?, channel_highlight_ignore`;
-    var sql = `UPDATE guilds SET ${stringMods}, ${stringRoles}, ${stringChannels} WHERE server_id = ?`;
+    var stringSettings = `settings_gamble_percent = ?`;
+    var sql = `UPDATE guilds SET ${stringChannels}, ${stringMods}, ${stringRoles}, ${stringSettings} WHERE server_id = ?`;
 
     var stringValues = [
+      serverUpdates.channels.alertStream,
+      serverUpdates.channels.highlightBoard,
+      serverUpdates.channels.highlightIgnore,
       serverUpdates.mods.alertStream,
       serverUpdates.mods.autoAdd,
       serverUpdates.mods.game8Ball,
@@ -250,9 +256,7 @@ module.exports = (app, Bot) => {
       serverUpdates.roles.autoAdd,
       serverUpdates.roles.moderator,
       serverUpdates.roles.optins,
-      serverUpdates.channels.alertStream,
-      serverUpdates.channels.highlightBoard,
-      serverUpdates.channels.highlightIgnore,
+      serverUpdates.settings.gamblePercent,
       serverID
     ];
 

@@ -1,9 +1,10 @@
 $(document).ready(function () {
 
   var serverUpdates = {
+    channels: {},
     mods: {},
     roles: {},
-    channels: {}
+    settings: {}
   };
 
   var pathname = window.location.pathname;
@@ -46,7 +47,7 @@ $(document).ready(function () {
     $('.save').attr('disabled', false);
   });
 
-  $('input,textarea').keyup(function (e) {
+  $('input').keyup(function (e) {
     $('.save').attr('disabled', false);
   });
 
@@ -63,8 +64,7 @@ $(document).ready(function () {
     }
 
     // get values from inputs
-    setFormValues('input[type="text"]');
-    setFormValues('textarea');
+    setFormValues();
 
     // build the parameters for api call
     var el = document.getElementById('settings');
@@ -80,7 +80,8 @@ $(document).ready(function () {
         if (data.success) {
           notifyServer('#008000', 'Successfully updated server settings!');
         } else if (data.error) {
-          notifyServer('#DC143C', data.error);
+          notifyServer('#DC143C', 'Something went wrong. Please try again later.');
+          console.error(data.error);
         } else {
           notifyServer('#DC143C', 'Something went wrong. Please try again later.');
         }
@@ -88,9 +89,9 @@ $(document).ready(function () {
     );
   });
 
-  function setFormValues(selector) {
+  function setFormValues() {
 
-    var inputs = $(selector);
+    var inputs = $('input[type="text"]');
 
     for (var i = 0; i < inputs.length; i++) {
       var name = inputs[i].name.split(':');
