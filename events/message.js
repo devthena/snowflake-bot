@@ -22,10 +22,12 @@ module.exports = (Bot, message) => {
 
   if (message.content.indexOf(botConfig.PREFIX) !== 0) {
 
+    if (!message.member) return;
+
     const words = message.content.split(/ +/g);
     const pattern = new RegExp('[A-Za-z].{2,}');
 
-    let member = message.member ? server.members.get(message.member.id) : null;
+    let member = server.members.get(message.member.id) || null;
     if (!member) member = JSON.parse(JSON.stringify(memberConfig));
 
     words.forEach(word => {
