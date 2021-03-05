@@ -21,7 +21,6 @@ exports.run = async (Bot, message, args) => {
 
   const notices = {
     invalidInput: `${message.member.displayName}, you can only give ${currencyText}, please enter an amount. :wink:`,
-    invalidMax: `Ahhh that's too much! You can only give a max of 10000 ${currency} at a time.`,
     noBot: `Sorry ${message.member.displayName}, I have no use for ${currencyText}. Please keep it! :snowflake:`,
     noPoints: `Sorry ${message.member.displayName}, you have no ${currencyText} to give. :neutral_face:`,
     noTag: `${message.member.displayName}, you have to tag the person you want to give your ${currencyText} to. :wink:`,
@@ -48,8 +47,6 @@ exports.run = async (Bot, message, args) => {
   if (giver.points < amount && message.member.id !== message.guild.ownerID) {
     return message.channel.send(notices.notEnough);
   }
-
-  if (amount > 10000) return message.channel.send(notices.invalidMax);
 
   let recipient = message.mentions.members.first();
   let recipientCopy = `${recipient.displayName}`;
