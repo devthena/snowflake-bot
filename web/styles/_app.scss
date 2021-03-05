@@ -10,7 +10,7 @@
 }
 
 .app-box {
-  min-height: #{'calc(100vh - 152px)'};
+  min-height: #{"calc(100vh - 152px)"};
   width: 100%;
 }
 
@@ -21,7 +21,7 @@
   padding: 30px;
 
   div.box {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     padding: 15px;
     width: 100%;
@@ -29,6 +29,11 @@
 
   div.box > h1,
   div.box > p {
+    text-align: center;
+  }
+
+  div.widgets {
+    margin: 0 auto;
     text-align: center;
   }
 }
@@ -39,12 +44,18 @@
 
 @media (min-width: 768px) {
   .app-box {
-    min-height: #{'calc(100vh - 134px)'};
+    min-height: #{"calc(100vh - 134px)"};
   }
 
   .container {
     div.box {
       padding: 30px;
+    }
+
+    div.widgets {
+      iframe:first-child {
+        margin-right: 20px;
+      }
     }
   }
 }
