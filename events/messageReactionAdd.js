@@ -31,8 +31,8 @@ module.exports = (Bot, reaction, user) => {
   member.exp += expAddends.reactionAdd;
 
   const reactUser = message.guild.member(user);
-  const nickname = reactUser ? reactUser.nickname : user.username;
-  const updatedMember = updateLevel(member, nickname, message.guild.channels);
+  const displayName = reactUser ? reactUser.displayName : user.username;
+  const updatedMember = updateLevel(member, displayName, message.guild.channels);
   
   server.members.set(user.id, updatedMember);
   Bot.servers.set(message.guild.id, server);
