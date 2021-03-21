@@ -5,12 +5,13 @@ const botConfig = require('../../constants/botConfig');
  * Adjusts the level and exp values of a member
  * @param {Object} member 
  * @param {String} nickname 
- * @param {Collection} guildChannels 
+ * @param {Collection<GuildChannel>} guildChannels 
  */
 const updateLevel = (member, nickname, guildChannels) => {
 
   let updatedMember = JSON.parse(JSON.stringify(member));
-  const totalExp = member.level * botConfig.LVL_MULTIPLIER;
+  const levelValue = member.level <= 20 ? member.level : 20;
+  const totalExp = levelValue * botConfig.LVL_MULTIPLIER;
 
   if (member.exp >= totalExp) {
     updatedMember.level = member.level + 1;
