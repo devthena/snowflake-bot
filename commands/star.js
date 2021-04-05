@@ -19,19 +19,28 @@ exports.run = async (Bot, message) => {
   if (!server) return;
 
   const notices = {
-    invalidMax: `${message.member.displayName}, you can only give one star per day. :)`,
-    invalidSelf: `${message.member.displayName}, you can't give yourself a star, goob. :)`,
-    noTag: `${message.member.displayName}, you have to tag the person you want to give a star to. :)`
+    invalidMax: `${message.member.displayName}, you can only give one star per day.`,
+    invalidSelf: `${message.member.displayName}, you can't give yourself a star, goob.`,
+    noStar: `${message.member.displayName}, you've already given a star for today.`,
+    noTag: `${message.member.displayName}, you have to tag the person you want to give a star to.`,
+    starAvailable: `${message.member.displayName}, you can give someone a star today. :sparkles:`
   };
 
+  const member = server.members.get(message.member.id);
+  const now = new Date();
+  const today = `${now.getMonth()}-${now.getDay()}`;
+
   if (message.mentions.members.size === 0) {
+
+    const args = message.content.slice(botConfig.PREFIX.length).trim().split(/ +/g);
+    const hasGivenStarMessage = member.lastStar === today ? notices.noStar : notices.starAvailable;
+
+    if(args[1] === 'check') return message.channel.send(hasGivenStarMessage);
+
     return message.channel.send(notices.noTag);
   }
 
-  const member = server.members.get(message.member.id);
   const mention = message.mentions.members.first();
-  const now = new Date();
-  const today = `${now.getMonth()}-${now.getDay()}`;
 
   if (message.member.id === mention.id) return message.channel.send(notices.invalidSelf);
   if (member.lastStar === today) return message.channel.send(notices.invalidMax);
