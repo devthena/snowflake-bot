@@ -8,7 +8,7 @@ const config = {
   LVL_MULTIPLIER: 2048,
   NAME: 'Snowflake Bot',
   PREFIX: '!',
-  VERSION: '1.7.1'
+  VERSION: '1.7.2'
 };
 
 module.exports = config;

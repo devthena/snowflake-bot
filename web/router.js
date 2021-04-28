@@ -111,6 +111,13 @@ module.exports = (app, Bot) => {
 
         if (selectedServer) {
 
+          var server = Bot.servers.get(serverID);
+          
+          selectedServer.channels = server.channels;
+          selectedServer.mods = server.mods;
+          selectedServer.roles = server.roles;
+          selectedServer.settings = server.settings;
+
           res.render('index', {
             type: 'server',
             metaTitle: 'Snowflake Bot | Server',
@@ -184,11 +191,7 @@ module.exports = (app, Bot) => {
             name: guild.name,
             available: guild.available,
             iconImage: guild.iconURL() || null,
-            memberCount: guild.memberCount,
-            channels: server.channels,
-            mods: server.mods,
-            roles: server.roles,
-            settings: server.settings
+            memberCount: guild.memberCount
           });
         }
       }
@@ -260,7 +263,7 @@ module.exports = (app, Bot) => {
       serverID
     ];
 
-    db.get(sql, stringValues, function (error) {
+    db.run(sql, stringValues, function (error) {
       if (error) {
         Bot.logger.error(`[DB] Cannot update server database: ${error}`);
         errorMessage = error;
