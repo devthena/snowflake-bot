@@ -63,6 +63,8 @@ $(document).ready(function () {
       serverUpdates['mods'][name] = value;
     }
 
+    console.log(serverUpdates);
+
     // get values from inputs
     setFormValues();
 
