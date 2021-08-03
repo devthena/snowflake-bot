@@ -18,7 +18,8 @@ module.exports = (Bot, member) => {
     author: member.guild.name,
     authorIcon: member.guild.iconURL(),
     message: `${member.user.tag} aka ${member.displayName} has left the server.`,
-    footer: `Discord User ID: ${member.id}`
+    footer: `Discord User ID: ${member.id}`,
+    type: 'leave'
   };
   serverLog(Bot, logEvent);
 

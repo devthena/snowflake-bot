@@ -18,7 +18,8 @@ module.exports = (Bot, messages) => {
       authorIcon: message.guild.iconURL(),
       thumbnail: message.author.displayAvatarURL(),
       message: `Message Deleted In: ${ message.channel }\nAuthor: ${ message.author.tag }`,
-      footer: `Discord User ID: ${ message.author.id }\nPosted on ${ message.createdAt }`
+      footer: `Discord User ID: ${ message.author.id }\nPosted on ${ message.createdAt }`,
+      type: 'delete'
     };
 
     if(text) logEvent.message += `\n\nContent: ${ text }`;

@@ -9,7 +9,8 @@ const serverLog = require('../helpers/serverLog');
 module.exports = async (Bot, info) => {
   let logEvent = {
     author: botConfig.NAME,
-    message: `Info: warn Event\nWarning: ${info}`
+    message: `Info: warn Event\nWarning: ${info}`,
+    type: 'default'
   };
   serverLog(Bot, logEvent);
 };

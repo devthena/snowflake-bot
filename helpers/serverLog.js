@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const botConfig = require('../constants/botConfig');
+const statusColors = require('../constants/statusColors');
 const logServerId = process.env.LOG_SERVER_ID;
 
 /**
@@ -22,7 +23,7 @@ const log = (Bot, logEvent) => {
       let botEmbed = new Discord.MessageEmbed()
         .setAuthor(`${logEvent.author} Server`, `${logEvent.authorIcon || ''}`)
         .setDescription(logEvent.message)
-        .setColor(botConfig.COLOR);
+        .setColor(statusColors[logEvent.type]);
       
       if(logEvent.thumbnail) botEmbed.setThumbnail(logEvent.thumbnail);
       if(logEvent.footer) botEmbed.setFooter(logEvent.footer);
