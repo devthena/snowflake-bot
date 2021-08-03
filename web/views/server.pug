@@ -26,7 +26,7 @@
         section
           .switch-info
             .switch-box
-              if server.mods.autoAdd === "true"
+              if server.mods.autoAdd
                 input(type="checkbox" class="switch" name="autoAdd" checked)
               else
                 input(type="checkbox" class="switch" name="autoAdd")
@@ -41,7 +41,7 @@
         section
           .switch-info
             .switch-box
-              if server.mods.optins === "true"
+              if server.mods.optins
                 input(type="checkbox" class="switch" name="optins" checked)
               else
                 input(type="checkbox" class="switch" name="optins")
@@ -56,7 +56,7 @@
         section
           .switch-info
             .switch-box
-              if server.mods.gameGamble === "true"
+              if server.mods.gameGamble
                 input(type="checkbox" class="switch" name="gameGamble" checked)
               else
                 input(type="checkbox" class="switch" name="gameGamble")
@@ -71,7 +71,7 @@
         section
           .switch-info
             .switch-box
-              if server.mods.game8Ball === "true"
+              if server.mods.game8Ball
                 input(type="checkbox" class="switch" name="game8Ball" checked)
               else
                 input(type="checkbox" class="switch" name="game8Ball")
@@ -83,7 +83,7 @@
         section
           .switch-info
             .switch-box
-              if server.mods.highlightBoard === "true"
+              if server.mods.highlightBoard
                 input(type="checkbox" class="switch" name="highlightBoard" checked)
               else
                 input(type="checkbox" class="switch" name="highlightBoard")
@@ -101,7 +101,7 @@
         section
           .switch-info
             .switch-box
-              if server.mods.alertStream === "true"
+              if server.mods.alertStream
                 input(type="checkbox" class="switch" name="alertStream" checked)
               else
                 input(type="checkbox" class="switch" name="alertStream")
