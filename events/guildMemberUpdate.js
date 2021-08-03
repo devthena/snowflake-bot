@@ -26,7 +26,8 @@ module.exports = async (Bot, oldMember, newMember) => {
       author: newMember.guild.name,
       authorIcon: newMember.guild.iconURL(),
       message: `Nickname has been reset for ${ newMember.user.tag }`,
-      footer: `Discord User ID: ${ newMember.id }`
+      footer: `Discord User ID: ${ newMember.id }`,
+      type: 'reset'
     };
 
     serverLog(Bot, logEvent);

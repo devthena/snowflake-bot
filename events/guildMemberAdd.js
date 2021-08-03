@@ -20,7 +20,8 @@ module.exports = (Bot, member) => {
 
     let logEvent = {
       author: member.guild.name,
-      authorIcon: member.guild.iconURL()
+      authorIcon: member.guild.iconURL(),
+      type: 'default'
     };
 
     if (autoAddRole) {
@@ -28,6 +29,7 @@ module.exports = (Bot, member) => {
         .then(function () {
           logEvent.message = `${member.user.tag} aka ${member.displayName} has been given the ${server.roles.autoAdd} role.`;
           logEvent.footer = `Discord User ID: ${member.id}`;
+          logEvent.type = 'join';
           serverLog(Bot, logEvent);
         }).catch(function (error) {
           logEvent.message = `Error: guildMemberAdd Event\n${JSON.stringify(error)}`;

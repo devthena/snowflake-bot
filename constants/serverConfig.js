@@ -1,7 +1,7 @@
 const config = {
   channels: {
-    alertStream: '',
-    highlightBoard: '',
+    alertStream: 'announcements',
+    highlightBoard: 'highlight-board',
     highlightIgnore: ''
   },
   mods: {
@@ -18,7 +18,7 @@ const config = {
     optins: ''
   },
   settings: {
-    gamblePercent: 50
+    gamblePercent: 40
   }
 };
 

@@ -17,7 +17,8 @@ module.exports = (Bot, guild, user) => {
     author: guild.name,
     authorIcon: guild.iconURL(),
     message: `${user.tag} has been banned from the server.`,
-    footer: `Discord User ID: ${user.id}`
+    footer: `Discord User ID: ${user.id}`,
+    type: 'ban'
   };
   serverLog(Bot, logEvent);
 

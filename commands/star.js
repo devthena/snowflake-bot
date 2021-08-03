@@ -28,7 +28,7 @@ exports.run = async (Bot, message) => {
 
   const member = server.members.get(message.member.id);
   const now = new Date();
-  const today = `${now.getMonth()}-${now.getDay()}`;
+  const today = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 
   if (message.mentions.members.size === 0) {
 
