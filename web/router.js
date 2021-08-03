@@ -240,26 +240,13 @@ module.exports = (app, Bot) => {
       Bot.logger.info('[DB] Established connection to database (web.js - api/server/update)');
     });
 
-    var stringChannels = `channel_alert_stream = ?, channel_highlight_board = ?, channel_highlight_ignore = ?`;
-    var stringMods = `mod_alert_stream = ?, mod_auto_add = ?, mod_game_8ball = ?, mod_game_gamble = ?, mod_highlight_board = ?, mod_optins = ?`;
-    var stringRoles = `role_auto_add = ?, role_moderator = ?, role_optins = ?`;
-    var stringSettings = `settings_gamble_percent = ?`;
-    var sql = `UPDATE guilds SET ${stringChannels}, ${stringMods}, ${stringRoles}, ${stringSettings} WHERE server_id = ?`;
+    var sql = `UPDATE guilds SET channels = ?, mods = ?, roles = ?, settings = ? WHERE server_id = ?`;
 
     var stringValues = [
-      serverUpdates.channels.alertStream,
-      serverUpdates.channels.highlightBoard,
-      serverUpdates.channels.highlightIgnore,
-      serverUpdates.mods.alertStream,
-      serverUpdates.mods.autoAdd,
-      serverUpdates.mods.game8Ball,
-      serverUpdates.mods.gameGamble,
-      serverUpdates.mods.highlightBoard,
-      serverUpdates.mods.optins,
-      serverUpdates.roles.autoAdd,
-      serverUpdates.roles.moderator,
-      serverUpdates.roles.optins,
-      serverUpdates.settings.gamblePercent,
+      JSON.stringify(serverUpdates.channels),
+      JSON.stringify(serverUpdates.mods),
+      JSON.stringify(serverUpdates.roles),
+      JSON.stringify(serverUpdates.settings),
       serverID
     ];
 

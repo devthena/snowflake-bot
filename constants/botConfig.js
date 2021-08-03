@@ -1,4 +1,5 @@
 const config = {
+  BACKUP_POLL_RATE: 1800000, // half hour
   CHANNEL: 'snowflake',
   COLOR: '#FFBFFA',
   COMMANDS_URL: 'https://snowflakebot.com/commands',

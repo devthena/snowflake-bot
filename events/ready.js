@@ -1,5 +1,5 @@
-const dbConfig = require('../constants/dbConfig');
 const DB_NAME = process.env.DB_NAME;
+const botConfig = require('../constants/botConfig');
 const serverConfig = require('../constants/serverConfig');
 const sqlite3 = require('sqlite3').verbose();
 const loadMembers = require('../helpers/loadMembers');
@@ -35,27 +35,12 @@ module.exports = async Bot => {
 
       if (row) {
 
-        config.channels = {
-          alertStream: row.channel_alert_stream,
-          highlightBoard: row.channel_highlight_board,
-          highlightIgnore: row.channel_highlight_ignore
-        };
-        config.mods = {
-          alertStream: row.mod_alert_stream,
-          autoAdd: row.mod_auto_add,
-          game8Ball: row.mod_game_8ball,
-          gameGamble: row.mod_game_gamble,
-          highlightBoard: row.mod_highlight_board,
-          optins: row.mod_optins
-        };
-        config.roles = {
-          autoAdd: row.role_auto_add,
-          moderator: row.role_moderator,
-          optins: row.role_optins
-        };
-        config.settings = {
-          gamblePercent: parseInt(row.settings_gamble_percent, 10)
-        }
+        config.channels = JSON.parse(row.channels);
+        config.mods = JSON.parse(row.mods);
+        config.roles = JSON.parse(row.roles);
+        config.settings = JSON.parse(row.settings);
+
+        Bot.servers.set(guild.id, config);
 
         if (guild.ownerID !== row.owner_id) {
           db.run(`UPDATE guilds SET owner_id = ${guild.ownerID} WHERE server_id = ${guild.id}`, error => {
@@ -80,8 +65,10 @@ module.exports = async Bot => {
 
       } else {
 
-        let columns = `(server_id,owner_id,${dbConfig.MODS.join()},${dbConfig.ROLES.join()},${dbConfig.CHANNELS.join()})`;
-        let values = `(${guild.id},${guild.ownerID},${dbConfig.DEFAULT_VALUES})`;
+        Bot.servers.set(guild.id, config);
+
+        let columns = `(server_id,owner_id,channels,mods,roles,settings)`;
+        let values = `(${guild.id},${guild.ownerID},${JSON.stringify(config.channels)},${JSON.stringify(config.mods)},${JSON.stringify(config.roles)},${JSON.stringify(config.settings)})`;
 
         db.run(`INSERT INTO guilds ${columns} VALUES ${values}`, error => {
           if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);
@@ -95,8 +82,8 @@ module.exports = async Bot => {
         });
 
       }
+
     });
 
-    Bot.servers.set(guild.id, config);
   });
 };
