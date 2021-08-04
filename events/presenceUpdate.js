@@ -54,7 +54,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
       }
 
       // stream announcements for server owners
-      if (isTrue(server.mods.alertStream) && newPresence.guild.ownerID === newMember.id) {
+      if (isTrue(server.mods.alertStream) && newPresence.guild.ownerId === newMember.id) {
 
         const streamActivity = newPresence.activities.find(activity => activity.type === types.streaming);
         const alertStreamChannel = newPresence.guild.channels.cache.find(channel => channel.name.includes(server.channels.alertStream));

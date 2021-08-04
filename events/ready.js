@@ -1,6 +1,6 @@
 const DB_NAME = process.env.DB_NAME;
-const botConfig = require('../constants/botConfig');
 const serverConfig = require('../constants/serverConfig');
+const slashCommands = require('../constants/slashCommands');
 const sqlite3 = require('sqlite3').verbose();
 const loadMembers = require('../helpers/loadMembers');
 
@@ -10,7 +10,10 @@ const loadMembers = require('../helpers/loadMembers');
  * @param {Client} Bot 
  */
 module.exports = async Bot => {
+
   Bot.logger.info('* Snowflake is online *');
+
+  await Bot.guilds.cache.get('282668559765602304')?.commands.set(slashCommands);
 
   const db = new sqlite3.Database(`./${DB_NAME}`, error => {
     if (error) return Bot.logger.error(`[DB] Event Ready: ${error}`);
@@ -42,8 +45,8 @@ module.exports = async Bot => {
 
         Bot.servers.set(guild.id, config);
 
-        if (guild.ownerID !== row.owner_id) {
-          db.run(`UPDATE guilds SET owner_id = ${guild.ownerID} WHERE server_id = ${guild.id}`, error => {
+        if (guild.ownerId !== row.owner_id) {
+          db.run(`UPDATE guilds SET owner_id = ${guild.ownerId} WHERE server_id = ${guild.id}`, error => {
             if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);
             serverCount++;
             if (serverCount === lastIndex) {
@@ -68,7 +71,7 @@ module.exports = async Bot => {
         Bot.servers.set(guild.id, config);
 
         let columns = `(server_id,owner_id,channels,mods,roles,settings)`;
-        let values = `(${guild.id},${guild.ownerID},${JSON.stringify(config.channels)},${JSON.stringify(config.mods)},${JSON.stringify(config.roles)},${JSON.stringify(config.settings)})`;
+        let values = `(${guild.id},${guild.ownerId},${JSON.stringify(config.channels)},${JSON.stringify(config.mods)},${JSON.stringify(config.roles)},${JSON.stringify(config.settings)})`;
 
         db.run(`INSERT INTO guilds ${columns} VALUES ${values}`, error => {
           if (error) Bot.logger.error(`[DB] Event Ready: ${error}`);

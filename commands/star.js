@@ -1,82 +1,41 @@
-const LOCAL = process.env.LOCAL;
-const Discord = require('discord.js');
-const botConfig = require('../constants/botConfig');
+
+const { MessageEmbed } = require('discord.js');
+const { YELLOW } = require('../constants/discordColors');
 const expAddends = require('../constants/expAddends');
-const memberConfig = require('../constants/memberConfig');
-const isTrue = require('../helpers/isTrue');
 const updateLevel = require('../helpers/user/updateLevel');
 
-/**
- * Adds a star (as a form of endorsement) to a mentioned user
- * @param {Client} Bot 
- * @param {Message} message 
- */
-exports.run = async (Bot, message) => {
-
-  if (!message.guild.available) return;
-
-  const server = Bot.servers.get(message.guild.id);
-  if (!server) return;
+module.exports = (memberData, recipientData, interaction) => {
 
   const notices = {
-    invalidMax: `${message.member.displayName}, you can only give one star per day.`,
-    invalidSelf: `${message.member.displayName}, you can't give yourself a star, goob.`,
-    noStar: `${message.member.displayName}, you've already given a star for today.`,
-    noTag: `${message.member.displayName}, you have to tag the person you want to give a star to.`,
-    starAvailable: `${message.member.displayName}, you can give someone a star today. :sparkles:`
+    invalidMax: `${interaction.member.displayName}, you can only give one star per day.`,
+    invalidSelf: `${interaction.member.displayName}, you can't give yourself a star, goob.`
   };
 
-  const member = server.members.get(message.member.id);
   const now = new Date();
   const today = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 
-  if (message.mentions.members.size === 0) {
+  const recipient = interaction.options.getMember('user');
 
-    const args = message.content.slice(botConfig.PREFIX.length).trim().split(/ +/g);
-    const hasGivenStarMessage = member.lastStar === today ? notices.noStar : notices.starAvailable;
+  if (interaction.member.id === recipient.id) return { message: notices.invalidSelf };
+  if (memberData.lastStar === today) return { message: notices.invalidMax };
 
-    if(args[1] === 'check') return message.channel.send(hasGivenStarMessage);
+  memberData.lastStar = today;
 
-    return message.channel.send(notices.noTag);
-  }
+  recipientData.stars += 1;
+  recipientData.exp += expAddends.starred;
 
-  const mention = message.mentions.members.first();
+  const updatedRecipient = updateLevel(recipientData, recipient.displayName, interaction.guild.channels);
 
-  if (message.member.id === mention.id) return message.channel.send(notices.invalidSelf);
-  if (member.lastStar === today) return message.channel.send(notices.invalidMax);
-
-  let recipient = server.members.get(mention.id);
-  if (!recipient) recipient = JSON.parse(JSON.stringify(memberConfig));
-
-  member.lastStar = today;
-  server.members.set(message.member.id, member);
-
-  recipient.stars += 1;
-  recipient.exp += expAddends.starred;
-  const updatedRecipient = updateLevel(recipient, mention.displayName, message.guild.channels);
-  server.members.set(mention.id, updatedRecipient);
-
-  Bot.servers.set(message.guild.id, server);
-
-  let botEmbed = new Discord.MessageEmbed()
+  const botEmbed = new MessageEmbed()
     .setTitle('Daily Star Sent!')
-    .setDescription(`${mention.displayName} got a star from ${message.member.displayName}!\n\nThey also got +100 EXP as a bonus. :sparkles:`)
-    .setColor(botConfig.COLOR)
+    .setDescription(`${recipient.displayName} got a star from ${interaction.member.displayName}!\n\nThey also got +100 EXP as a bonus. :sparkles:`)
+    .setColor(YELLOW)
     .setFooter(`Star given on ${now}`);
 
-  return message.channel.send(botEmbed);
-};
+  return {
+    embed: botEmbed,
+    updatedMember: memberData,
+    updatedRecipient: updatedRecipient
+  };
 
-exports.conf = {
-  enabled: !isTrue(LOCAL),
-  aliases: [],
-  cooldown: 5,
-  permitLevel: 'L2'
-};
-
-exports.info = {
-  name: 'star',
-  description: 'Gives a star (as a form of endorsement) to a mentioned user.',
-  category: 'user',
-  usage: '!star'
 };

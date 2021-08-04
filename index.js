@@ -9,14 +9,28 @@ const app = new express();
 const { promisify } = require('util');
 const readdir = promisify(require('fs').readdir);
 
-const Discord = require('discord.js');
+const { Client, Intents } = require('discord.js');
 
 // configure settings for rendering web pages
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/web/views');
 app.use(express.static(__dirname + '/web/public'));
 
-const Bot = new Discord.Client({ disableEveryone: false });
+const Bot = new Client({
+  disableEveryone: false,
+  intents: [
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_BANS,
+    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+    Intents.FLAGS.GUILD_INTEGRATIONS,
+    Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.GUILD_PRESENCES
+  ]
+});
 
 // add the helper functions specific to the bot
 const loadCommand = require('./helpers/loadCommand');
