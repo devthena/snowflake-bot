@@ -1,5 +1,5 @@
 const botActivities = require('../constants/botActivities');
-const botConfig = require('../constants/botConfig');
+const { BACKUP_POLL_RATE } = require('../constants/botConfig');
 const backupMembers = require('./backupMembers');
 
 let backupTimer = null;
@@ -22,7 +22,7 @@ const startBackup = Bot => {
   if (backupTimer) clearTimeout(backupTimer);
   backupTimer = setTimeout(() => {
     startBackup(Bot);
-  }, botConfig.BACKUP_POLL_RATE);
+  }, BACKUP_POLL_RATE);
 
 };
 

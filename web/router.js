@@ -2,13 +2,13 @@
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const DB_NAME = process.env.DB_NAME;
+const LOCAL = process.env.LOCAL;
 const SCOPES = ['identify'];
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
-const REDIRECT_URI_LOCAL = process.env.AUTH_REDIRECT_URI_LOCAL;
+const REDIRECT_URI = LOCAL ? process.env.AUTH_REDIRECT_URI_LOCAL : process.env.AUTH_REDIRECT_URI;
 
+const express = require('express');
 const passport = require('passport');
-const bodyParser = require('body-parser');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const DiscordStrategy = require('passport-discord').Strategy;
@@ -29,7 +29,7 @@ module.exports = (app, Bot) => {
 
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    callbackURL: Bot.isLocal ? REDIRECT_URI_LOCAL : REDIRECT_URI,
+    callbackURL: REDIRECT_URI,
     scope: SCOPES
 
   }, fetchUserData));
@@ -42,8 +42,8 @@ module.exports = (app, Bot) => {
 
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // render: main page
   app.get('/', (req, res) => {
@@ -183,7 +183,7 @@ module.exports = (app, Bot) => {
     var user = { profile: profile };
 
     Bot.guilds.cache.forEach(guild => {
-      if (guild.ownerID === profile.id) {
+      if (guild.ownerId === profile.id) {
         var server = Bot.servers.get(guild.id);
         if (server) {
           serverList.push({

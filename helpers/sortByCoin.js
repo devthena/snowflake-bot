@@ -6,7 +6,7 @@ const sortByCoin = toSort => {
 
   let sortable = [];
   toSort.forEach((obj, id) => {
-    if (obj.points > 1) sortable.push([id, obj.points, obj.level]);
+    if (obj.points > 1) sortable.push([id, obj.level, obj.exp, obj.points]);
   });
 
   const compare = (a, b) => {
@@ -16,7 +16,7 @@ const sortByCoin = toSort => {
   };
 
   sortable.sort((a, b) => {
-    return compare(a[1], b[1]);
+    return compare(a[3], b[3]);
   });
 
   return sortable;

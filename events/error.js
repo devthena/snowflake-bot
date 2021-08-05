@@ -1,4 +1,4 @@
-const botConfig = require('../constants/botConfig');
+const { NAME } = require('../constants/botConfig');
 const serverLog = require('../helpers/serverLog');
 
 /**
@@ -9,7 +9,7 @@ const serverLog = require('../helpers/serverLog');
  */
 module.exports = async (Bot, error) => {
   let logEvent = {
-    author: botConfig.NAME,
+    author: NAME,
     message: `Info: error Event\nError: ${JSON.stringify(error)}`,
     type: 'default'
   };

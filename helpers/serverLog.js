@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const botConfig = require('../constants/botConfig');
+const { LOG_CHANNEL } = require('../constants/botConfig');
 const statusColors = require('../constants/statusColors');
 const logServerId = process.env.LOG_SERVER_ID;
 
@@ -15,7 +15,7 @@ const log = (Bot, logEvent) => {
   if (logServer) {
 
     const logChannel = logServer.channels.cache.find(channel => {
-      return channel.name.includes(botConfig.LOG_CHANNEL) && channel.isText();
+      return channel.name.includes(LOG_CHANNEL) && channel.isText();
     });
 
     if (logServer.available && logChannel) {

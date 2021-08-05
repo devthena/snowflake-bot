@@ -1,11 +1,13 @@
+const PINK = require('./botConfig').COLOR;
+const colors = require('./discordColors');
+
 const status = {
-  'ban': '#E91E63',
-  'default': '#FC9CE1',
-  'delete': '#9B59B6',
-  'join': '#2ECC71',
-  'kick': '#E74C3C',
-  'leave': '#F1C40F',
-  'reset': '#3498DB'
+  'ban': colors.RED,
+  'default': PINK,
+  'delete': colors.RED,
+  'join': colors.GREEN,
+  'leave': colors.YELLOW,
+  'reset': colors.BLUE
 };
 
 module.exports = status;
