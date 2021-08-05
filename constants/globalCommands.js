@@ -12,6 +12,10 @@ const commands = [
     ]
   },
   {
+    name: 'help',
+    description: 'Display helpful links about the bot'
+  },
+  {
     name: 'info',
     description: 'Display bot information'
   }

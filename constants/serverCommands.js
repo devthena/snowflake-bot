@@ -43,10 +43,6 @@ const commands = [
     ]
   },
   {
-    name: 'help',
-    description: 'Display helpful links about the bot'
-  },
-  {
     name: 'leaderboard',
     description: 'Display the top users for this server',
     options: [
