@@ -1,4 +1,4 @@
-module.exports = (validOptins, interaction) => {
+module.exports = (toAdd, validOptins, interaction) => {
 
   const validRoles = validOptins.split(',');
   const role = interaction.options.getRole('role');
@@ -8,8 +8,18 @@ module.exports = (validOptins, interaction) => {
   if (isRoleAllowed) {
 
     if (interaction.member.roles.cache.has(role.id)) {
-      return { message: `${interaction.member.displayName}, you're already opted in, goob. :wink:` };
+      
+      if(toAdd) return { message: `${interaction.member.displayName}, you're already opted in, goob. :wink:` };
+      
+      interaction.member.roles.remove(role)
+        .then(function () {
+          return { message: `You are now free from the ${role.name} role, ${interaction.member.displayName}!` };
+        }).catch(function (error) {
+          return { message: 'There was a problem removing this role. Please try again later.' };
+        });
     }
+
+    if(!toAdd) return { message: `${interaction.member.displayName}, you don't have that role, goob. :wink:` };
 
     interaction.member.roles.add(role)
       .then(function () {
@@ -19,5 +29,6 @@ module.exports = (validOptins, interaction) => {
       });
   }
   
-  return { message: 'Nice try -- how about a different role? :smirk:' };
+  if(toAdd) return { message: 'Nice try -- how about a different role? :smirk:' };
+  return { message: `Nope, can't remove that -- how about a different role? :thinking:` };
 };

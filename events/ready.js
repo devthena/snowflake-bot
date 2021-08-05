@@ -27,7 +27,8 @@ module.exports = async Bot => {
   });
 
   if(!Bot.application?.commands) await Bot.application?.fetch();
-  await Bot.application?.commands.set(globalCommands);
+
+  if(!LOCAL) await Bot.application?.commands.set(globalCommands);
 
   const guildArray = Array.from(Bot.guilds.cache.values());
 
@@ -98,7 +99,6 @@ module.exports = async Bot => {
     Bot.servers.set(guild.id, config);
 
     await asyncForEach(toDelete, async item => {
-      console.log(item);
       await db.run(`DELETE from members WHERE id = ${item}`);
       Bot.logger.info(`[DB] Deleted score record for ${item}`);
     });

@@ -1,4 +1,4 @@
-const { MessageAttachment } = require('discord.js');
+const { MessageActionRow, MessageAttachment, MessageButton } = require('discord.js');
 
 const clear = require('../commands/clear');
 const gamble = require('../commands/gamble');
@@ -8,10 +8,9 @@ const leaderboard = require('../commands/leaderboard');
 const magic8Ball = require('../commands/8ball');
 const nickname = require('../commands/nickname');
 const optin = require('../commands/optin');
-const optout = require('../commands/optout');
 const star = require('../commands/star');
 
-const { COMMANDS_URL, CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
+const { CURRENCY, CURRENCY_TEXT, URLS } = require('../constants/botConfig');
 const memberConfig = require('../constants/memberConfig');
 
 const getProfileCard = require('../helpers/user/getProfileCard');
@@ -98,13 +97,11 @@ module.exports = async (Bot, interaction) => {
 
     if(interaction.commandName === 'help') {
 
-      const value = interaction.options.getString('command');
-      if(!value) return await interaction.reply({
-        content: `For information on the bot commands, visit this link: ${COMMANDS_URL}`,
-        ephemeral: true
-      });
+      const row = new MessageActionRow()
+        .addComponents(new MessageButton().setLabel('Commands').setStyle('LINK').setURL(URLS.COMMANDS))
+        .addComponents(new MessageButton().setLabel('FAQ').setStyle('LINK').setURL(URLS.FAQ));
 
-      // TODO: display description of specified commands
+      return await interaction.reply({ content: 'Here are some links you might be interested in:', components: [row] });
     }
 
     if(interaction.commandName === 'info') {
@@ -131,7 +128,7 @@ module.exports = async (Bot, interaction) => {
         return await interaction.reply('Role opt in is not enabled in this server.');
       }
 
-      const answer = optin(server.roles.optins, interaction);
+      const answer = optin(true, server.roles.optins, interaction);
       return await interaction.reply(answer.message);
     }
 
@@ -141,7 +138,7 @@ module.exports = async (Bot, interaction) => {
         return await interaction.reply('Role opt out is not enabled in this server.');
       }
 
-      const answer = optout(interaction);
+      const answer = optin(false, server.roles.optins, interaction);
       return await interaction.reply(answer.message);
     }
 

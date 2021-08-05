@@ -14,7 +14,7 @@ const commands = [
   },
   {
     name: 'gamble',
-    description: 'Play a game of double or nothing',
+    description: 'Play your points for a chance to double it',
     options: [
       {
         name: 'amount',
@@ -44,49 +44,7 @@ const commands = [
   },
   {
     name: 'help',
-    description: 'Look up command descriptions',
-    options: [
-      {
-        name: 'command',
-        type: 'STRING',
-        description: 'Name of the command',
-        required: false,
-        choices: [
-          {
-            name: 'gamble',
-            value: 'gamble'
-          },
-          {
-            name: 'give',
-            value: 'give'
-          },
-          {
-            name: 'leaderboard',
-            value: 'leaderboard'
-          },
-          {
-            name: 'optin',
-            value: 'optin'
-          },
-          {
-            name: 'optout',
-            value: 'optout'
-          },
-          {
-            name: 'points',
-            value: 'points'
-          },
-          {
-            name: 'profile',
-            value: 'profile'
-          },
-          {
-            name: 'star',
-            value: 'star'
-          }
-        ]
-      }
-    ]
+    description: 'Display helpful links about the bot'
   },
   {
     name: 'leaderboard',
