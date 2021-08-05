@@ -1,12 +1,13 @@
 const commands = [
   {
-    name: '8ball',
-    description: 'Play a game of Magic 8 Ball',
+    name: 'clear',
+    description: 'Delete a specific amount of messages',
+    defaultPermission: false,
     options: [
       {
-        name: 'question',
-        type: 'STRING',
-        description: 'Enter a question',
+        name: 'amount',
+        type: 'INTEGER',
+        description: 'Enter the number of messages',
         required: true
       }
     ]
@@ -52,20 +53,12 @@ const commands = [
         required: false,
         choices: [
           {
-            name: '8ball',
-            value: '8ball'
-          },
-          {
             name: 'gamble',
             value: 'gamble'
           },
           {
             name: 'give',
             value: 'give'
-          },
-          {
-            name: 'info',
-            value: 'info'
           },
           {
             name: 'leaderboard',
@@ -96,10 +89,6 @@ const commands = [
     ]
   },
   {
-    name: 'info',
-    description: 'Display bot information'
-  },
-  {
     name: 'leaderboard',
     description: 'Display the top users for this server',
     options: [
@@ -118,6 +107,49 @@ const commands = [
             value: 'rank'
           }
         ]
+      }
+    ]
+  },
+  {
+    name: 'nickname',
+    description: 'Set nicknames of members that have the specified role',
+    defaultPermission: false,
+    options: [
+      {
+        name: 'role',
+        type: 'ROLE',
+        description: 'Enter a role',
+        required: true
+      },
+      {
+        name: 'format',
+        type: 'STRING',
+        description: 'Example: 🎁 name 🎁',
+        required: true
+      }
+    ]
+  },
+  {
+    name: 'optin',
+    description: 'Add a role to yourself',
+    options: [
+      {
+        name: 'role',
+        type: 'ROLE',
+        description: 'Enter a role',
+        required: true
+      }
+    ]
+  },
+  {
+    name: 'optout',
+    description: 'Remove a role from yourself',
+    options: [
+      {
+        name: 'role',
+        type: 'ROLE',
+        description: 'Enter a role',
+        required: true
       }
     ]
   },
@@ -148,7 +180,26 @@ const commands = [
         required: true
       }
     ]
-  }
+  },
+  {
+    name: 'take',
+    description: 'Take an amount of points from a user',
+    defaultPermission: false,
+    options: [
+      {
+        name: 'user',
+        type: 'USER',
+        description: 'Enter a user from this server',
+        required: true
+      },
+      {
+        name: 'amount',
+        type: 'INTEGER',
+        description: 'Enter a specific amount of points',
+        required: true
+      }
+    ]
+  },
 ];
 
 module.exports = commands;

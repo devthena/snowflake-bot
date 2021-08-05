@@ -1,10 +1,14 @@
 const { MessageAttachment } = require('discord.js');
 
-const magic8Ball = require('../commands/8ball');
+const clear = require('../commands/clear');
 const gamble = require('../commands/gamble');
 const give = require('../commands/give');
 const info = require('../commands/info');
 const leaderboard = require('../commands/leaderboard');
+const magic8Ball = require('../commands/8ball');
+const nickname = require('../commands/nickname');
+const optin = require('../commands/optin');
+const optout = require('../commands/optout');
 const star = require('../commands/star');
 
 const { COMMANDS_URL, CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
@@ -23,6 +27,11 @@ const isTrue = require('../helpers/isTrue');
 module.exports = async (Bot, interaction) => {
 
   const server = Bot.servers.get(interaction.guildId);
+
+  const updateMemberData = (id, data) => {
+    server.members.set(id, data);
+    Bot.servers.set(interaction.guildId, server);
+  };
   
   if(interaction.isCommand()) {
 
@@ -36,6 +45,12 @@ module.exports = async (Bot, interaction) => {
       return await interaction.reply(answer);
     }
 
+    if(interaction.commandName === 'clear') {
+
+      const answer = await clear(interaction);
+      return await interaction.reply({ content: answer.message, ephemeral: true});
+    }
+
     if(interaction.commandName === 'gamble') {
 
       if (!isTrue(server.mods.gameGamble)) {
@@ -45,18 +60,12 @@ module.exports = async (Bot, interaction) => {
       let memberData = server.members.get(interaction.user.id);
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
-        server.members.set(interaction.user.id, memberData);
-        Bot.servers.set(interaction.guildId, server);
+        updateMemberData(interaction.user.id, memberData);
         return await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`);
       }
 
       const answer = gamble(memberData, server.settings.gamblePercent, interaction);
-
-      if(answer.updatedMember) {
-        server.members.set(interaction.user.id, answer.updatedMember);
-        Bot.servers.set(interaction.guildId, server);
-      }
-
+      if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
       return await interaction.reply(answer.message);
     }
 
@@ -65,8 +74,7 @@ module.exports = async (Bot, interaction) => {
       let memberData = server.members.get(interaction.user.id);
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
-        server.members.set(interaction.user.id, memberData);
-        Bot.servers.set(interaction.guildId, server);
+        updateMemberData(interaction.user.id, memberData);
         return await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`);
       }
 
@@ -76,24 +84,14 @@ module.exports = async (Bot, interaction) => {
       }
 
       let recipientData = server.members.get(recipient.id);
-
       if (!recipientData) {
         recipientData = JSON.parse(JSON.stringify(memberConfig));
-        server.members.set(interaction.user.id, memberData);
-        Bot.servers.set(interaction.guildId, server);
+        updateMemberData(recipient.id, recipientData);
       }
 
       const answer = give(memberData, recipientData, interaction);
-
-      if(answer.updatedMember) {
-        server.members.set(interaction.user.id, answer.updatedMember);
-        Bot.servers.set(interaction.guildId, server);
-      }
-
-      if(answer.updatedRecipient) {
-        server.members.set(recipient.id, answer.updatedRecipient);
-        Bot.servers.set(interaction.guildId, server);
-      }
+      if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
+      if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
 
       return await interaction.reply(answer.message);
     }
@@ -101,7 +99,12 @@ module.exports = async (Bot, interaction) => {
     if(interaction.commandName === 'help') {
 
       const value = interaction.options.getString('command');
-      if(!value) return await interaction.reply({ content: `For information on the bot commands, visit this link: ${COMMANDS_URL}`, ephemeral: true });
+      if(!value) return await interaction.reply({
+        content: `For information on the bot commands, visit this link: ${COMMANDS_URL}`,
+        ephemeral: true
+      });
+
+      // TODO: display description of specified commands
     }
 
     if(interaction.commandName === 'info') {
@@ -116,13 +119,38 @@ module.exports = async (Bot, interaction) => {
       return await interaction.reply({ embeds: [answer.embed] });
     }
 
+    if(interaction.commandName === 'nickname') {
+
+      const answer = nickname(interaction);
+      return await interaction.reply(answer.message);
+    }
+
+    if(interaction.commandName === 'optin') {
+
+      if (!isTrue(server.mods.optins)) {
+        return await interaction.reply('Role opt in is not enabled in this server.');
+      }
+
+      const answer = optin(server.roles.optins, interaction);
+      return await interaction.reply(answer.message);
+    }
+
+    if(interaction.commandName === 'optout') {
+
+      if (!isTrue(server.mods.optins)) {
+        return await interaction.reply('Role opt out is not enabled in this server.');
+      }
+
+      const answer = optout(interaction);
+      return await interaction.reply(answer.message);
+    }
+
     if(interaction.commandName === 'points') {
 
       let memberData = server.members.get(interaction.user.id);
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
-        server.members.set(interaction.user.id, memberData);
-        Bot.servers.set(interaction.guildId, server);
+        updateMemberData(interaction.user.id, memberData);
         return await interaction.reply(`${interaction.member.displayName}, you do not have any ${CURRENCY_TEXT} yet. :neutral_face:`);
       }
 
@@ -139,8 +167,7 @@ module.exports = async (Bot, interaction) => {
       let memberData = server.members.get(member.id);
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
-        server.members.set(member.id, memberData);
-        Bot.servers.set(interaction.guildId, server);
+        updateMemberData(member.id, memberData);
       }
 
       const rank = getRank(member.id, server.members);
@@ -155,8 +182,7 @@ module.exports = async (Bot, interaction) => {
       let memberData = server.members.get(interaction.user.id);
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
-        server.members.set(interaction.user.id, memberData);
-        Bot.servers.set(interaction.guildId, server);
+        updateMemberData(interaction.user.id, memberData);
       }
 
       if(memberData.level < 2) return await interaction.reply('You need to be at least level 2 to use this command.');
@@ -164,26 +190,35 @@ module.exports = async (Bot, interaction) => {
       const recipient = interaction.options.getMember('user');
 
       let recipientData = server.members.get(recipient.id);
-
       if (!recipientData) {
         recipientData = JSON.parse(JSON.stringify(memberConfig));
-        server.members.set(interaction.user.id, memberData);
-        Bot.servers.set(interaction.guildId, server);
+        updateMemberData(recipient.id, recipientData);
       }
 
       const answer = star(memberData, recipientData, interaction);
+      if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
+      if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
+      if(answer.embed) return await interaction.reply({ embeds: [answer.embed] });
 
-      if(answer.updatedMember) {
-        server.members.set(interaction.user.id, answer.updatedMember);
-        Bot.servers.set(interaction.guildId, server);
+      return await interaction.reply(answer.message);
+    }
+
+    if(interaction.commandName === 'take') {
+
+      const recipient = interaction.options.getMember('user');
+      if(recipient.id === Bot.user.id) {
+        return await interaction.reply(`Sorry ${interaction.member.displayName}, you can't take points from me. :snowflake:`);
       }
 
-      if(answer.updatedRecipient) {
-        server.members.set(recipient.id, answer.updatedRecipient);
-        Bot.servers.set(interaction.guildId, server);
+      let recipientData = server.members.get(recipient.id);
+      if (!recipientData) {
+        recipientData = JSON.parse(JSON.stringify(memberConfig));
+        updateMemberData(recipient.id, recipientData);
       }
 
-      return await interaction.reply({ embeds: [answer.embed] });
+      const answer = take(recipientData, interaction);
+      if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
+      return await interaction.reply(answer.message);
     }
 
   }

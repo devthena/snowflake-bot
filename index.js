@@ -1,5 +1,5 @@
 if (process.version.slice(1).split('.')[0] < 12) {
-  throw new Error('Node 12.0.0 or higher is required. Update Node on your system.');
+  throw new Error('Node 14.0.0 or higher is required. Update Node on your system.');
 }
 
 require('dotenv').config();
@@ -11,7 +11,6 @@ const readdir = promisify(require('fs').readdir);
 
 const { Client, Intents } = require('discord.js');
 
-// configure settings for rendering web pages
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/web/views');
 app.use(express.static(__dirname + '/web/public'));
@@ -32,12 +31,6 @@ const Bot = new Client({
   ]
 });
 
-// add the helper functions specific to the bot
-const loadCommand = require('./helpers/loadCommand');
-const isTrue = require('./helpers/isTrue');
-
-Bot.commands = new Map();
-Bot.isLocal = isTrue(process.env.LOCAL);
 Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.servers = new Map();
 
@@ -45,15 +38,6 @@ require('./web/router')(app, Bot);
 
 const initBot = async () => {
 
-  // load the command files
-  const commandFiles = await readdir('./commands/');
-
-  commandFiles.forEach(fn => {
-    if (!fn.endsWith(".js")) return;
-    loadCommand(Bot, fn);
-  });
-
-  // load the bot event files
   const eventFiles = await readdir('./events/');
 
   eventFiles.forEach(file => {

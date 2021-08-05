@@ -1,72 +1,23 @@
+module.exports = (validOptins, interaction) => {
 
-const LOCAL = process.env.LOCAL;
-const isTrue = require('../helpers/isTrue');
+  const validRoles = validOptins.split(',');
+  const role = interaction.options.getRole('role');
 
-/**
- * Adds a specific opt role to a member
- * @param {Client} Bot 
- * @param {Message} message 
- * @param {Array} args 
- */
-exports.run = async (Bot, message, args) => {
+  const isRoleAllowed = validRoles.includes(role.name);
 
-  if (!message.guild.available) return;
+  if (isRoleAllowed) {
 
-  const server = Bot.servers.get(message.guild.id);
-  if (!server) return;
-
-  if (isTrue(server.mods.optins)) {
-
-    if (!args.length) {
-      return message.channel.send('You have to specify the role you want to opt in to (case sensitive!)');
+    if (interaction.member.roles.cache.has(role.id)) {
+      return { message: `${interaction.member.displayName}, you're already opted in, goob. :wink:` };
     }
 
-    const serverOptinRoles = server.roles.optins.split(',');
-    const specifiedRole = args.join(' ');
-    const optInRole = message.member.guild.roles.cache.find(role => role.name.includes(specifiedRole));
-
-    if (optInRole) {
-
-      const isRoleAllowed = serverOptinRoles.includes(specifiedRole);
-
-      if (isRoleAllowed) {
-
-        if (message.member.roles.cache.has(optInRole.id)) {
-          return message.channel.send(`${message.member.displayName}, you\'re already opted in, goob. :)`);
-        }
-
-        message.member.roles.add(optInRole)
-          .then(function () {
-            message.channel.send(`Success! You now have the ${specifiedRole} role, ${message.member.displayName}!`);
-          }).catch(function (error) {
-            Bot.logger.error(`Opt-in: Cannot add role - ${error}`);
-            message.channel.send('There was a problem adding your opt in role. Please try again later.');
-          });
-
-      } else {
-        message.channel.send('Nice try -- how about we try a different role? :smirk:');
-      }
-
-    } else {
-      Bot.logger.error('Opt-in: Specified role does not exist.');
-      message.channel.send('Looks like this role doesn\'t exist. Did you make a typo? Roles are case-sensitive.');
-    }
-
-  } else {
-    message.channel.send('Opt-ins are disabled right now. Please try again later.');
+    interaction.member.roles.add(role)
+      .then(function () {
+        return { message: `Success! You now have the ${role.name} role, ${interaction.member.displayName}!` };
+      }).catch(function (error) {
+        return { message: 'There was a problem adding this role. Please try again later.' };
+      });
   }
-};
-
-exports.conf = {
-  enabled: !isTrue(LOCAL),
-  aliases: [],
-  cooldown: 3,
-  permitLevel: 0
-};
-
-exports.info = {
-  name: 'optin',
-  description: 'Adds a specific opt role to a member.',
-  category: 'default',
-  usage: '!optin <role>'
+  
+  return { message: 'Nice try -- how about a different role? :smirk:' };
 };

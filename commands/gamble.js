@@ -1,17 +1,14 @@
-const botConfig = require('../constants/botConfig');
+const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
 const weightedRandom = require('../helpers/weightedRandom');
 
 module.exports = (memberData, winPercent, interaction) => {
 
-  const currency = botConfig.CURRENCY;
-  const currencyText = botConfig.CURRENCY_TEXT;
-
   const notices = {
     invalidInput: `Please enter a specific amount or a value of 'all' or 'half'. :wink:`,
-    invalidNegative: `You should gamble at least 1 ${currency}, goob. :wink:`,
-    lostAll: `${interaction.member.displayName} lost all of their ${currencyText}. :money_with_wings:`,
-    noPoints: `Sorry ${interaction.member.displayName}, you have no ${currencyText} to gamble. :neutral_face:`,
-    notEnough: `Sorry ${interaction.member.displayName}, you don't have that many ${currencyText} to gamble. :neutral_face:`
+    invalidNegative: `You should gamble at least 1 ${CURRENCY}, goob. :wink:`,
+    lostAll: `${interaction.member.displayName} lost all of their ${CURRENCY_TEXT}. :money_with_wings:`,
+    noPoints: `Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`,
+    notEnough: `Sorry ${interaction.member.displayName}, you don't have that many ${CURRENCY_TEXT} to gamble. :neutral_face:`
   };
 
   const amount = interaction.options.getString('amount');
@@ -30,7 +27,7 @@ module.exports = (memberData, winPercent, interaction) => {
     if (result === 'win') {
       memberData.points += points;
       return {
-        message: `${interaction.member.displayName} won ${points} :moneybag: and now has ${memberData.points} ${currency}! :sparkles:`,
+        message: `${interaction.member.displayName} won ${points} :moneybag: and now has ${memberData.points} ${CURRENCY}! :sparkles:`,
         updatedMember: memberData
       };
     }
@@ -51,7 +48,7 @@ module.exports = (memberData, winPercent, interaction) => {
     if (result === 'win') {
       memberData.points += halfPoints;
       return {
-        message: `${interaction.member.displayName} won ${halfPoints} :moneybag: and now has ${memberData.points} ${currency}!`,
+        message: `${interaction.member.displayName} won ${halfPoints} :moneybag: and now has ${memberData.points} ${CURRENCY}!`,
         updatedMember: memberData
       };
     }
@@ -59,7 +56,7 @@ module.exports = (memberData, winPercent, interaction) => {
     memberData.points -= halfPoints;
 
     return {
-      message: `${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${memberData.points} ${currency}.`,
+      message: `${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${memberData.points} ${CURRENCY}.`,
       updatedMember: memberData
     };
   }
@@ -74,14 +71,14 @@ module.exports = (memberData, winPercent, interaction) => {
       if (result === 'win') {
         memberData.points += value;
         return {
-          message: `${interaction.member.displayName} won ${value} :moneybag: and now has ${memberData.points} ${currency}!`,
+          message: `${interaction.member.displayName} won ${value} :moneybag: and now has ${memberData.points} ${CURRENCY}!`,
           updatedMember: memberData
         };
       }
       
       memberData.points -= value;
       return {
-        message: `${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${memberData.points} ${currency}.`,
+        message: `${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${memberData.points} ${CURRENCY}.`,
         updatedMember: memberData
       };
     }

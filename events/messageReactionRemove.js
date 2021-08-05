@@ -1,4 +1,4 @@
-const botConfig = require('../constants/botConfig');
+const { LVL_MULTIPLIER } = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 
@@ -30,7 +30,7 @@ module.exports = (Bot, reaction, user) => {
       member.exp += expAddends.reactionRemove;
     } else if (member.level > 1) {
       member.level -= 1;
-      member.exp = (member.level * botConfig.LVL_MULTIPLIER) + expAddends.reactionRemove;
+      member.exp = (member.level * LVL_MULTIPLIER) + expAddends.reactionRemove;
     }
   }
 

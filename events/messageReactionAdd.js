@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const botConfig = require('../constants/botConfig');
+const { COLOR } = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
@@ -108,7 +108,7 @@ module.exports = (Bot, reaction, user) => {
 
         const botEmbed = new Discord.MessageEmbed()
           .setAuthor(message.author.username, message.author.displayAvatarURL())
-          .setColor(botConfig.COLOR)
+          .setColor(COLOR)
           .setDescription(description)
           .setImage(imageUrl)
           .setFooter(`Posted on ${message.createdAt}`);

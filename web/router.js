@@ -2,10 +2,10 @@
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const DB_NAME = process.env.DB_NAME;
+const LOCAL = process.env.LOCAL;
 const SCOPES = ['identify'];
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
-const REDIRECT_URI_LOCAL = process.env.AUTH_REDIRECT_URI_LOCAL;
+const REDIRECT_URI = LOCAL ? process.env.AUTH_REDIRECT_URI_LOCAL : process.env.AUTH_REDIRECT_URI;
 
 const express = require('express');
 const passport = require('passport');
@@ -29,7 +29,7 @@ module.exports = (app, Bot) => {
 
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    callbackURL: Bot.isLocal ? REDIRECT_URI_LOCAL : REDIRECT_URI,
+    callbackURL: REDIRECT_URI,
     scope: SCOPES
 
   }, fetchUserData));

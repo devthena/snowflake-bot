@@ -1,65 +1,15 @@
-const LOCAL = process.env.LOCAL;
-const isTrue = require('../helpers/isTrue');
+module.exports = (interaction) => {
 
-/**
- * Removes a specific opt role from a member
- * @param {Client} Bot 
- * @param {Message} message 
- * @param {Array} args 
- */
-exports.run = async (Bot, message, args) => {
+  const role = interaction.options.getRole('role');
 
-  if (!message.guild.available) return;
-
-  const server = Bot.servers.get(message.guild.id);
-  if (!server) return;
-
-  if (!args.length) {
-    return message.channel.send('You have to specify the role you want to opt out from (case sensitive!)');
+  if (!interaction.member.roles.cache.has(role.id)) {
+    return { message: `${interaction.member.displayName}, you don't have that role, goob. :wink:` };
   }
 
-  const serverOptinRoles = server.roles.optins.split(',');
-  const specifiedRole = args.join(' ');
-  const optInRole = message.member.guild.roles.cache.find(role => role.name.includes(specifiedRole));
-
-  if (optInRole) {
-
-    const isRoleAllowed = serverOptinRoles.includes(specifiedRole);
-
-    if (isRoleAllowed) {
-
-      if (!message.member.roles.cache.has(optInRole.id)) {
-        return message.channel.send(`${message.member.displayName}, you don't have that role, goob. :)`);
-      }
-
-      message.member.roles.remove(optInRole)
-        .then(function () {
-          message.channel.send(`You are now free from the ${specifiedRole} role, ${message.member.displayName}.`);
-        }).catch(function (error) {
-          Bot.logger.error(`Opt-Out: Cannot remove role - ${error}`);
-          message.channel.send('There was a problem removing your role. Please try again later.');
-        });
-
-    } else {
-      message.channel.send('Yeah I can\'t opt you out of that one.. maybe a different role?');
-    }
-
-  } else {
-    Bot.logger.error('Opt-Out: Specified role does not exist.');
-    message.channel.send('Looks like this role doesn\'t exist. Did you make a typo? Roles are case-sensitive.');
-  }
-};
-
-exports.conf = {
-  enabled: !isTrue(LOCAL),
-  aliases: [],
-  cooldown: 3,
-  permitLevel: 0
-};
-
-exports.info = {
-  name: 'optout',
-  description: 'Removes a specific opt role from a member.',
-  category: 'default',
-  usage: '!optout <role>'
+  interaction.member.roles.remove(role)
+    .then(function () {
+      return { message: `You are now free from the ${role.name} role, ${interaction.member.displayName}!` };
+    }).catch(function (error) {
+      return { message: 'There was a problem removing this role. Please try again later.' };
+    });
 };
