@@ -10,12 +10,12 @@ const updateLevel = require('../helpers/user/updateLevel');
  */
 module.exports = (Bot, message) => {
 
-  if (message.channel.type !== 'text') return;
+  if (message.channel.type !== 'GUILD_TEXT') return;
   if (!message.guild.available) return;
   if (message.author.bot) return;
   if (message.author.system) return;
 
-  const server = Bot.servers.get(message.guild.id);
+  const server = Bot.servers.get(message.guildId);
   if (!server) return;
 
   if (!message.member) return;
@@ -45,5 +45,5 @@ module.exports = (Bot, message) => {
 
   const updatedMember = updateLevel(member, message.member.displayName, message.guild.channels);
   server.members.set(message.member.id, updatedMember);
-  Bot.servers.set(message.guild.id, server);
+  Bot.servers.set(message.guildId, server);
 };
