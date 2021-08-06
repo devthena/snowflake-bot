@@ -13,13 +13,13 @@ module.exports = (Bot, reaction, user) => {
 
   const message = reaction.message;
 
-  if (message.channel.type !== 'text') return;
+  if (message.channel.type !== 'GUILD_TEXT') return;
 
   if (!message.guild.available) return;
 
   if (message.author.bot || user.bot || message.author.system) return;
 
-  const server = Bot.servers.get(message.guild.id);
+  const server = Bot.servers.get(message.guildId);
   if (!server) return;
 
   let member = server.members.get(user.id);
@@ -35,5 +35,5 @@ module.exports = (Bot, reaction, user) => {
   }
 
   server.members.set(user.id, member);
-  Bot.servers.set(message.guild.id, server);
+  Bot.servers.set(message.guildId, server);
 };

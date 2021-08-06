@@ -16,13 +16,13 @@ module.exports = (Bot, reaction, user) => {
 
   const message = reaction.message;
 
-  if (message.channel.type !== 'text') return;
+  if (message.channel.type !== 'GUILD_TEXT') return;
 
   if (!message.guild.available) return;
 
   if (message.author.bot || user.bot || message.author.system) return;
 
-  const server = Bot.servers.get(message.guild.id);
+  const server = Bot.servers.get(message.guildId);
   if (!server) return;
 
   let member = server.members.get(user.id);
@@ -35,7 +35,7 @@ module.exports = (Bot, reaction, user) => {
   const updatedMember = updateLevel(member, displayName, message.guild.channels);
   
   server.members.set(user.id, updatedMember);
-  Bot.servers.set(message.guild.id, server);
+  Bot.servers.set(message.guildId, server);
 
   if (isTrue(server.mods.highlightBoard)) {
 
@@ -84,7 +84,7 @@ module.exports = (Bot, reaction, user) => {
         let displayName = message.member ? message.member.displayName : message.author.username;
         const updatedAuthor = updateLevel(author, displayName, message.guild.channels);
         server.members.set(message.author.id, updatedAuthor);
-        Bot.servers.set(message.guild.id, server);
+        Bot.servers.set(message.guildId, server);
 
         let imageUrl = null;
         let description = `${message.cleanContent}\n\nLink for [original message](${message.url}) in ${message.channel}`;
@@ -112,7 +112,7 @@ module.exports = (Bot, reaction, user) => {
           .setDescription(description)
           .setImage(imageUrl)
           .setFooter(`Posted on ${message.createdAt}`);
-        highlightBoardChannel.send(botEmbed);
+        highlightBoardChannel.send({ embeds: [botEmbed] });
       }
 
       let index = server.messageTrackIds.indexOf(message.id);
