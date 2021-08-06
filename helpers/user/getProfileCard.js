@@ -174,7 +174,7 @@ const getProfileCard = async (stats, rank, member) => {
       stars: stats.stars
     },
     puppeteerArgs: {
-      args: ['--no-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
   });
 

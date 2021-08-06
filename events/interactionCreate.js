@@ -167,11 +167,13 @@ module.exports = async (Bot, interaction) => {
         updateMemberData(member.id, memberData);
       }
 
+      await interaction.deferReply();
+
       const rank = getRank(member.id, server.members);
       const profileCard = await getProfileCard(memberData, rank, member);
       const attachment = new MessageAttachment(profileCard, 'profile.png');
 
-      return await interaction.reply({ attachments: [attachment] });
+      return await interaction.editReply({ files: [attachment] });
     }
 
     if(interaction.commandName === 'star') {
