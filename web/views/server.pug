@@ -52,7 +52,7 @@
           .feature
             label Valid Optin Roles (comma-separated):
             input(type="text" name="roles:optins" value=server.roles.optins)
-        // Game: Double or Nothing
+        // Game: Point Gamble
         section
           .switch-info
             .switch-box
@@ -67,18 +67,6 @@
           .feature
             label Win Percentage:
             input(type="text" name="settings:gamblePercent" value=server.settings.gamblePercent)
-        // Game: Magic 8 Ball
-        section
-          .switch-info
-            .switch-box
-              if server.mods.game8Ball
-                input(type="checkbox" class="switch" name="game8Ball" checked)
-              else
-                input(type="checkbox" class="switch" name="game8Ball")
-              include ./switch.pug
-            .info
-              h3 Game: Magic 8 Ball
-              span Let members ask the bot like Magic 8 Ball
         // Highlight Board
         section
           .switch-info

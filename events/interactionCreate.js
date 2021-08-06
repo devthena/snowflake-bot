@@ -37,10 +37,6 @@ module.exports = async (Bot, interaction) => {
 
     if(interaction.commandName === '8ball') {
 
-      if (!isTrue(server.mods.game8Ball)) {
-        return await interaction.reply('8Ball is not enabled in this server.');
-      }
-
       const answer = magic8Ball();
       return await interaction.reply(answer);
     }
