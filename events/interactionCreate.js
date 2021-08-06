@@ -9,6 +9,7 @@ const magic8Ball = require('../commands/8ball');
 const nickname = require('../commands/nickname');
 const optin = require('../commands/optin');
 const star = require('../commands/star');
+const take = require('../commands/take');
 
 const { CURRENCY, CURRENCY_TEXT, URLS } = require('../constants/botConfig');
 const memberConfig = require('../constants/memberConfig');
