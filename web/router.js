@@ -5,7 +5,6 @@ const DB_NAME = process.env.DB_NAME;
 const LOCAL = process.env.LOCAL;
 const SCOPES = ['identify'];
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const REDIRECT_URI = LOCAL ? process.env.AUTH_REDIRECT_URI_LOCAL : process.env.AUTH_REDIRECT_URI;
 
 const express = require('express');
 const passport = require('passport');
@@ -13,7 +12,10 @@ const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const DiscordStrategy = require('passport-discord').Strategy;
 
+const isTrue = require('../helpers/isTrue');
 const serverLog = require('../helpers/serverLog');
+
+const REDIRECT_URI = isTrue(LOCAL) ? process.env.AUTH_REDIRECT_URI_LOCAL : process.env.AUTH_REDIRECT_URI;
 
 module.exports = (app, Bot) => {
 

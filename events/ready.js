@@ -10,6 +10,7 @@ const globalCommands = require('../constants/globalCommands');
 const serverCommands = require('../constants/serverCommands');
 
 const asyncForEach = require('../helpers/asyncForEach');
+const isTrue = require('../helpers/isTrue');
 const startBackup = require('../helpers/startBackup');
 
 /**
@@ -28,7 +29,7 @@ module.exports = async Bot => {
 
   if(!Bot.application?.commands) await Bot.application?.fetch();
 
-  if(!LOCAL) await Bot.application?.commands.set(globalCommands);
+  if(!isTrue(LOCAL)) await Bot.application?.commands.set(globalCommands);
 
   const guildArray = Array.from(Bot.guilds.cache.values());
 
@@ -106,5 +107,5 @@ module.exports = async Bot => {
   });
 
   await db.close();
-  if(!LOCAL) startBackup(Bot);
+  if(!isTrue(LOCAL)) startBackup(Bot);
 };
