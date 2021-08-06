@@ -1,20 +1,4 @@
-const LOCAL = process.env.LOCAL;
-const isTrue = require('../helpers/isTrue');
-
-/**
- * Game: Magic 8 Ball
- * @param {Client} Bot 
- * @param {Message} message 
- * @param {Array} args 
- */
-exports.run = async (Bot, message, args) => {
-
-  if (!message.guild.available) return;
-
-  const server = Bot.servers.get(message.guild.id);
-  if (!server) return;
-  if (!isTrue(server.mods.game8Ball)) return;
-  if (args.length === 0) return;
+module.exports = () => {
 
   let responseArray = [
     'It is certain.',
@@ -39,22 +23,8 @@ exports.run = async (Bot, message, args) => {
     'Very doubtful.'
   ];
 
-  let randomNum = Math.floor(Math.random() * responseArray.length);
-  let answer = responseArray[randomNum];
+  const randomNum = Math.floor(Math.random() * responseArray.length);
+  const answer = responseArray[randomNum];
 
-  return message.channel.send(`:8ball: says.. ${answer}`);
-};
-
-exports.conf = {
-  enabled: !isTrue(LOCAL),
-  aliases: [],
-  cooldown: 5,
-  permitLevel: 0
-};
-
-exports.info = {
-  name: '8ball',
-  description: 'Play a game of Magic 8 Ball.',
-  category: 'games',
-  usage: '!8ball <question>'
+  return `:8ball: says.. ${answer}`;
 };

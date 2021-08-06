@@ -1,47 +1,41 @@
 const DB_NAME = process.env.DB_NAME;
+
+const { open } = require('sqlite');
 const sqlite3 = require('sqlite3').verbose();
+
+const asyncForEach = require('../helpers/asyncForEach');
 
 /**
  * Updates the database with server members data
  * @param {ClientUser} Bot 
  */
-const backupMembers = Bot => {
+const backupMembers = async Bot => {
 
-  const db = new sqlite3.Database(`./${DB_NAME}`, error => {
-    if (error) return Bot.logger.error(`[DB] backupMembers: ${error}`);
+  const db = await open({
+    filename: `./${DB_NAME}`,
+    driver: sqlite3.Database
   });
 
-  let serverCount = 0;
-  let lastIndex = Bot.servers.size;
-  let sql = 'INSERT OR REPLACE INTO members (id,user_id,server_id,level,exp,points,stars) VALUES (?,?,?,?,?,?,?)';
+  const serverArray = Array.from(Bot.servers.entries());
+  const sql = 'INSERT OR REPLACE INTO members (id,user_id,server_id,level,exp,points,stars) VALUES (?,?,?,?,?,?,?)';
 
-  Bot.servers.forEach((server, serverID) => {
-    Bot.logger.info(`[DB] startBackup: ${serverID}, size ${server.members.size}`);
+  await asyncForEach(serverArray, async server => {
 
-    let processCount = 0;
+    const serverId = server[0];
+    const serverData = server[1];
 
-    server.members.forEach((member, userID) => {
+    Bot.logger.info(`[DB] startBackup: ${serverId}, size ${serverData.members.size}`);
 
-      const uniqueID = member.uniqueID ? member.uniqueID : `${userID}-${Date.now()}`;
-
-      db.run(sql, [uniqueID, userID, serverID, member.level, member.exp, member.points, member.stars], error => {
-        if (error) Bot.logger.error(`[DB] Cannot update points for ${userID}: ${error}`);
-
-        processCount++;
-        if (processCount === server.members.size) {
-
-          Bot.logger.info(`[DB] Backup done for ${serverID}`);
-
-          serverCount++;
-          if (serverCount === lastIndex) {
-            db.close(error => {
-              if (error) return Bot.logger.error(`[DB] backupMembers: ${error}`);
-            });
-          }
-        }
-      });
+    const memberArray = Array.from(serverData.members.entries());
+    await asyncForEach(memberArray, async member => {
+      const uniqueId = member.uniqueId ? member.uniqueId : `${member[0]}-${Date.now()}`;
+      await db.run(sql, [uniqueId, member[0], serverId, member[1].level, member[1].exp, member[1].points, member[1].stars]);
     });
+
+    Bot.logger.info(`[DB] Backup done for ${serverId}`);
   });
+
+  db.close();
 };
 
 module.exports = backupMembers;

@@ -1,127 +1,90 @@
-const LOCAL = process.env.LOCAL;
-const botConfig = require('../constants/botConfig');
-const memberConfig = require('../constants/memberConfig');
-const isTrue = require('../helpers/isTrue');
+const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
 const weightedRandom = require('../helpers/weightedRandom');
 
-/**
- * Game: Double or Nothing
- * @param {Client} Bot 
- * @param {Message} message 
- * @param {Array} args 
- */
-exports.run = async (Bot, message, args) => {
-
-  if (!message.guild.available) return;
-
-  const server = Bot.servers.get(message.guild.id);
-  if (!server) return;
-  if (!isTrue(server.mods.gameGamble)) return;
-
-  const currency = botConfig.CURRENCY;
-  const currencyText = botConfig.CURRENCY_TEXT;
+module.exports = (memberData, winPercent, interaction) => {
 
   const notices = {
-    invalidInput: `You can only gamble an amount of your ${currencyText}, 'all', or 'half'. :wink:`,
-    invalidNegative: `You should gamble at least 1 ${currency}, goob. :wink:`,
-    lostAll: `${message.member.displayName} lost all of their ${currencyText}. :money_with_wings:`,
-    noPoints: `Sorry ${message.member.displayName}, you have no ${currencyText} to gamble. :neutral_face:`,
-    notEnough: `Sorry ${message.member.displayName}, you don't have that many ${currencyText} to gamble. :neutral_face:`
+    invalidInput: `Please enter a specific amount or a value of 'all' or 'half'. :wink:`,
+    invalidNegative: `You should gamble at least 1 ${CURRENCY}, goob. :wink:`,
+    lostAll: `${interaction.member.displayName} lost all of their ${CURRENCY_TEXT}. :money_with_wings:`,
+    noPoints: `Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`,
+    notEnough: `Sorry ${interaction.member.displayName}, you don't have that many ${CURRENCY_TEXT} to gamble. :neutral_face:`
   };
 
-  let allIn = false;
-  let gambleHalf = false;
+  const amount = interaction.options.getString('amount');
+  if(isNaN(amount) && amount !== 'all' && amount !== 'half') return { message: notices.invalidInput };
 
-  const probability = { win: (server.settings.gamblePercent / 100), loss: (1 - (server.settings.gamblePercent / 100)) };
+  const probability = { win: (winPercent / 100), loss: (1 - (winPercent / 100)) };
 
-  if (args[0] === 'all') allIn = true;
-  else if (args[0] === 'half') gambleHalf = true;
+  const points = parseInt(memberData.points, 10);
 
-  if (isNaN(args[0]) && !allIn && !gambleHalf) return message.channel.send(notices.invalidInput);
-
-  let member = server.members.get(message.member.id);
-  if (!member) {
-    member = JSON.parse(JSON.stringify(memberConfig));
-    server.members.set(message.member.id, member);
-    Bot.servers.set(message.guild.id, server);
-    return message.channel.send(notices.noPoints);
-  }
-
-  const points = parseInt(member.points, 10);
-
-  if (points < 1) return message.channel.send(notices.noPoints);
+  if (points < 1) return { message: notices.noPoints };
 
   const result = weightedRandom(probability);
 
-  if (allIn) {
+  if (amount === 'all') {
 
     if (result === 'win') {
-      member.points += points;
-      server.members.set(message.member.id, member);
-      Bot.servers.set(message.guild.id, server);
-      return message.channel.send(`${message.member.displayName} won ${points} :moneybag: and now has ${member.points} ${currency}! :sparkles:`);
+      memberData.points += points;
+      return {
+        message: `${interaction.member.displayName} won ${points} :moneybag: and now has ${memberData.points} ${CURRENCY}! :sparkles:`,
+        updatedMember: memberData
+      };
     }
     
-    member.points = 0;
-    server.members.set(message.member.id, member);
-    Bot.servers.set(message.guild.id, server);
-    return message.channel.send(notices.lostAll);
+    memberData.points = 0;
+
+    return {
+      message: notices.lostAll,
+      updatedMember: memberData
+    };
 
   }
   
-  if (gambleHalf) {
+  if (amount === 'half') {
 
     const halfPoints = Math.round(points / 2);
 
     if (result === 'win') {
-      member.points += halfPoints;
-      server.members.set(message.member.id, member);
-      Bot.servers.set(message.guild.id, server);
-      return message.channel.send(`${message.member.displayName} won ${halfPoints} :moneybag: and now has ${member.points} ${currency}!`);
+      memberData.points += halfPoints;
+      return {
+        message: `${interaction.member.displayName} won ${halfPoints} :moneybag: and now has ${memberData.points} ${CURRENCY}!`,
+        updatedMember: memberData
+      };
     }
     
-    member.points -= halfPoints;
-    server.members.set(message.member.id, member);
-    Bot.servers.set(message.guild.id, server);
-    return message.channel.send(`${message.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${member.points} ${currency}.`);
+    memberData.points -= halfPoints;
+
+    return {
+      message: `${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${memberData.points} ${CURRENCY}.`,
+      updatedMember: memberData
+    };
   }
 
-  let count = parseInt(args[0], 10);
-  if (!count || count < 1) return message.channel.send(notices.invalidNegative);
+  const value = parseInt(amount, 10);
+  if (value < 1) return { message: notices.invalidNegative };
 
   if (points > 0) {
 
-    if (count <= points) {
+    if (value <= points) {
 
       if (result === 'win') {
-        member.points += count;
-        server.members.set(message.member.id, member);
-        Bot.servers.set(message.guild.id, server);
-        return message.channel.send(`${message.member.displayName} won ${count} :moneybag: and now has ${member.points} ${currency}!`);
+        memberData.points += value;
+        return {
+          message: `${interaction.member.displayName} won ${value} :moneybag: and now has ${memberData.points} ${CURRENCY}!`,
+          updatedMember: memberData
+        };
       }
       
-      member.points -= count;
-      server.members.set(message.member.id, member);
-      Bot.servers.set(message.guild.id, server);
-      return message.channel.send(`${message.member.displayName} lost ${count} :money_with_wings: and now has ${member.points} ${currency}.`);
+      memberData.points -= value;
+      return {
+        message: `${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${memberData.points} ${CURRENCY}.`,
+        updatedMember: memberData
+      };
     }
     
-    return message.channel.send(notices.notEnough);
+    return { message: notices.notEnough };
   }
   
-  return message.channel.send(notices.noPoints);
-};
-
-exports.conf = {
-  enabled: !isTrue(LOCAL),
-  aliases: [],
-  cooldown: 3,
-  permitLevel: 0
-};
-
-exports.info = {
-  name: 'gamble',
-  description: 'Play a game of double or nothing using a given amount of points.',
-  category: 'games',
-  usage: '!gamble <amount>'
+  return { message: notices.noPoints };
 };

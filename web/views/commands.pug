@@ -3,51 +3,60 @@
     h1 Command List
     .commands
       section
-        h2.pink !8ball
-        p Usage: !8ball &lt;question&gt;
-        p Description: Ask the bot like a Magic 8 Ball.
+        h2.pink /8ball
+        p Usage: /8ball &lt;question&gt;
+        p Description: Play a game of Magic 8 Ball
       section
-        h2.pink !commands
-        p Usage: !commands
-        p Description: Displays the link for the commands page of the bot website.
+        h2.pink /clear [admin]
+        p Usage: /clear &lt;amount&gt;
+        p Description: Delete a specific amount of message
       section
-        h2.pink !gamble
-        p Usage: !gamble &lt;amount&gt;
-        p Description: Play a game of double or nothing with the bot.
+        h2.pink /gamble
+        p Usage: /gamble &lt;amount&gt;
+        p Description: Play your points for a chance to double it
         p Values: &lt;number&gt; | all | half
       section
-        h2.pink !give
-        p Usage: !give &lt;@user&gt; &lt;amount&gt;
-        p Description: Transfer an amount of points to another user by tagging them.
+        h2.pink /give
+        p Usage: /give &lt;@user&gt; &lt;amount&gt;
+        p Description: Give an amount of points to a user
       section
-        h2.pink !optin
-        p Usage: !optin &lt;role&gt;
-        p Description: Adds a role made for notifying users in specific channels.
+        h2.pink /help
+        p Usage: /help
+        p Description: Display helpful links about the bot
       section
-        h2.pink !optout
-        p Usage: !optout &lt;role&gt;
-        p Description: Removes a role made for notifying users in specific channels.
+        h2.pink /info
+        p Usage: /info
+        p Description: Display bot information
       section
-        h2.pink !points
-        p Usage: !points
-        p Description: Displays the amount of points of the user.
+        h2.pink /leaderboard
+        p Usage: /leaderboard &lt;type&gt;
+        p Description: Display the top users for this server
+        p Values: points | rank
       section
-        h2.pink !profile
-        p Usage: !profile
-        p Description: Displays a profile card with the latest rank information of the user.
+        h2.pink /nickname [admin]
+        p Usage: /nickname &lt;@role&gt; &lt;format&gt;
+        p Description: Set nicknames of members that have the specified role
       section
-        h2.pink !snowflake
-        p Usage: !snowflake
-        p Description: Displays the bot information.
+        h2.pink /optin
+        p Usage: /optin &lt;@role&gt;
+        p Description: Add a role to yourself
       section
-        h2.pink !star
-        p Usage: !star &lt;@user&gt;
-        p Description: Gives a star (as a form of endorsement) to a mentioned user.
+        h2.pink /optout
+        p Usage: /optout &lt;role&gt;
+        p Description: Remove a role from yourself
       section
-        h2.pink !topcoin
-        p Usage: !topcoin
-        p Description: Displays a list of members with the highest amount of points.
+        h2.pink /points
+        p Usage: /points
+        p Description: Display your points balance
       section
-        h2.pink !toprank
-        p Usage: !toprank
-        p Description: Displays a list of members with the highest level and exp.
+        h2.pink /profile
+        p Usage: /profile (optional) &lt;@user&gt;
+        p Description: Display your user profile
+      section
+        h2.pink /star
+        p Usage: /star &lt;@user&gt;
+        p Description: Give a star to a user as a form of endorsement
+      section
+        h2.pink /take [admin]
+        p Usage: /take &lt;@user&gt; &lt;amount&gt;
+        p Description: Take an amount of points from a user

@@ -1,46 +1,28 @@
 ## Snowflake Bot
 
-A Discord bot I created for AthenaUS and AikoBliss servers. This bot is not meant for public use but you are more than welcome to fork this repository.
+A Discord bot I created for AthenaUS and AikoBliss servers. This bot is not meant for public use.
 
-### Setup Bot Application
+### Global Commands
 
-Here is a link to a guide in setting up a Discord bot application: https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot. From this guide you should be able to get a Client ID, Client Secret, and Token
+- /8ball - Play a game of Magic 8 Ball
+- /help - Display helpful links about the bot
+- /info - Display bot information
 
-### Environment Variables
+### Server Commands
 
-The following are required in your `.env` file to properly run the bot:
-
-- AUTH_REDIRECT_URI - sample value http://snowflakebot.com/auth/discord/callback
-- AUTH_REDIRECT_URI_LOCAL (optional) - sample value http://localhost:8080/auth/discord/callback
-- CLIENT_ID
-- CLIENT_SECRET
-- TOKEN
-
-### Development and Testing
-
-In your terminal, run the following commands:
-
-```sh
-$ nvm use
-$ npm install
-$ npm run start
-```
-
-### Default Commands
-
-- !8ball - a mini game patterned from Magic 8 Ball
-- !commands - displays the URL for the commands list
-- !gamble {number} - a game with 50/50 chance to double {number} user points or lose it
-- !give {@user} {number} - transfers {number} user points to another user
-- !optin {role} - adds a role to the user, useful for notifications for movie nights
-- !optout {role} - removes a role from the user
-- !points - displays the current user points a user has
-- !snowflake - displays the bot information
-- !star {@user} - gives a star (as an endorsement) to a user
-- !topcoin - displays a list of users with the highest points
-- !toprank - displays a list of users with the highest level
+- /clear {amount} - Delete a specific amount of messages (ADMIN)
+- /gamble {amount} - Play your points for a chance to double it
+- /give {@user} {amount} - Give an amount of points to a user
+- /leaderboard {type} - Display the top users for this server
+- /nickname {@role} {format} - Set nicknames of members that have the specified role (ADMIN)
+- /optin {@role} - Add a role to yourself
+- /optout {@role} - Remove a role from yourself
+- /points - Display your points balance
+- /profile - Display your user profile
+- /star {@user} - Give a star to a user as a form of endorsement
+- /take - Take an amount of points from a user (ADMIN)
 
 ### References
 
 - Guide in developing a Discord Bot using Discord.js - https://discordjs.guide
-- Discord.js documentation - https://discord.js.org/#/docs/main/stable/general/welcome
+- Discord.js documentation - https://discord.js.org

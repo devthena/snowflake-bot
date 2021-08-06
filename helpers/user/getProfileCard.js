@@ -1,5 +1,5 @@
 const nodeHtmlToImage = require('node-html-to-image');
-const botConfig = require('../../constants/botConfig');
+const { LVL_MULTIPLIER } = require('../../constants/botConfig');
 const monthMap = require('../../constants/monthMap');
 
 /**
@@ -10,7 +10,7 @@ const monthMap = require('../../constants/monthMap');
  */
 const getProfileCard = async (stats, rank, member) => {
 
-  const maxExp = stats.level * botConfig.LVL_MULTIPLIER;
+  const maxExp = stats.level * LVL_MULTIPLIER;
 
   const profileCardBuffer = await nodeHtmlToImage({
     html: `<html>
@@ -174,7 +174,7 @@ const getProfileCard = async (stats, rank, member) => {
       stars: stats.stars
     },
     puppeteerArgs: {
-      args: ['--no-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
   });
 

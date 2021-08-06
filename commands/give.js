@@ -1,87 +1,34 @@
-const LOCAL = process.env.LOCAL;
-const botConfig = require('../constants/botConfig');
-const memberConfig = require('../constants/memberConfig');
-const isTrue = require('../helpers/isTrue');
+const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
 
-/**
- * Give an amount of points to a specific member
- * @param {Client} Bot 
- * @param {Message} message 
- * @param {Array} args 
- */
-exports.run = async (Bot, message, args) => {
-
-  if (!message.guild.available) return;
-
-  const server = Bot.servers.get(message.guild.id);
-  if (!server) return;
-
-  const currency = botConfig.CURRENCY;
-  const currencyText = botConfig.CURRENCY_TEXT;
+module.exports = (memberData, recipientData, interaction) => {
 
   const notices = {
-    invalidInput: `${message.member.displayName}, you can only give ${currencyText}, please enter an amount. :wink:`,
-    noBot: `Sorry ${message.member.displayName}, I have no use for ${currencyText}. Please keep it! :snowflake:`,
-    noPoints: `Sorry ${message.member.displayName}, you have no ${currencyText} to give. :neutral_face:`,
-    noTag: `${message.member.displayName}, you have to tag the person you want to give your ${currencyText} to. :wink:`,
-    notEnough: `Sorry ${message.member.displayName}, you don't have that many ${currencyText} to give. :neutral_face:`
+    noPoints: `Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`,
+    notEnough: `Sorry ${interaction.member.displayName}, you don't have that many ${CURRENCY_TEXT} to give. :neutral_face:`
   };
 
-  if (message.mentions.members.size === 0) {
-    return message.channel.send(notices.noTag);
+  const amount = interaction.options.getInteger('amount');
+  if (amount <= 0) return { message: `${interaction.member.displayName}, you can't give ${amount} ${CURRENCY}, goob. :wink:` };
+
+  if (memberData.points < amount && interaction.member.id !== interaction.guild.ownerId) {
+    return { message: notices.notEnough };
   }
 
-  if (isNaN(args[1])) return message.channel.send(notices.invalidInput);
+  let recipient = interaction.options.getMember('user');
+  let recipientCopy = `${recipient.displayName}.`;
 
-  let amount = parseInt(args[1], 10);
-  if (amount <= 0) return message.channel.send(`${message.member.displayName}, you can't give ${amount} ${currency}, goob. :wink:`);
+  if (interaction.member.id === recipient.id) recipientCopy = 'yourself. :smirk:';
 
-  let giver = server.members.get(message.member.id);
-  if (!giver) {
-    giver = JSON.parse(JSON.stringify(memberConfig));
-    server.members.set(message.member.id, giver);
-    Bot.servers.set(message.guild.id, server);
-    return message.channel.send(notices.noPoints);
+  if (interaction.member.id !== interaction.guild.ownerId) {
+    memberData.points -= amount;
   }
 
-  if (giver.points < amount && message.member.id !== message.guild.ownerID) {
-    return message.channel.send(notices.notEnough);
-  }
+  recipientData.points += amount;
 
-  let recipient = message.mentions.members.first();
-  let recipientCopy = `${recipient.displayName}`;
+  return {
+    message: `${interaction.member.displayName}, you have given ${amount} ${CURRENCY} to ${recipientCopy}`,
+    updatedMember: memberData,
+    updatedRecipient: recipientData
+  };
 
-  if (message.member.id === recipient.id) recipientCopy = 'yourself. :smirk:';
-
-  if (Bot.user.id === recipient.id) {
-    return message.channel.send(notices.noBot);
-  }
-
-  if (message.member.id !== message.guild.ownerID) {
-    giver.points -= amount;
-    server.members.set(message.member.id, giver);
-  }
-
-  let member = server.members.get(recipient.id);
-  if (!member) member = JSON.parse(JSON.stringify(memberConfig));
-
-  member.points += amount;
-
-  server.members.set(recipient.id, member);
-  Bot.servers.set(message.guild.id, server);
-  return message.channel.send(`${message.member.displayName}, you have given ${amount} ${currency} to ${recipientCopy}.`);
-};
-
-exports.conf = {
-  enabled: !isTrue(LOCAL),
-  aliases: [],
-  cooldown: 5,
-  permitLevel: 0
-};
-
-exports.info = {
-  name: 'give',
-  description: 'Give an amount of points to a specific member.',
-  category: 'user',
-  usage: '!give <@user> <amount>'
 };

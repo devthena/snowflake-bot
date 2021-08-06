@@ -1,7 +1,7 @@
 
 const Discord = require('discord.js');
 const isTrue = require('../helpers/isTrue');
-const botConfig = require('../constants/botConfig');
+const { COLOR } = require('../constants/botConfig');
 const types = require('./../constants/activityTypes');
 
 /**
@@ -54,7 +54,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
       }
 
       // stream announcements for server owners
-      if (isTrue(server.mods.alertStream) && newPresence.guild.ownerID === newMember.id) {
+      if (isTrue(server.mods.alertStream) && newPresence.guild.ownerId === newMember.id) {
 
         const streamActivity = newPresence.activities.find(activity => activity.type === types.streaming);
         const alertStreamChannel = newPresence.guild.channels.cache.find(channel => channel.name.includes(server.channels.alertStream));
@@ -69,7 +69,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
           const botEmbed = new Discord.MessageEmbed()
             .setAuthor(newMember.user.username, newMember.user.displayAvatarURL())
-            .setColor(botConfig.COLOR)
+            .setColor(COLOR)
             .setTitle(`Now Streaming ${streamActivity.state}`)
             .setDescription(liveMessage)
             .setImage(liveImage)
