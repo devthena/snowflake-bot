@@ -17,7 +17,7 @@ const updateLevel = (member, nickname, guildChannels) => {
     updatedMember.level = member.level + 1;
     updatedMember.exp = member.exp - totalExp;
     const botChannel = guildChannels.cache.find(channel => {
-      return channel.name.includes(CHANNEL) && channel.isText();
+      return channel.name.includes(CHANNEL) && channel.type === 'GUILD_TEXT';
     });
 
     if (botChannel) {

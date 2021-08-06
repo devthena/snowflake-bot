@@ -8,7 +8,7 @@ const serverLog = require('../helpers/serverLog');
  */
 module.exports = (Bot, guild, user) => {
 
-  if (!guild.available) return;
+  if (!guild?.available) return;
 
   const server = Bot.servers.get(guild.id);
   if (!server) return;

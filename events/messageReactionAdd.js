@@ -17,9 +17,7 @@ module.exports = (Bot, reaction, user) => {
   const message = reaction.message;
 
   if (message.channel.type !== 'GUILD_TEXT') return;
-
-  if (!message.guild.available) return;
-
+  if (!message.guild?.available) return;
   if (message.author.bot || user.bot || message.author.system) return;
 
   const server = Bot.servers.get(message.guildId);

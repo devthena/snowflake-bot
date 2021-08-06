@@ -11,7 +11,7 @@ const updateLevel = require('../helpers/user/updateLevel');
 module.exports = (Bot, message) => {
 
   if (message.channel.type !== 'GUILD_TEXT') return;
-  if (!message.guild.available) return;
+  if (!message.guild?.available) return;
   if (message.author.bot) return;
   if (message.author.system) return;
 

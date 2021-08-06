@@ -11,7 +11,7 @@ const config = {
     COMMANDS: 'https://snowflakebot.com/commands',
     FAQ: 'https://snowflakebot.com/faq'
   },
-  VERSION: '1.8.0-alpha'
+  VERSION: '1.8.0-beta'
 };
 
 module.exports = config;
