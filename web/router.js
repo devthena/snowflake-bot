@@ -204,7 +204,7 @@ module.exports = (app, Bot) => {
     let logEvent = {
       author: 'Snowflake Web',
       message: `User Log In: ${discordTag}\nDiscord User ID: ${profile.id}`,
-      footer: new Date(),
+      footer: new Date().toString(),
       type: 'default'
     };
 
