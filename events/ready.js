@@ -35,16 +35,20 @@ module.exports = async Bot => {
 
   await asyncForEach(guildArray, async guild => {
 
-    const commands = await Bot.guilds.cache.get(guild.id)?.commands.set(serverCommands);
-    const commArray = Array.from(commands.values());
+    if(!isTrue(LOCAL)) {
 
-    await asyncForEach(commArray, async comm => {
-      if(comm.name === 'clear' || comm.name === 'nickname' || comm.name === 'take') {
-        comm.permissions.set({
-          permissions: [{ id: guild.ownerId, type: 'USER', permission: true }]
-        });
-      }
-    });
+      const commands = await Bot.guilds.cache.get(guild.id)?.commands.set(serverCommands);
+      const commArray = Array.from(commands.values());
+
+      await asyncForEach(commArray, async comm => {
+        if(comm.name === 'clear' || comm.name === 'nickname' || comm.name === 'take') {
+          comm.permissions.set({
+            permissions: [{ id: guild.ownerId, type: 'USER', permission: true }]
+          });
+        }
+      });
+
+    }
 
     let memberMap = new Map();
     let config = JSON.parse(JSON.stringify(serverConfig));
