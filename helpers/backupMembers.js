@@ -3,7 +3,7 @@ const DB_NAME = process.env.DB_NAME;
 const { open } = require('sqlite');
 const sqlite3 = require('sqlite3').verbose();
 
-const asyncForEach = require('../helpers/asyncForEach');
+const asyncForEach = require('./asyncForEach');
 
 /**
  * Updates the database with server members data
