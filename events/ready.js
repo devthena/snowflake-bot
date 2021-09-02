@@ -29,13 +29,13 @@ module.exports = async Bot => {
 
   if(!Bot.application?.commands) await Bot.application?.fetch();
 
-  if(!isTrue(LOCAL)) await Bot.application?.commands.set(globalCommands);
+  if(isTrue(LOCAL)) await Bot.application?.commands.set(globalCommands);
 
   const guildArray = Array.from(Bot.guilds.cache.values());
 
   await asyncForEach(guildArray, async guild => {
 
-    if(!isTrue(LOCAL)) {
+    if(isTrue(LOCAL)) {
 
       const commands = await Bot.guilds.cache.get(guild.id)?.commands.set(serverCommands);
       const commArray = Array.from(commands.values());
