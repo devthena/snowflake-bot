@@ -188,7 +188,7 @@ module.exports = async (Bot, interaction) => {
         return;
       }
 
-      const answer = optin(true, server.roles.optins, interaction);
+      const answer = await optin(true, server.roles.optins, interaction);
 
       try {
         await interaction.reply(answer.message);
@@ -208,7 +208,7 @@ module.exports = async (Bot, interaction) => {
         return;
       }
 
-      const answer = optin(false, server.roles.optins, interaction);
+      const answer = await optin(false, server.roles.optins, interaction);
 
       try {
         await interaction.reply(answer.message);

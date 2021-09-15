@@ -1,4 +1,4 @@
-module.exports = (toAdd, validOptins, interaction) => {
+module.exports = async (toAdd, validOptins, interaction) => {
 
   const validRoles = validOptins.split(',');
   const role = interaction.options.getRole('role');
@@ -10,23 +10,23 @@ module.exports = (toAdd, validOptins, interaction) => {
     if (interaction.member.roles.cache.has(role.id)) {
       
       if(toAdd) return { message: `${interaction.member.displayName}, you're already opted in, goob. :wink:` };
-      
-      interaction.member.roles.remove(role)
-        .then(function () {
-          return { message: `You are now free from the ${role.name} role, ${interaction.member.displayName}!` };
-        }).catch(function (error) {
-          return { message: 'There was a problem removing this role. Please try again later.' };
-        });
+
+      try {
+        await interaction.member.roles.remove(role);
+        return { message: `You are now free from the ${role.name} role, ${interaction.member.displayName}!` };
+      } catch(err) { console.error(err); }
+
+      return { message: 'There was a problem removing this role. Please try again later.' };
     }
 
     if(!toAdd) return { message: `${interaction.member.displayName}, you don't have that role, goob. :wink:` };
 
-    interaction.member.roles.add(role)
-      .then(function () {
-        return { message: `Success! You now have the ${role.name} role, ${interaction.member.displayName}!` };
-      }).catch(function (error) {
-        return { message: 'There was a problem adding this role. Please try again later.' };
-      });
+    try {
+      await interaction.member.roles.add(role);
+      return { message: `Success! You now have the ${role.name} role, ${interaction.member.displayName}!` };
+    } catch(err) { console.error(err); }
+    
+    return { message: 'There was a problem adding this role. Please try again later.' };
   }
   
   if(toAdd) return { message: 'Nice try -- how about a different role? :smirk:' };
