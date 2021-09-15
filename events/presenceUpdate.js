@@ -1,5 +1,5 @@
 
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const isTrue = require('../helpers/isTrue');
 const { COLOR } = require('../constants/botConfig');
 const types = require('./../constants/activityTypes');
@@ -67,7 +67,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
           let liveImage = streamActivity.assets ? streamActivity.assets.largeImageURL() : null;
 
-          const botEmbed = new Discord.MessageEmbed()
+          const botEmbed = new MessageEmbed()
             .setAuthor(newMember.user.username, newMember.user.displayAvatarURL())
             .setColor(COLOR)
             .setTitle(`Now Streaming ${streamActivity.state}`)
