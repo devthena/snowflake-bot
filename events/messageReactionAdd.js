@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { COLOR } = require('../constants/botConfig');
 const expAddends = require('../constants/expAddends');
 const memberConfig = require('../constants/memberConfig');
@@ -104,7 +104,7 @@ module.exports = (Bot, reaction, user) => {
           }
         }
 
-        const botEmbed = new Discord.MessageEmbed()
+        const botEmbed = new MessageEmbed()
           .setAuthor(message.author.username, message.author.displayAvatarURL())
           .setColor(COLOR)
           .setDescription(description)

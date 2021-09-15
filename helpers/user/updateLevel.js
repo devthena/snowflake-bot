@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { CHANNEL, COLOR, LVL_MULTIPLIER } = require('../../constants/botConfig');
 
 /**
@@ -21,7 +21,7 @@ const updateLevel = (member, nickname, guildChannels) => {
     });
 
     if (botChannel) {
-      let botEmbed = new Discord.MessageEmbed()
+      let botEmbed = new MessageEmbed()
         .setTitle('User Level Up!')
         .setDescription(`${ nickname } advanced to level ${ updatedMember.level }! :gem:`)
         .setColor(COLOR);
