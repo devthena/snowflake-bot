@@ -20,7 +20,7 @@ const startBackup = require('../helpers/startBackup');
  */
 module.exports = async Bot => {
 
-  Bot.logger.info('* Snowflake is online *');
+  console.log('* Snowflake is online *');
 
   const db = await open({
     filename: `./${DB_NAME}`,
@@ -29,19 +29,19 @@ module.exports = async Bot => {
 
   if(!Bot.application?.commands) await Bot.application?.fetch();
 
-  if(isTrue(LOCAL)) await Bot.application?.commands.set(globalCommands);
+  if(!isTrue(LOCAL)) await Bot.application?.commands.set(globalCommands);
 
   const guildArray = Array.from(Bot.guilds.cache.values());
 
   await asyncForEach(guildArray, async guild => {
 
-    if(isTrue(LOCAL)) {
+    if(!isTrue(LOCAL)) {
 
       const commands = await Bot.guilds.cache.get(guild.id)?.commands.set(serverCommands);
       const commArray = Array.from(commands.values());
 
       await asyncForEach(commArray, async comm => {
-        if(comm.name === 'clear' || comm.name === 'nickname' || comm.name === 'take') {
+        if(['clear', 'nickname', 'take'].includes(comm.name)) {
           comm.permissions.set({
             permissions: [{ id: guild.ownerId, type: 'USER', permission: true }]
           });
@@ -59,7 +59,11 @@ module.exports = async Bot => {
 
     config.members = memberMap;
 
-    const row = await db.get(`SELECT * FROM guilds WHERE server_id = ${guild.id}`);
+    let row = null;
+
+    try {
+      row = await db.get(`SELECT * FROM guilds WHERE server_id = ${guild.id}`);
+    } catch(err) { console.error(err); }
 
     if(row) {
 
@@ -69,7 +73,10 @@ module.exports = async Bot => {
       config.settings = JSON.parse(row.settings);
 
       if (guild.ownerId !== row.owner_id) {
-        await db.run(`UPDATE guilds SET owner_id = ${guild.ownerId} WHERE server_id = ${guild.id}`);
+        try {
+          await db.run(`UPDATE guilds SET owner_id = ${guild.ownerId} WHERE server_id = ${guild.id}`);
+        } catch(err) { console.error(err); }
+        
       }
 
     } else {
@@ -77,39 +84,55 @@ module.exports = async Bot => {
       const columns = `(server_id,owner_id,channels,mods,roles,settings)`;
       const values = `(${guild.id},${guild.ownerId},${JSON.stringify(config.channels)},${JSON.stringify(config.mods)},${JSON.stringify(config.roles)},${JSON.stringify(config.settings)})`;
 
-      await db.run(`INSERT INTO guilds ${columns} VALUES ${values}`);
+      try {
+        await db.run(`INSERT INTO guilds ${columns} VALUES ${values}`);
+      } catch(err) { console.error(err); }
+
     }
 
     let toDelete = [];
-    await db.each(`SELECT * from members WHERE server_id = ${guild.id}`, (error, entry) => {
-      
-      if (error) Bot.logger.error(`[DB] loadMembers: ${error}`);
 
-      if (entry) {
-        let member = guild.members.cache.get(entry.user_id);
-        if (!member) {
-          toDelete.push(entry.id);
-        } else {
-          config.members.set(entry.user_id, {
-            uniqueId: entry.id,
-            level: entry.level ? entry.level : 1,
-            exp: entry.exp ? entry.exp : 0,
-            points: entry.points,
-            stars: entry.stars ? entry.stars : 0
-          });
+    try {
+
+      await db.each(`SELECT * from members WHERE server_id = ${guild.id}`, (error, entry) => {
+        
+        if (error) Bot.logger.error(`[DB] loadMembers: ${error}`);
+
+        if (entry) {
+          let member = guild.members.cache.get(entry.user_id);
+          if (!member) {
+            toDelete.push(entry.id);
+          } else {
+            config.members.set(entry.user_id, {
+              uniqueId: entry.id,
+              level: entry.level ? entry.level : 1,
+              exp: entry.exp ? entry.exp : 0,
+              points: entry.points,
+              stars: entry.stars ? entry.stars : 0
+            });
+          }
         }
-      }
-    });
+      });
+
+    } catch(err) { console.error(err); }
 
     Bot.servers.set(guild.id, config);
 
+
     await asyncForEach(toDelete, async item => {
-      await db.run(`DELETE from members WHERE id = ${item}`);
+
+      try {
+        await db.run(`DELETE from members WHERE id = ${item}`);
+      } catch(err) { console.error(err); }
+
       Bot.logger.info(`[DB] Deleted score record for ${item}`);
     });
 
   });
 
-  await db.close();
+  try {
+    await db.close();
+  } catch(err) { console.error(err); }
+  
   if(!isTrue(LOCAL)) startBackup(Bot);
 };

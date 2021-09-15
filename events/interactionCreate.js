@@ -38,31 +38,56 @@ module.exports = async (Bot, interaction) => {
     if(interaction.commandName === '8ball') {
 
       const answer = magic8Ball();
-      return await interaction.reply(answer);
+
+      try {
+        await interaction.reply(answer);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'clear') {
 
       const answer = await clear(interaction);
-      return await interaction.reply({ content: answer.message, ephemeral: true});
+
+      try {
+        await interaction.reply({ content: answer.message, ephemeral: true});
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'gamble') {
 
       if (!isTrue(server.mods.gameGamble)) {
-        return await interaction.reply('Gambling is not enabled in this server.');
+
+        try {
+          await interaction.reply('Gambling is not enabled in this server.');
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
       let memberData = server.members.get(interaction.user.id);
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
         updateMemberData(interaction.user.id, memberData);
-        return await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`);
+
+        try {
+          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`);
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
       const answer = gamble(memberData, server.settings.gamblePercent, interaction);
       if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
-      return await interaction.reply(answer.message);
+
+      try {
+        await interaction.reply(answer.message);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'give') {
@@ -71,12 +96,22 @@ module.exports = async (Bot, interaction) => {
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
         updateMemberData(interaction.user.id, memberData);
-        return await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`);
+
+        try {
+          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`);
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
       const recipient = interaction.options.getMember('user');
       if(recipient.id === Bot.user.id) {
-        return await interaction.reply(`Sorry ${interaction.member.displayName}, I have no use for points. Please keep it! :snowflake:`);
+
+        try {
+          await interaction.reply(`Sorry ${interaction.member.displayName}, I have no use for points. Please keep it! :snowflake:`);
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
       let recipientData = server.members.get(recipient.id);
@@ -89,7 +124,11 @@ module.exports = async (Bot, interaction) => {
       if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
       if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
 
-      return await interaction.reply(answer.message);
+      try {
+        await interaction.reply(answer.message);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'help') {
@@ -98,45 +137,84 @@ module.exports = async (Bot, interaction) => {
         .addComponents(new MessageButton().setLabel('Commands').setStyle('LINK').setURL(URLS.COMMANDS))
         .addComponents(new MessageButton().setLabel('FAQ').setStyle('LINK').setURL(URLS.FAQ));
 
-      return await interaction.reply({ content: 'Here are some links you might be interested in:', components: [row] });
+      try {
+        await interaction.reply({ content: 'Here are some links you might be interested in:', components: [row] });
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'info') {
 
       const answer = info(Bot.user);
-      return await interaction.reply({ embeds: [answer.embed] });
+
+      try {
+        await interaction.reply({ embeds: [answer.embed] });
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'leaderboard') {
 
       const answer = leaderboard(server.members, interaction);
-      return await interaction.reply({ embeds: [answer.embed] });
+
+      try {
+        await interaction.reply({ embeds: [answer.embed] });
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'nickname') {
 
       const answer = nickname(interaction);
-      return await interaction.reply(answer.message);
+
+      try {
+        await interaction.reply(answer.message);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'optin') {
 
       if (!isTrue(server.mods.optins)) {
-        return await interaction.reply('Role opt in is not enabled in this server.');
+
+        try {
+          await interaction.reply('Role opt in is not enabled in this server.');
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
       const answer = optin(true, server.roles.optins, interaction);
-      return await interaction.reply(answer.message);
+
+      try {
+        await interaction.reply(answer.message);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'optout') {
 
       if (!isTrue(server.mods.optins)) {
-        return await interaction.reply('Role opt out is not enabled in this server.');
+
+        try {
+          await interaction.reply('Role opt out is not enabled in this server.');
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
       const answer = optin(false, server.roles.optins, interaction);
-      return await interaction.reply(answer.message);
+
+      try {
+        await interaction.reply(answer.message);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'points') {
@@ -145,10 +223,19 @@ module.exports = async (Bot, interaction) => {
       if (!memberData) {
         memberData = JSON.parse(JSON.stringify(memberConfig));
         updateMemberData(interaction.user.id, memberData);
-        return await interaction.reply(`${interaction.member.displayName}, you do not have any ${CURRENCY_TEXT} yet. :neutral_face:`);
+
+        try {
+          await interaction.reply(`${interaction.member.displayName}, you do not have any ${CURRENCY_TEXT} yet. :neutral_face:`);
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
-      return await interaction.reply(`${interaction.member.displayName}, your current balance is: ${memberData.points} ${CURRENCY}`);
+      try {
+        await interaction.reply(`${interaction.member.displayName}, your current balance is: ${memberData.points} ${CURRENCY}`);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'profile') {
@@ -164,13 +251,19 @@ module.exports = async (Bot, interaction) => {
         updateMemberData(member.id, memberData);
       }
 
-      await interaction.deferReply();
+      try {
 
-      const rank = getRank(member.id, server.members);
-      const profileCard = await getProfileCard(memberData, rank, member);
-      const attachment = new MessageAttachment(profileCard, 'profile.png');
+        await interaction.deferReply();
 
-      return await interaction.editReply({ files: [attachment] });
+        const rank = getRank(member.id, server.members);
+        const profileCard = await getProfileCard(memberData, rank, member);
+        const attachment = new MessageAttachment(profileCard, 'profile.png');
+
+        await interaction.editReply({ files: [attachment] });
+      
+      } catch(err) { console.error(err); }
+  
+      return;
     }
 
     if(interaction.commandName === 'star') {
@@ -181,7 +274,14 @@ module.exports = async (Bot, interaction) => {
         updateMemberData(interaction.user.id, memberData);
       }
 
-      if(memberData.level < 2) return await interaction.reply('You need to be at least level 2 to use this command.');
+      if(memberData.level < 2) {
+        
+        try {
+          await interaction.reply('You need to be at least level 2 to use this command.');
+        } catch(err) { console.error(err); }
+  
+        return;
+      }
 
       const recipient = interaction.options.getMember('user');
 
@@ -196,14 +296,23 @@ module.exports = async (Bot, interaction) => {
       if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
       if(answer.embed) return await interaction.reply({ embeds: [answer.embed] });
 
-      return await interaction.reply(answer.message);
+      try {
+        await interaction.reply(answer.message);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
     if(interaction.commandName === 'take') {
 
       const recipient = interaction.options.getMember('user');
       if(recipient.id === Bot.user.id) {
-        return await interaction.reply(`Sorry ${interaction.member.displayName}, you can't take points from me. :snowflake:`);
+
+        try {
+          await interaction.reply(`Sorry ${interaction.member.displayName}, you can't take points from me. :snowflake:`);
+        } catch(err) { console.error(err); }
+  
+        return;
       }
 
       let recipientData = server.members.get(recipient.id);
@@ -214,7 +323,12 @@ module.exports = async (Bot, interaction) => {
 
       const answer = take(recipientData, interaction);
       if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
-      return await interaction.reply(answer.message);
+
+      try {
+        await interaction.reply(answer.message);
+      } catch(err) { console.error(err); }
+
+      return;
     }
 
   }

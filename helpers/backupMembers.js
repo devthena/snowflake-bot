@@ -29,7 +29,11 @@ const backupMembers = async Bot => {
     const memberArray = Array.from(serverData.members.entries());
     await asyncForEach(memberArray, async member => {
       const uniqueId = member.uniqueId ? member.uniqueId : `${member[0]}-${Date.now()}`;
-      await db.run(sql, [uniqueId, member[0], serverId, member[1].level, member[1].exp, member[1].points, member[1].stars]);
+
+      try {
+        await db.run(sql, [uniqueId, member[0], serverId, member[1].level, member[1].exp, member[1].points, member[1].stars]);
+      } catch(err) { console.error(err); }
+      
     });
 
     Bot.logger.info(`[DB] Backup done for ${serverId}`);
