@@ -14,7 +14,8 @@ module.exports = interaction => {
 
       const nickname = format.replace('name', member.user.username);
 
-      member.setNickname(nickname)
+      if(member.managable) {
+        member.setNickname(nickname)
         .then(() => {
           processedCount++;
           updatedCount++;
@@ -28,6 +29,7 @@ module.exports = interaction => {
             return { message: `Total members found: ${filteredMembers.size}. Total members updated: ${updatedCount}` };
           }
         });
+      }
     });
   }
 

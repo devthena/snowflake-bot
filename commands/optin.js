@@ -11,20 +11,24 @@ module.exports = async (toAdd, validOptins, interaction) => {
       
       if(toAdd) return { message: `${interaction.member.displayName}, you're already opted in, goob. :wink:` };
 
-      try {
-        await interaction.member.roles.remove(role);
-        return { message: `You are now free from the ${role.name} role, ${interaction.member.displayName}!` };
-      } catch(err) { console.error(err); }
+      if(interaction.member.managable) {
+        try {
+          await interaction.member.roles.remove(role);
+          return { message: `You are now free from the ${role.name} role, ${interaction.member.displayName}!` };
+        } catch(err) { console.error(err); }
+      }
 
       return { message: 'There was a problem removing this role. Please try again later.' };
     }
 
     if(!toAdd) return { message: `${interaction.member.displayName}, you don't have that role, goob. :wink:` };
 
-    try {
-      await interaction.member.roles.add(role);
-      return { message: `Success! You now have the ${role.name} role, ${interaction.member.displayName}!` };
-    } catch(err) { console.error(err); }
+    if(interaction.member.managable) {
+      try {
+        await interaction.member.roles.add(role);
+        return { message: `Success! You now have the ${role.name} role, ${interaction.member.displayName}!` };
+      } catch(err) { console.error(err); }
+    }
     
     return { message: 'There was a problem adding this role. Please try again later.' };
   }

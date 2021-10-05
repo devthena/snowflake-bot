@@ -35,7 +35,7 @@ module.exports = async Bot => {
 
   await asyncForEach(guildArray, async guild => {
 
-    if(!isTrue(LOCAL)) {
+    if(isTrue(LOCAL)) {
 
       const commands = await Bot.guilds.cache.get(guild.id)?.commands.set(serverCommands);
       const commArray = Array.from(commands.values());
