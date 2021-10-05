@@ -18,7 +18,7 @@ module.exports = async (Bot, oldMember, newMember) => {
 
   const isPastSubscriber = subRole ? oldMember.roles.cache.has(subRole.id) : false;
   
-  if (oldMember.premiumSince || isPastSubscriber) {
+  if (newMember.managable && (oldMember.premiumSince || isPastSubscriber)) {
     
     newMember.setNickname(null);
 
