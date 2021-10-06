@@ -11,7 +11,7 @@ module.exports = async (toAdd, validOptins, interaction) => {
       
       if(toAdd) return { message: `${interaction.member.displayName}, you're already opted in, goob. :wink:` };
 
-      if(interaction.member.managable) {
+      if(interaction.member.manageable) {
         try {
           await interaction.member.roles.remove(role);
           return { message: `You are now free from the ${role.name} role, ${interaction.member.displayName}!` };
@@ -23,7 +23,7 @@ module.exports = async (toAdd, validOptins, interaction) => {
 
     if(!toAdd) return { message: `${interaction.member.displayName}, you don't have that role, goob. :wink:` };
 
-    if(interaction.member.managable) {
+    if(interaction.member.manageable) {
       try {
         await interaction.member.roles.add(role);
         return { message: `Success! You now have the ${role.name} role, ${interaction.member.displayName}!` };

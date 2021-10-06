@@ -24,7 +24,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
   // member went offline
   if (newPresence.status === 'offline') {
-    if (liveRole && newMember.managable && newMember.roles.cache.has(liveRole.id)) {
+    if (liveRole && newMember.manageable && newMember.roles.cache.has(liveRole.id)) {
       newMember.roles.remove(liveRole)
         .then(function () {
           Bot.logger.info(`${newMember.displayName} went offline.`);
@@ -44,7 +44,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
     if (!hasBeenStreaming && isStreaming) {
 
-      if (liveRole && newMember.managable && !newMember.roles.cache.has(liveRole.id)) {
+      if (liveRole && newMember.manageable && !newMember.roles.cache.has(liveRole.id)) {
         newMember.roles.add(liveRole)
           .then(function () {
             Bot.logger.info(`${newMember.displayName} started streaming.`);
@@ -84,7 +84,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
     } else if (hasBeenStreaming && !isStreaming) {
 
       // member stopped streaming
-      if (liveRole && newMember.managable && newMember.roles.cache.has(liveRole.id)) {
+      if (liveRole && newMember.manageable && newMember.roles.cache.has(liveRole.id)) {
         newMember.roles.remove(liveRole)
           .then(function () {
             Bot.logger.info(`${newMember.displayName} is done streaming.`);
@@ -96,7 +96,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
 
   } else {
 
-    if (liveRole && newMember.managable && newMember.roles.cache.has(liveRole.id)) {
+    if (liveRole && newMember.manageable && newMember.roles.cache.has(liveRole.id)) {
       newMember.roles.remove(liveRole)
         .then(function () {
           Bot.logger.info(`${newMember.displayName} is done streaming.`);

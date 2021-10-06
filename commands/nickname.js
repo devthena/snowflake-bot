@@ -14,7 +14,7 @@ module.exports = interaction => {
 
       const nickname = format.replace('name', member.user.username);
 
-      if(member.managable) {
+      if(member.manageable) {
         member.setNickname(nickname)
         .then(() => {
           processedCount++;
