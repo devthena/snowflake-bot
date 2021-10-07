@@ -1,5 +1,4 @@
 const expAddends = require('../constants/expAddends');
-const memberConfig = require('../constants/memberConfig');
 const updateLevel = require('../helpers/user/updateLevel');
 
 /**
@@ -8,42 +7,50 @@ const updateLevel = require('../helpers/user/updateLevel');
  * @param {Client} Bot 
  * @param {Message} message 
  */
-module.exports = (Bot, message) => {
+module.exports = async (Bot, message) => {
 
   if (message.channel.type !== 'GUILD_TEXT') return;
   if (!message.guild?.available) return;
   if (message.author.bot) return;
   if (message.author.system) return;
-
-  const server = Bot.servers.get(message.guildId);
-  if (!server) return;
-
   if (!message.member) return;
 
   const words = message.content.split(/ +/g);
   const pattern = new RegExp('[A-Za-z].{2,}');
 
-  let member = server.members.get(message.member.id) || null;
-  if (!member) member = JSON.parse(JSON.stringify(memberConfig));
+  let member = await Bot.db.collection('members').findOne({ userId: message.member.id });
+  if(!member) {
+    member = {
+      userId: message.member.id,
+      serverId: message.guildId,
+      ...memberConfig
+    };
+    await Bot.db.collection('members').insertOne(member);
+  }
+
+  let addend = 0;
+  let points = member.points;
 
   words.forEach(word => {
     const match = pattern.test(word);
-    if (match) member.points++;
+    if (match) points++;
   });
 
   if (!/bot-/.test(message.channel.name)) {
 
-    if (words.length > 1) member.exp += expAddends.message;
-    if (message.attachments.first()) member.exp += expAddends.attachment;
+    if (words.length > 1) addend += expAddends.message;
+    if (message.attachments.first()) addend += expAddends.attachment;
 
     const hasSubscriberRole = message.member.roles.cache.find(role => role.name.toLowerCase().includes('subscriber'));
     const hasNitroBoosterRole = message.member.premiumSince;
 
-    if (hasSubscriberRole) member.exp += expAddends.subscriber;
-    if (hasNitroBoosterRole) member.exp += expAddends.nitroBooster;
+    if (hasSubscriberRole) addend += expAddends.subscriber;
+    if (hasNitroBoosterRole) addend += expAddends.nitroBooster;
   }
 
-  const updatedMember = updateLevel(member, message.member.displayName, message.guild.channels);
-  server.members.set(message.member.id, updatedMember);
-  Bot.servers.set(message.guildId, server);
+  let updates = updateLevel(member, addend, message.member.displayName, message.guild.channels);
+  if(!updates) updates = { points };
+  else updates.points = points;
+
+  await Bot.db.collection('members').updateOne({ userId: message.member.id }, { $set: { ...updates } });
 };

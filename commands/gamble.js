@@ -1,7 +1,7 @@
 const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
 const weightedRandom = require('../helpers/weightedRandom');
 
-module.exports = (memberData, winPercent, interaction) => {
+module.exports = (member, winPercent, interaction) => {
 
   const notices = {
     invalidInput: `Please enter a specific amount or a value of 'all' or 'half'. :wink:`,
@@ -16,48 +16,47 @@ module.exports = (memberData, winPercent, interaction) => {
 
   const probability = { win: (winPercent / 100), loss: (1 - (winPercent / 100)) };
 
-  const points = parseInt(memberData.points, 10);
-
-  if (points < 1) return { message: notices.noPoints };
+  if (member.points < 1) return { message: notices.noPoints };
 
   const result = weightedRandom(probability);
+  let updates = { points: member.points };
 
   if (amount === 'all') {
 
     if (result === 'win') {
-      memberData.points += points;
+      updates.points += member.points;
       return {
-        message: `${interaction.member.displayName} won ${points} :moneybag: and now has ${memberData.points} ${CURRENCY}! :sparkles:`,
-        updatedMember: memberData
+        message: `${interaction.member.displayName} won ${points} :moneybag: and now has ${updates.points} ${CURRENCY}! :sparkles:`,
+        updates
       };
     }
     
-    memberData.points = 0;
+    updates.points = 0;
 
     return {
       message: notices.lostAll,
-      updatedMember: memberData
+      updates
     };
 
   }
   
   if (amount === 'half') {
 
-    const halfPoints = Math.round(points / 2);
+    const halfPoints = Math.round(member.points / 2);
 
     if (result === 'win') {
-      memberData.points += halfPoints;
+      updates.points += halfPoints;
       return {
-        message: `${interaction.member.displayName} won ${halfPoints} :moneybag: and now has ${memberData.points} ${CURRENCY}!`,
-        updatedMember: memberData
+        message: `${interaction.member.displayName} won ${halfPoints} :moneybag: and now has ${updates.points} ${CURRENCY}!`,
+        updates
       };
     }
     
-    memberData.points -= halfPoints;
+    updates.points -= halfPoints;
 
     return {
-      message: `${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${memberData.points} ${CURRENCY}.`,
-      updatedMember: memberData
+      message: `${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`,
+      updates
     };
   }
 
@@ -69,17 +68,17 @@ module.exports = (memberData, winPercent, interaction) => {
     if (value <= points) {
 
       if (result === 'win') {
-        memberData.points += value;
+        updates.points += value;
         return {
-          message: `${interaction.member.displayName} won ${value} :moneybag: and now has ${memberData.points} ${CURRENCY}!`,
-          updatedMember: memberData
+          message: `${interaction.member.displayName} won ${value} :moneybag: and now has ${updates.points} ${CURRENCY}!`,
+          updates
         };
       }
       
-      memberData.points -= value;
+      updates.points -= value;
       return {
-        message: `${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${memberData.points} ${CURRENCY}.`,
-        updatedMember: memberData
+        message: `${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`,
+        updates
       };
     }
     

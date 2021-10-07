@@ -1,3 +1,4 @@
+const memberConfig = require('../constants/memberConfig');
 const isTrue = require('../helpers/isTrue');
 const serverLog = require('../helpers/serverLog');
 
@@ -13,6 +14,12 @@ module.exports = (Bot, member) => {
 
   const server = Bot.servers.get(member.guild.id);
   if (!server) return;
+
+  Bot.db.collection('members').insertOne({
+    userId: member.id,
+    serverId: member.guild.id,
+    ...memberConfig
+  });
 
   if (isTrue(server.mods.autoAdd)) {
 

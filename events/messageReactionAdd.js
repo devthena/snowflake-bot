@@ -12,7 +12,7 @@ const updateLevel = require('../helpers/user/updateLevel');
  * @param {MessageReaction} reaction 
  * @param {User} user 
  */
-module.exports = (Bot, reaction, user) => {
+module.exports = async (Bot, reaction, user) => {
 
   const message = reaction.message;
 
@@ -23,17 +23,23 @@ module.exports = (Bot, reaction, user) => {
   const server = Bot.servers.get(message.guildId);
   if (!server) return;
 
-  let member = server.members.get(user.id);
-  if (!member) member = JSON.parse(JSON.stringify(memberConfig));
-
-  member.exp += expAddends.reactionAdd;
+  let member = await Bot.db.collection('members').findOne({ userId: user.id });
+  if(!member) {
+    member = {
+      userId: user.id,
+      serverId: message.guildId,
+      ...memberConfig
+    };
+    await Bot.db.collection('members').insertOne(member);
+  }
 
   const reactUser = message.guild.members.cache.get(user.id);
   const displayName = reactUser ? reactUser.displayName : user.username;
-  const updatedMember = updateLevel(member, displayName, message.guild.channels);
-  
-  server.members.set(user.id, updatedMember);
-  Bot.servers.set(message.guildId, server);
+
+  let updates = updateLevel(member, expAddends.reactionAdd, displayName, message.guild.channels);
+  if(!updates) updates = { exp: member.exp + expAddends.reactionAdd };
+
+  await Bot.db.collection('members').updateOne({ userId: user.id }, { $set: { ...updates } });
 
   if (isTrue(server.mods.highlightBoard)) {
 
@@ -74,15 +80,22 @@ module.exports = (Bot, reaction, user) => {
 
       if (highlightBoardChannel) {
 
-        let author = server.members.get(message.author.id);
-        if (!author) author = JSON.parse(JSON.stringify(memberConfig));
+        let author = await Bot.db.collection('members').findOne({ userId: message.author.id });
+        if(!author) {
+          author = {
+            userId: message.author.id,
+            serverId: message.guildId,
+            ...memberConfig
+          };
+          await Bot.db.collection('members').insertOne(author);
+        }
 
-        author.exp += expAddends.highlight;
+        const displayName = message.member ? message.member.displayName : message.author.username;
 
-        let displayName = message.member ? message.member.displayName : message.author.username;
-        const updatedAuthor = updateLevel(author, displayName, message.guild.channels);
-        server.members.set(message.author.id, updatedAuthor);
-        Bot.servers.set(message.guildId, server);
+        let authorUpdates = updateLevel(author, expAddends.highlight, displayName, message.guild.channels);
+        if(!authorUpdates) authorUpdates = { exp: author.exp += expAddends.highlight };
+
+        await Bot.db.collection('members').updateOne({ userId: message.author.id }, { $set: { ...authorUpdates } });
 
         let imageUrl = null;
         let description = `${message.cleanContent}\n\nLink for [original message](${message.url}) in ${message.channel}`;

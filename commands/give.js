@@ -1,6 +1,6 @@
 const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
 
-module.exports = (memberData, recipientData, interaction) => {
+module.exports = (member, recipientData, interaction) => {
 
   const notices = {
     noPoints: `Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`,
@@ -10,7 +10,7 @@ module.exports = (memberData, recipientData, interaction) => {
   const amount = interaction.options.getInteger('amount');
   if (amount <= 0) return { message: `${interaction.member.displayName}, you can't give ${amount} ${CURRENCY}, goob. :wink:` };
 
-  if (memberData.points < amount && interaction.member.id !== interaction.guild.ownerId) {
+  if (member.points < amount && interaction.member.id !== interaction.guild.ownerId) {
     return { message: notices.notEnough };
   }
 
@@ -19,16 +19,19 @@ module.exports = (memberData, recipientData, interaction) => {
 
   if (interaction.member.id === recipient.id) recipientCopy = 'yourself. :smirk:';
 
+  let updates = { points: member.points };
+  let recipientUpdates = { points: recipientData.points };
+
   if (interaction.member.id !== interaction.guild.ownerId) {
-    memberData.points -= amount;
+    updates.points -= amount;
   }
 
-  recipientData.points += amount;
+  recipientUpdates.points += amount;
 
   return {
     message: `${interaction.member.displayName}, you have given ${amount} ${CURRENCY} to ${recipientCopy}`,
-    updatedMember: memberData,
-    updatedRecipient: recipientData
+    updates,
+    recipientUpdates
   };
 
 };

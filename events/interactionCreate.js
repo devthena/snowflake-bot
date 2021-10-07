@@ -27,20 +27,17 @@ const isTrue = require('../helpers/isTrue');
 module.exports = async (Bot, interaction) => {
 
   const server = Bot.servers.get(interaction.guildId);
-
-  const updateMemberData = (id, data) => {
-    server.members.set(id, data);
-    Bot.servers.set(interaction.guildId, server);
-  };
   
   if(interaction.isCommand()) {
 
+    // interactions that do not use member data
+
     if(interaction.commandName === '8ball') {
 
-      const answer = magic8Ball();
+      const response = magic8Ball();
 
       try {
-        await interaction.reply(answer);
+        await interaction.reply(response);
       } catch(err) { console.error(err); }
 
       return;
@@ -48,84 +45,10 @@ module.exports = async (Bot, interaction) => {
 
     if(interaction.commandName === 'clear') {
 
-      const answer = await clear(interaction);
+      const response = await clear(interaction);
 
       try {
-        await interaction.reply({ content: answer.message, ephemeral: true});
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'gamble') {
-
-      if (!isTrue(server.mods.gameGamble)) {
-
-        try {
-          await interaction.reply('Gambling is not enabled in this server.');
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      let memberData = server.members.get(interaction.user.id);
-      if (!memberData) {
-        memberData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(interaction.user.id, memberData);
-
-        try {
-          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      const answer = gamble(memberData, server.settings.gamblePercent, interaction);
-      if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
-
-      try {
-        await interaction.reply(answer.message);
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'give') {
-
-      let memberData = server.members.get(interaction.user.id);
-      if (!memberData) {
-        memberData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(interaction.user.id, memberData);
-
-        try {
-          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      const recipient = interaction.options.getMember('user');
-      if(recipient.id === Bot.user.id) {
-
-        try {
-          await interaction.reply(`Sorry ${interaction.member.displayName}, I have no use for points. Please keep it! :snowflake:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      let recipientData = server.members.get(recipient.id);
-      if (!recipientData) {
-        recipientData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(recipient.id, recipientData);
-      }
-
-      const answer = give(memberData, recipientData, interaction);
-      if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
-      if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
-
-      try {
-        await interaction.reply(answer.message);
+        await interaction.reply({ content: response.message, ephemeral: true});
       } catch(err) { console.error(err); }
 
       return;
@@ -146,21 +69,10 @@ module.exports = async (Bot, interaction) => {
 
     if(interaction.commandName === 'info') {
 
-      const answer = info(Bot.user);
+      const response = info(Bot.user);
 
       try {
-        await interaction.reply({ embeds: [answer.embed] });
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'leaderboard') {
-
-      const answer = leaderboard(server.members, interaction);
-
-      try {
-        await interaction.reply({ embeds: [answer.embed] });
+        await interaction.reply({ embeds: [response.embed] });
       } catch(err) { console.error(err); }
 
       return;
@@ -168,10 +80,10 @@ module.exports = async (Bot, interaction) => {
 
     if(interaction.commandName === 'nickname') {
 
-      const answer = nickname(interaction);
+      const response = nickname(interaction);
 
       try {
-        await interaction.reply(answer.message);
+        await interaction.reply(response.message);
       } catch(err) { console.error(err); }
 
       return;
@@ -188,10 +100,10 @@ module.exports = async (Bot, interaction) => {
         return;
       }
 
-      const answer = await optin(true, server.roles.optins, interaction);
+      const response = await optin(true, server.roles.optins, interaction);
 
       try {
-        await interaction.reply(answer.message);
+        await interaction.reply(response.message);
       } catch(err) { console.error(err); }
 
       return;
@@ -208,10 +120,109 @@ module.exports = async (Bot, interaction) => {
         return;
       }
 
-      const answer = await optin(false, server.roles.optins, interaction);
+      const response = await optin(false, server.roles.optins, interaction);
 
       try {
-        await interaction.reply(answer.message);
+        await interaction.reply(response.message);
+      } catch(err) { console.error(err); }
+
+      return;
+    }
+
+    // interactions that use member data
+
+    await interaction.deferReply();
+
+    let member = await Bot.db.collection('members').findOne({ userId: interaction.user.id });
+    if(!member) {
+      member = {
+        userId: interaction.user.id,
+        serverId: interaction.guildId,
+        ...memberConfig
+      };
+      await Bot.db.collection('members').insertOne(member);
+    }
+
+    if(interaction.commandName === 'gamble') {
+
+      if (!isTrue(server.mods.gameGamble)) {
+
+        try {
+          await interaction.reply('Gambling is not enabled in this server.');
+        } catch(err) { console.error(err); }
+  
+        return;
+      }
+
+      if (member.points === 0) {
+
+        try {
+          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`);
+        } catch(err) { console.error(err); }
+  
+        return;
+      }
+
+      const response = gamble(member, server.settings.gamblePercent, interaction);
+
+      try {
+        await interaction.reply(response.message);
+        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...response.updates } });
+      } catch(err) { console.error(err); }
+
+      return;
+    }
+
+    if(interaction.commandName === 'give') {
+
+      if (member.points === 0) {
+
+        try {
+          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`);
+        } catch(err) { console.error(err); }
+  
+        return;
+      }
+
+      const recipient = interaction.options.getMember('user');
+      if(recipient.id === Bot.user.id) {
+
+        try {
+          await interaction.reply(`Sorry ${interaction.member.displayName}, I have no use for points. Please keep it! :snowflake:`);
+        } catch(err) { console.error(err); }
+  
+        return;
+      }
+
+      let recipientData = await Bot.db.collection('members').findOne({ userId: recipient.id });
+      if(!recipientData) {
+        recipientData = {
+          userId: recipient.id,
+          serverId: interaction.guildId,
+          ...memberConfig
+        };
+        await Bot.db.collection('members').insertOne(recipientData);
+      }
+
+      const response = give(member, recipientData, interaction);
+
+      try {
+        await interaction.reply(response.message);
+        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...response.updates } });
+        await Bot.db.collection('members').updateOne({ userId: recipient.id }, { $set: { ...response.recipientUpdates } });
+      } catch(err) { console.error(err); }
+
+      return;
+    }
+
+    // TODO: continue updates from this command
+    
+    if(interaction.commandName === 'leaderboard') {
+
+      const answer = leaderboard(server.members, interaction);
+
+      try {
+        await interaction.reply({ embeds: [answer.embed] });
       } catch(err) { console.error(err); }
 
       return;
