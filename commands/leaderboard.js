@@ -1,21 +1,29 @@
 
 const { MessageEmbed } = require('discord.js');
 const { COLOR, CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
-const sortByCoin = require('../helpers/sortByCoin');
-const sortByRank = require('../helpers/sortByRank');
 
-module.exports = (members, interaction) => {
+module.exports = async (Bot, interaction) => {
   
   const type = interaction.options.getString('type');
 
-  let sortable = sortByCoin(members);
+  let topFive = null;
   let title = `${CURRENCY} ----- Server Top Coin ----- ${CURRENCY}`;
   let description = `Here are the users with the highest ${CURRENCY_TEXT}!`;
 
-  if(type === 'rank') {
-    sortable = sortByRank(members);
-    title = ':trident: ----- Server Top Rank ----- :trident:';
-    description = `Here are the users with the highest level!`;
+  switch(type) {
+    case 'rank':
+      topFive = await Bot.db.collection('members')
+        .find({ serverId: interaction.guildId })
+        .sort({ level: -1, exp: -1 })
+        .limit(5).toArray();
+      title = ':trident: ----- Server Top Rank ----- :trident:';
+      description = `Here are the users with the highest level!`;
+      break;
+    default:
+      topFive = await Bot.db.collection('members')
+        .find({ serverId: interaction.guildId })
+        .sort({ points: -1 })
+        .limit(5).toArray();
   }
 
   const botEmbed = new MessageEmbed()
@@ -23,28 +31,31 @@ module.exports = (members, interaction) => {
     .setDescription(description)
     .setColor(COLOR);
 
-  const limit = Math.min(sortable.length, 5);
-  for (let i = 0; i < limit; i++) {
+  for (let i = 0; i < topFive.length; i++) {
 
-    const arr = sortable[i];
-    const user = interaction.guild.members.cache.get(arr[0]);
-    const value = `Level: ${arr[1]} | Exp: ${arr[2]} | Gold: ${arr[3]}`;
+    const top = topFive[i];
+    const member = interaction.guild.members.cache.get(top.userId);
+
+    let value = `Gold: ${ top.points }`;
+    if(type === 'rank') value = `Level: ${ top.level } | Exp: ${ top.exp }`;
 
     switch (i) {
       case 0:
-        botEmbed.addField(`${i + 1}. ${user.displayName} :first_place:`, value);
+        botEmbed.addField(`${i + 1}. ${member.displayName} :first_place:`, value);
         break;
       case 1:
-        botEmbed.addField(`${i + 1}. ${user.displayName} :second_place:`, value);
+        botEmbed.addField(`${i + 1}. ${member.displayName} :second_place:`, value);
         break;
       case 2:
-        botEmbed.addField(`${i + 1}. ${user.displayName} :third_place:`, value);
+        botEmbed.addField(`${i + 1}. ${member.displayName} :third_place:`, value);
         break;
       default:
-        botEmbed.addField(`${i + 1}. ${user.displayName}`, value);
+        botEmbed.addField(`${i + 1}. ${member.displayName}`, value);
     }
 
   }
 
-  return { embed: botEmbed };
+  try {
+    await interaction.reply({ embeds: [ botEmbed ] });
+  } catch(err) { console.error(err); }
 };

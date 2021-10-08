@@ -1,17 +1,19 @@
 const { MessageEmbed } = require('discord.js');
 const { COLOR, VERSION } = require('../constants/botConfig');
 
-module.exports = botUser => {
+module.exports = async (Bot, interaction) => {
 
-  let botEmbed = new MessageEmbed()
+  const botEmbed = new MessageEmbed()
     .setTitle('Bot Information')
     .setFooter('Note: This bot is exclusive to AthenaUS and AikoBliss servers.')
     .setDescription('I\'m made with ❤ by AthenaUS!')
-    .setThumbnail(botUser.displayAvatarURL())
+    .setThumbnail(Bot.user.displayAvatarURL())
     .setColor(COLOR)
-    .addField('Created On', botUser.createdAt.toDateString(), true)
+    .addField('Created On', Bot.user.createdAt.toDateString(), true)
     .addField('Release', `version ${VERSION}`, true);
 
-  return { embed: botEmbed };
+  try {
+    await interaction.reply({ embeds: [ botEmbed ] });
+  } catch(err) { console.error(err); }
 
 };

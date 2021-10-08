@@ -1,4 +1,6 @@
-module.exports = interaction => {
+const asyncForEach = require('../helpers/asyncForEach');
+
+module.exports = async interaction => {
 
   const format = interaction.options.getString('format');
   const role = interaction.options.getRole('role');
@@ -7,31 +9,28 @@ module.exports = interaction => {
 
   if (filteredMembers.size > 0) {
 
-    let processedCount = 0;
     let updatedCount = 0;
 
-    filteredMembers.forEach(member => {
-
-      const nickname = format.replace('name', member.user.username);
-
+    await asyncForEach(filteredMembers, async member => {
       if(member.manageable) {
-        member.setNickname(nickname)
-        .then(() => {
-          processedCount++;
+        const nickname = format.replace('name', member.user.username);
+        try {
+          await member.setNickname(nickname);
           updatedCount++;
-          if (processedCount === filteredMembers.size) {
-            return { message: `Total members found: ${filteredMembers.size}. Total members updated: ${updatedCount}` };
-          }
-        })
-        .catch(error => {
-          processedCount++;
-          if (processedCount === filteredMembers.size) {
-            return { message: `Total members found: ${filteredMembers.size}. Total members updated: ${updatedCount}` };
-          }
-        });
+        } catch(err) {
+          console.error(err);
+        }
       }
     });
+
+    try {
+      await interaction.reply(`Total members found: ${filteredMembers.size}. Total members updated: ${updatedCount}`);
+    } catch(err) { console.error(err); }
+
+  } else {
+    try {
+      await interaction.reply('Total members found: 0');
+    } catch(err) { console.error(err); }
   }
 
-  return { message: 'Total members found: 0' };
 };

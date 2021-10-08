@@ -5,5 +5,12 @@ module.exports = async interaction => {
   if(amount > 100) return { message: 'You can only delete 100 messages at a time.' };
 
   const messages = await interaction.channel.bulkDelete(amount, true);
-  return { message: `Cleared a total of ${ messages.size } messages.` };
+
+  try {
+    await interaction.reply({
+      content: `Cleared a total of ${ messages.size } messages.`,
+      ephemeral: true
+    });
+  } catch(err) { console.error(err); }
+  
 };

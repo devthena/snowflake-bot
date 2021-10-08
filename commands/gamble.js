@@ -1,7 +1,15 @@
 const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
+const isTrue = require('../helpers/isTrue');
 const weightedRandom = require('../helpers/weightedRandom');
 
-module.exports = (member, winPercent, interaction) => {
+module.exports = (member, server, interaction) => {
+
+  if (!isTrue(server.mods.gameGamble)) {
+    try {
+      await interaction.reply('Gambling is not enabled in this server.');
+    } catch(err) { console.error(err); }
+    return;
+  }
 
   const notices = {
     invalidInput: `Please enter a specific amount or a value of 'all' or 'half'. :wink:`,
@@ -11,79 +19,97 @@ module.exports = (member, winPercent, interaction) => {
     notEnough: `Sorry ${interaction.member.displayName}, you don't have that many ${CURRENCY_TEXT} to gamble. :neutral_face:`
   };
 
+  if (member.points < 1) {
+    try {
+      await interaction.reply(notices.noPoints);
+    } catch(err) { console.error(err); }
+    return;
+  }
+
   const amount = interaction.options.getString('amount');
-  if(isNaN(amount) && amount !== 'all' && amount !== 'half') return { message: notices.invalidInput };
 
-  const probability = { win: (winPercent / 100), loss: (1 - (winPercent / 100)) };
+  if(isNaN(amount) && amount !== 'all' && amount !== 'half') {
+    try {
+      await interaction.reply(notices.invalidInput);
+    } catch(err) { console.error(err); }
+    return;
+  }
 
-  if (member.points < 1) return { message: notices.noPoints };
+  const probability = {
+    win: (server.settings.gamblePercent / 100),
+    loss: (1 - (server.settings.gamblePercent / 100))
+  };
 
   const result = weightedRandom(probability);
+
   let updates = { points: member.points };
 
   if (amount === 'all') {
 
-    if (result === 'win') {
-      updates.points += member.points;
-      return {
-        message: `${interaction.member.displayName} won ${points} :moneybag: and now has ${updates.points} ${CURRENCY}! :sparkles:`,
-        updates
-      };
-    }
-    
-    updates.points = 0;
+    try {
 
-    return {
-      message: notices.lostAll,
-      updates
-    };
+      if (result === 'win') {
+        updates.points += member.points;
+        await interaction.reply(`${interaction.member.displayName} won ${points} :moneybag: and now has ${updates.points} ${CURRENCY}! :sparkles:`);
+        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...updates } });
+      } else {
+        await interaction.reply(notices.lostAll);
+        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { points: 0 } });
+      }
 
+    } catch(err) { console.error(err); }
+    return;
   }
   
   if (amount === 'half') {
 
     const halfPoints = Math.round(member.points / 2);
 
-    if (result === 'win') {
-      updates.points += halfPoints;
-      return {
-        message: `${interaction.member.displayName} won ${halfPoints} :moneybag: and now has ${updates.points} ${CURRENCY}!`,
-        updates
-      };
-    }
-    
-    updates.points -= halfPoints;
+    try {
 
-    return {
-      message: `${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`,
-      updates
-    };
+      if (result === 'win') {
+        updates.points += halfPoints;
+        await interaction.reply(`${interaction.member.displayName} won ${halfPoints} :moneybag: and now has ${updates.points} ${CURRENCY}!`);
+      } else {
+        updates.points -= halfPoints;
+        await interaction.reply(`${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`);
+      }
+
+      await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...updates } });
+      
+    } catch(err) { console.error(err); }
+    return;
   }
 
   const value = parseInt(amount, 10);
-  if (value < 1) return { message: notices.invalidNegative };
 
-  if (points > 0) {
+  if (value < 1) {
+    try {
+      await interaction.reply(notices.invalidNegative);
+    } catch(err) { console.error(err); }
+    return;
+  }
 
-    if (value <= points) {
+  if (value <= member.points) {
+
+    try {
 
       if (result === 'win') {
         updates.points += value;
-        return {
-          message: `${interaction.member.displayName} won ${value} :moneybag: and now has ${updates.points} ${CURRENCY}!`,
-          updates
-        };
+        await interaction.reply(`${interaction.member.displayName} won ${value} :moneybag: and now has ${updates.points} ${CURRENCY}!`);
+      } else {
+        updates.points -= value;
+        await interaction.reply(`${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`);
       }
+
+      await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...updates } });
       
-      updates.points -= value;
-      return {
-        message: `${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`,
-        updates
-      };
-    }
-    
-    return { message: notices.notEnough };
+    } catch(err) { console.error(err); }
+
+    return;
   }
   
-  return { message: notices.noPoints };
+  try {
+    await interaction.reply(notices.notEnough);
+  } catch(err) { console.error(err); }
 };

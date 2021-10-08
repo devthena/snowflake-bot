@@ -1,8 +1,9 @@
-const { MessageActionRow, MessageAttachment, MessageButton } = require('discord.js');
+const { MessageAttachment } = require('discord.js');
 
 const clear = require('../commands/clear');
 const gamble = require('../commands/gamble');
 const give = require('../commands/give');
+const help = require('../commands/help');
 const info = require('../commands/info');
 const leaderboard = require('../commands/leaderboard');
 const magic8Ball = require('../commands/8ball');
@@ -11,12 +12,11 @@ const optin = require('../commands/optin');
 const star = require('../commands/star');
 const take = require('../commands/take');
 
-const { CURRENCY, CURRENCY_TEXT, URLS } = require('../constants/botConfig');
+const { CURRENCY } = require('../constants/botConfig');
 const memberConfig = require('../constants/memberConfig');
 
 const getProfileCard = require('../helpers/user/getProfileCard');
 const getRank = require('../helpers/user/getRank');
-const isTrue = require('../helpers/isTrue');
 
 /**
  * Handles interactions from users
@@ -32,100 +32,20 @@ module.exports = async (Bot, interaction) => {
 
     // interactions that do not use member data
 
-    if(interaction.commandName === '8ball') {
-
-      const response = magic8Ball();
-
-      try {
-        await interaction.reply(response);
-      } catch(err) { console.error(err); }
-
-      return;
+    if(interaction.commandName === '8ball') return magic8Ball(interaction);
+    if(interaction.commandName === 'clear') return clear(interaction);
+    if(interaction.commandName === 'help') return help(interaction);
+    if(interaction.commandName === 'info') return info(Bot, interaction);
+    if(interaction.commandName === 'leaderboard') return leaderboard(Bot, interaction);
+    if(interaction.commandName === 'nickname') return nickname(interaction);
+    if(interaction.commandName === 'optin' || interaction.commandName === 'optout') {
+      return optin(interaction.commandName === 'optin', server, interaction);
     }
-
-    if(interaction.commandName === 'clear') {
-
-      const response = await clear(interaction);
-
+    if(interaction.commandName === 'points') {
       try {
-        await interaction.reply({ content: response.message, ephemeral: true});
+        const message = `${interaction.member.displayName}, your current balance is: ${member.points} ${CURRENCY}`;
+        await interaction.reply(message);
       } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'help') {
-
-      const row = new MessageActionRow()
-        .addComponents(new MessageButton().setLabel('Commands').setStyle('LINK').setURL(URLS.COMMANDS))
-        .addComponents(new MessageButton().setLabel('FAQ').setStyle('LINK').setURL(URLS.FAQ));
-
-      try {
-        await interaction.reply({ content: 'Here are some links you might be interested in:', components: [row] });
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'info') {
-
-      const response = info(Bot.user);
-
-      try {
-        await interaction.reply({ embeds: [response.embed] });
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'nickname') {
-
-      const response = nickname(interaction);
-
-      try {
-        await interaction.reply(response.message);
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'optin') {
-
-      if (!isTrue(server.mods.optins)) {
-
-        try {
-          await interaction.reply('Role opt in is not enabled in this server.');
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      const response = await optin(true, server.roles.optins, interaction);
-
-      try {
-        await interaction.reply(response.message);
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'optout') {
-
-      if (!isTrue(server.mods.optins)) {
-
-        try {
-          await interaction.reply('Role opt out is not enabled in this server.');
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      const response = await optin(false, server.roles.optins, interaction);
-
-      try {
-        await interaction.reply(response.message);
-      } catch(err) { console.error(err); }
-
       return;
     }
 
@@ -144,127 +64,20 @@ module.exports = async (Bot, interaction) => {
     }
 
     if(interaction.commandName === 'gamble') {
-
-      if (!isTrue(server.mods.gameGamble)) {
-
-        try {
-          await interaction.reply('Gambling is not enabled in this server.');
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      if (member.points === 0) {
-
-        try {
-          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to gamble. :neutral_face:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      const response = gamble(member, server.settings.gamblePercent, interaction);
-
-      try {
-        await interaction.reply(response.message);
-        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...response.updates } });
-      } catch(err) { console.error(err); }
-
-      return;
+      return gamble(member, server.settings.gamblePercent, interaction);
     }
+    if(interaction.commandName === 'give') return give(Bot, member, interaction);
 
-    if(interaction.commandName === 'give') {
-
-      if (member.points === 0) {
-
-        try {
-          await interaction.reply(`Sorry ${interaction.member.displayName}, you have no ${CURRENCY_TEXT} to give. :neutral_face:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      const recipient = interaction.options.getMember('user');
-      if(recipient.id === Bot.user.id) {
-
-        try {
-          await interaction.reply(`Sorry ${interaction.member.displayName}, I have no use for points. Please keep it! :snowflake:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      let recipientData = await Bot.db.collection('members').findOne({ userId: recipient.id });
-      if(!recipientData) {
-        recipientData = {
-          userId: recipient.id,
-          serverId: interaction.guildId,
-          ...memberConfig
-        };
-        await Bot.db.collection('members').insertOne(recipientData);
-      }
-
-      const response = give(member, recipientData, interaction);
-
-      try {
-        await interaction.reply(response.message);
-        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...response.updates } });
-        await Bot.db.collection('members').updateOne({ userId: recipient.id }, { $set: { ...response.recipientUpdates } });
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    // TODO: continue updates from this command
-    
-    if(interaction.commandName === 'leaderboard') {
-
-      const answer = leaderboard(server.members, interaction);
-
-      try {
-        await interaction.reply({ embeds: [answer.embed] });
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
-    if(interaction.commandName === 'points') {
-
-      let memberData = server.members.get(interaction.user.id);
-      if (!memberData) {
-        memberData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(interaction.user.id, memberData);
-
-        try {
-          await interaction.reply(`${interaction.member.displayName}, you do not have any ${CURRENCY_TEXT} yet. :neutral_face:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      try {
-        await interaction.reply(`${interaction.member.displayName}, your current balance is: ${memberData.points} ${CURRENCY}`);
-      } catch(err) { console.error(err); }
-
-      return;
-    }
+    // TODO: replace getRank function with mongodb query
 
     if(interaction.commandName === 'profile') {
 
-      let member = interaction.member;
+      let user = interaction.member;
       const mention = interaction.options.getMember('user');
 
-      if(mention) member = mention;
-
-      let memberData = server.members.get(member.id);
-      if (!memberData) {
-        memberData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(member.id, memberData);
-      }
+      if(mention) user = mention;
 
       try {
-
-        await interaction.deferReply();
 
         const rank = getRank(member.id, server.members);
         const profileCard = await getProfileCard(memberData, rank, member);
@@ -276,6 +89,8 @@ module.exports = async (Bot, interaction) => {
   
       return;
     }
+
+    // TODO: add new field lastStar to the entry
 
     if(interaction.commandName === 'star') {
 
@@ -314,33 +129,7 @@ module.exports = async (Bot, interaction) => {
       return;
     }
 
-    if(interaction.commandName === 'take') {
-
-      const recipient = interaction.options.getMember('user');
-      if(recipient.id === Bot.user.id) {
-
-        try {
-          await interaction.reply(`Sorry ${interaction.member.displayName}, you can't take points from me. :snowflake:`);
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      let recipientData = server.members.get(recipient.id);
-      if (!recipientData) {
-        recipientData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(recipient.id, recipientData);
-      }
-
-      const answer = take(recipientData, interaction);
-      if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
-
-      try {
-        await interaction.reply(answer.message);
-      } catch(err) { console.error(err); }
-
-      return;
-    }
+    if(interaction.commandName === 'take') return take(Bot, interaction);
 
   }
 };
