@@ -70,7 +70,7 @@ $(document).ready(function () {
     var el = document.getElementById('settings');
     var serverData = {
       id: el.dataset.serverId,
-      updates: serverUpdates
+      updates: JSON.stringify(serverUpdates)
     };
 
     $.post(

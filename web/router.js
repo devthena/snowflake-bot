@@ -234,7 +234,7 @@ module.exports = (app, Bot) => {
   app.post('/api/server/update', checkAuth, (req, res) => {
 
     const serverId = req.body.id;
-    const serverUpdates = req.body.updates;
+    const serverUpdates = JSON.parse(req.body.updates);
     
     let serverInfo = Bot.servers.get(serverId);
     serverInfo.channels = serverUpdates.channels;
