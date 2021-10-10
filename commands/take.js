@@ -48,7 +48,7 @@ module.exports = async (Bot, interaction) => {
 
   try {
     await interaction.reply(`${interaction.member.displayName}, you have taken ${amount} ${CURRENCY} from ${recipient.displayName}`);
-    await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...updates } });
+    await Bot.db.collection('members').updateOne({ userId: recipient.id }, { $set: { ...updates } });
   } catch(err) { console.error(err); }
-  
+
 };

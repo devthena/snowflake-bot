@@ -9,14 +9,12 @@ const leaderboard = require('../commands/leaderboard');
 const magic8Ball = require('../commands/8ball');
 const nickname = require('../commands/nickname');
 const optin = require('../commands/optin');
+const profile = require('../commands/profile');
 const star = require('../commands/star');
 const take = require('../commands/take');
 
 const { CURRENCY } = require('../constants/botConfig');
 const memberConfig = require('../constants/memberConfig');
-
-const getProfileCard = require('../helpers/user/getProfileCard');
-const getRank = require('../helpers/user/getRank');
 
 /**
  * Handles interactions from users
@@ -51,8 +49,6 @@ module.exports = async (Bot, interaction) => {
 
     // interactions that use member data
 
-    await interaction.deferReply();
-
     let member = await Bot.db.collection('members').findOne({ userId: interaction.user.id });
     if(!member) {
       member = {
@@ -63,72 +59,10 @@ module.exports = async (Bot, interaction) => {
       await Bot.db.collection('members').insertOne(member);
     }
 
-    if(interaction.commandName === 'gamble') {
-      return gamble(member, server.settings.gamblePercent, interaction);
-    }
+    if(interaction.commandName === 'gamble') return gamble(member, server, interaction);
     if(interaction.commandName === 'give') return give(Bot, member, interaction);
-
-    // TODO: replace getRank function with mongodb query
-
-    if(interaction.commandName === 'profile') {
-
-      let user = interaction.member;
-      const mention = interaction.options.getMember('user');
-
-      if(mention) user = mention;
-
-      try {
-
-        const rank = getRank(member.id, server.members);
-        const profileCard = await getProfileCard(memberData, rank, member);
-        const attachment = new MessageAttachment(profileCard, 'profile.png');
-
-        await interaction.editReply({ files: [attachment] });
-      
-      } catch(err) { console.error(err); }
-  
-      return;
-    }
-
-    // TODO: add new field lastStar to the entry
-
-    if(interaction.commandName === 'star') {
-
-      let memberData = server.members.get(interaction.user.id);
-      if (!memberData) {
-        memberData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(interaction.user.id, memberData);
-      }
-
-      if(memberData.level < 2) {
-        
-        try {
-          await interaction.reply('You need to be at least level 2 to use this command.');
-        } catch(err) { console.error(err); }
-  
-        return;
-      }
-
-      const recipient = interaction.options.getMember('user');
-
-      let recipientData = server.members.get(recipient.id);
-      if (!recipientData) {
-        recipientData = JSON.parse(JSON.stringify(memberConfig));
-        updateMemberData(recipient.id, recipientData);
-      }
-
-      const answer = star(memberData, recipientData, interaction);
-      if(answer.updatedMember) updateMemberData(interaction.user.id, answer.updatedMember);
-      if(answer.updatedRecipient) updateMemberData(recipient.id, answer.updatedRecipient);
-      if(answer.embed) return await interaction.reply({ embeds: [answer.embed] });
-
-      try {
-        await interaction.reply(answer.message);
-      } catch(err) { console.error(err); }
-
-      return;
-    }
-
+    if(interaction.commandName === 'profile') return profile(Bot, member, interaction);
+    if(interaction.commandName === 'star') return star(Bot, member, interaction);
     if(interaction.commandName === 'take') return take(Bot, interaction);
 
   }

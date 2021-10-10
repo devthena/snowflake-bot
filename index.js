@@ -38,19 +38,20 @@ const Bot = new Client({
   ]
 });
 
-try {
-  await dbclient.connect();
-} catch(err) { return console.log(err); }
-
-console.log('* Database connection successful *');
-
-Bot.db = dbclient.db('snowdb');
 Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.servers = new Map();
 
 require('./web/router')(app, Bot);
 
 const initBot = async () => {
+
+  try {
+    await dbclient.connect();
+  } catch(err) { return console.log(err); }
+  
+  console.log('* Database connection successful *');
+
+  Bot.db = dbclient.db('snowdb');
 
   const eventFiles = await readdir('./events/');
 

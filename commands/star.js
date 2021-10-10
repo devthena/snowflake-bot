@@ -4,7 +4,14 @@ const { YELLOW } = require('../constants/discordColors');
 const expAddends = require('../constants/expAddends');
 const updateLevel = require('../helpers/user/updateLevel');
 
-module.exports = (memberData, recipientData, interaction) => {
+module.exports = async (Bot, member, interaction) => {
+
+  if(member.level < 2) {
+    try {
+      await interaction.reply('You need to be at least level 2 to use this command.');
+    } catch(err) { console.error(err); }
+    return;
+  }
 
   const notices = {
     invalidMax: `${interaction.member.displayName}, you can only give one star per day.`,
@@ -16,15 +23,14 @@ module.exports = (memberData, recipientData, interaction) => {
 
   const recipient = interaction.options.getMember('user');
 
-  if (interaction.member.id === recipient.id) return { message: notices.invalidSelf };
-  if (memberData.lastStar === today) return { message: notices.invalidMax };
+  try {
+    if (interaction.member.id === recipient.id) return await interaction.reply(notices.invalidSelf);
+    if (member.lastStar === today) return await interaction.reply(notices.invalidMax);
+  } catch(err) { console.error(err); }
 
-  memberData.lastStar = today;
-
-  recipientData.stars += 1;
-  recipientData.exp += expAddends.starred;
-
-  const updatedRecipient = updateLevel(recipientData, recipient.displayName, interaction.guild.channels);
+  let recipientUpdates = updateLevel(recipientData, expAddends.starred, recipient.displayName, interaction.guild.channels);
+  if(!recipientUpdates) recipientUpdates = { stars: recipientData.stars + 1 };
+  else recipientUpdates.stars = recipientData.stars + 1;
 
   const botEmbed = new MessageEmbed()
     .setTitle('Daily Star Sent!')
@@ -32,10 +38,10 @@ module.exports = (memberData, recipientData, interaction) => {
     .setColor(YELLOW)
     .setFooter(`Star given on ${now}`);
 
-  return {
-    embed: botEmbed,
-    updatedMember: memberData,
-    updatedRecipient: updatedRecipient
-  };
+  try {
+    await interaction.reply({ embeds: [ botEmbed ] });
+    await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { lastStar: today } });
+    await Bot.db.collection('members').updateOne({ userId: recipient.id }, { $set: { ...recipientUpdates } });
+  } catch(err) { console.error(err); }
 
 };

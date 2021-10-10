@@ -83,6 +83,7 @@ module.exports = async Bot => {
 
       await asyncForEach(filtered, async member => {
         await Bot.db.collection('members').deleteOne({ userId: member.userId });
+        Bot.logger.info(`[DB] Deleted record for: ${ member.userId }`);
       });
 
     } catch(err) { console.error(err); }

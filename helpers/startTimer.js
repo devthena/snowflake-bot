@@ -18,7 +18,7 @@ const startTimer = Bot => {
 
   if (timer) clearTimeout(timer);
   timer = setTimeout(() => {
-    startBackup(Bot);
+    startTimer(Bot);
   }, POLL_RATE);
 
 };
