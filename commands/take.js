@@ -17,12 +17,6 @@ module.exports = async (Bot, interaction) => {
     } catch(err) { console.error(err); }
   };
 
-  if(recipientData.points === 0) {
-    try {
-      await interaction.reply(notices.noPoints);
-    } catch(err) { console.error(err); }
-  };
-
   if(recipient.id === Bot.user.id) {
     try {
       await interaction.reply(`Sorry ${interaction.member.displayName}, you can't take points from me. :snowflake:`);
@@ -40,11 +34,16 @@ module.exports = async (Bot, interaction) => {
     await Bot.db.collection('members').insertOne(recipientData);
   }
 
+  if(recipientData.points === 0) {
+    try {
+      await interaction.reply(notices.noPoints);
+    } catch(err) { console.error(err); }
+  };
+
   let updates = { points: recipientData.points };
 
   if (amount > recipientData.points) updates.points = 0;
-
-  updates.points -= amount;
+  else updates.points -= amount;
 
   try {
     await interaction.reply(`${interaction.member.displayName}, you have taken ${amount} ${CURRENCY} from ${recipient.displayName}`);

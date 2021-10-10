@@ -2,7 +2,7 @@ const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
 const isTrue = require('../helpers/isTrue');
 const weightedRandom = require('../helpers/weightedRandom');
 
-module.exports = async (member, server, interaction) => {
+module.exports = async (Bot, member, server, interaction) => {
 
   if (!isTrue(server.mods.gameGamble)) {
     try {

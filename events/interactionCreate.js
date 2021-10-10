@@ -1,5 +1,3 @@
-const { MessageAttachment } = require('discord.js');
-
 const clear = require('../commands/clear');
 const gamble = require('../commands/gamble');
 const give = require('../commands/give');
@@ -39,13 +37,7 @@ module.exports = async (Bot, interaction) => {
     if(interaction.commandName === 'optin' || interaction.commandName === 'optout') {
       return optin(interaction.commandName === 'optin', server, interaction);
     }
-    if(interaction.commandName === 'points') {
-      try {
-        const message = `${interaction.member.displayName}, your current balance is: ${member.points} ${CURRENCY}`;
-        await interaction.reply(message);
-      } catch(err) { console.error(err); }
-      return;
-    }
+    if(interaction.commandName === 'profile') return profile(Bot, interaction);
 
     // interactions that use member data
 
@@ -59,11 +51,17 @@ module.exports = async (Bot, interaction) => {
       await Bot.db.collection('members').insertOne(member);
     }
 
-    if(interaction.commandName === 'gamble') return gamble(member, server, interaction);
+    if(interaction.commandName === 'gamble') return gamble(Bot, member, server, interaction);
     if(interaction.commandName === 'give') return give(Bot, member, interaction);
-    if(interaction.commandName === 'profile') return profile(Bot, member, interaction);
     if(interaction.commandName === 'star') return star(Bot, member, interaction);
     if(interaction.commandName === 'take') return take(Bot, interaction);
+    if(interaction.commandName === 'points') {
+      try {
+        const message = `${interaction.member.displayName}, your current balance is: ${member.points} ${CURRENCY}`;
+        await interaction.reply(message);
+      } catch(err) { console.error(err); }
+      return;
+    }
 
   }
 };

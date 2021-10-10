@@ -2,6 +2,7 @@
 const { MessageEmbed } = require('discord.js');
 const { YELLOW } = require('../constants/discordColors');
 const expAddends = require('../constants/expAddends');
+const memberConfig = require('../constants/memberConfig');
 const updateLevel = require('../helpers/user/updateLevel');
 
 module.exports = async (Bot, member, interaction) => {
@@ -19,7 +20,7 @@ module.exports = async (Bot, member, interaction) => {
   };
 
   const now = new Date();
-  const today = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  const today = `${ now.getFullYear() }-${ now.getMonth() + 1 }-${ now.getDate() }`;
 
   const recipient = interaction.options.getMember('user');
 
@@ -27,6 +28,16 @@ module.exports = async (Bot, member, interaction) => {
     if (interaction.member.id === recipient.id) return await interaction.reply(notices.invalidSelf);
     if (member.lastStar === today) return await interaction.reply(notices.invalidMax);
   } catch(err) { console.error(err); }
+
+  let recipientData = await Bot.db.collection('members').findOne({ userId: recipient.id });
+  if(!recipientData) {
+    recipientData = {
+      userId: recipient.id,
+      serverId: interaction.guildId,
+      ...memberConfig
+    };
+    await Bot.db.collection('members').insertOne(recipientData);
+  }
 
   let recipientUpdates = updateLevel(recipientData, expAddends.starred, recipient.displayName, interaction.guild.channels);
   if(!recipientUpdates) recipientUpdates = { stars: recipientData.stars + 1 };

@@ -1,6 +1,7 @@
 
 const { MessageEmbed } = require('discord.js');
-const { COLOR, CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
+const { CURRENCY, CURRENCY_TEXT } = require('../constants/botConfig');
+const { BLUE } = require('../constants/discordColors');
 
 module.exports = async (Bot, interaction) => {
   
@@ -29,16 +30,15 @@ module.exports = async (Bot, interaction) => {
   const botEmbed = new MessageEmbed()
     .setTitle(title)
     .setDescription(description)
-    .setColor(COLOR);
+    .setColor(BLUE);
 
-  for (let i = 0; i < topFive.length; i++) {
+  topFive.forEach((top, i) => {
 
-    const top = topFive[i];
     const member = interaction.guild.members.cache.get(top.userId);
 
     let value = `Gold: ${ top.points }`;
     if(type === 'rank') value = `Level: ${ top.level } | Exp: ${ top.exp }`;
-
+    
     switch (i) {
       case 0:
         botEmbed.addField(`${i + 1}. ${member.displayName} :first_place:`, value);
@@ -52,8 +52,7 @@ module.exports = async (Bot, interaction) => {
       default:
         botEmbed.addField(`${i + 1}. ${member.displayName}`, value);
     }
-
-  }
+  });
 
   try {
     await interaction.reply({ embeds: [ botEmbed ] });
