@@ -21,7 +21,8 @@ module.exports = async (Bot, interaction) => {
   let rank = null;
   let userData = filtered.find(data => data.userId === user.id);
 
-  if(!userData) userData = await Bot.db.collection('members').findOne({ userId: user.id });
+  if(!userData) userData = await Bot.db.collection('members')
+    .findOne({ userId: user.id, serverId: interaction.guildId });
   else rank = filtered.findIndex(data => data.userId === user.id) + 1;
 
   const profileCard = await getProfileCard(user, userData, rank);

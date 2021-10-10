@@ -19,7 +19,8 @@ module.exports = async (Bot, reaction, user) => {
 
   try {
 
-    let member = await Bot.db.collection('members').findOne({ userId: user.id });
+    let member = await Bot.db.collection('members')
+      .findOne({ userId: user.id, serverId: message.guildId });
     if(!member) {
       member = {
         userId: user.id,

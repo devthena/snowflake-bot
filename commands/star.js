@@ -29,7 +29,8 @@ module.exports = async (Bot, member, interaction) => {
     if (member.lastStar === today) return await interaction.reply(notices.invalidMax);
   } catch(err) { console.error(err); }
 
-  let recipientData = await Bot.db.collection('members').findOne({ userId: recipient.id });
+  let recipientData = await Bot.db.collection('members')
+    .findOne({ userId: recipient.id, serverId: interaction.guildId });
   if(!recipientData) {
     recipientData = {
       userId: recipient.id,
