@@ -35,6 +35,8 @@ const updateLevel = (member, addend, nickname, guildChannels) => {
       botChannel.send({ embeds: [botEmbed] });
     }
     
+  } else {
+    updates = { exp: currentExp };
   }
 
   return updates;
