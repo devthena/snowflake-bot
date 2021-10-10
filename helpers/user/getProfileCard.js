@@ -4,11 +4,11 @@ const monthMap = require('../../constants/monthMap');
 
 /**
  * Generate an image buffer for a user profile card
+ * @param {GuildMember} user
  * @param {Object} stats 
  * @param {Number} rank 
- * @param {GuildMember} member
  */
-const getProfileCard = async (stats, rank, member) => {
+const getProfileCard = async (user, stats, rank) => {
 
   const maxExp = stats.level * LVL_MULTIPLIER;
 
@@ -137,11 +137,11 @@ const getProfileCard = async (stats, rank, member) => {
           <p class="membership">MEMBER SINCE {{joinMonth}} {{joinYear}}</p>
           <div class="stats">
             <div class="gold">
-              <img src="https://discordapp.com/assets/11b9d8164d204c7fd48a88a515745c1d.svg" />
+              <img src="https://cdn.discordapp.com/attachments/896606880196083762/896606944096301096/coin.png" />
               <span>{{gold}}</span>
             </div>
             <div class="star">
-              <img src="https://discordapp.com/assets/141d49436743034a59dec6bd5618675d.svg" />
+              <img src="https://cdn.discordapp.com/attachments/896606880196083762/896606956490481784/star.png" />
               <span>{{stars}}</span>
             </div>
           </div>
@@ -159,18 +159,18 @@ const getProfileCard = async (stats, rank, member) => {
       </body>
     </html>`,
     content: {
-      avatar: member.user.displayAvatarURL(),
-      discriminator: member.user.discriminator,
+      avatar: user.displayAvatarURL(),
+      discriminator: user.user.discriminator,
       exp: stats.exp,
       gold: stats.points,
-      joinMonth: monthMap[member.joinedAt.getMonth()],
-      joinYear: member.joinedAt.getFullYear(),
+      joinMonth: monthMap[user.joinedAt.getMonth()],
+      joinYear: user.joinedAt.getFullYear(),
       level: stats.level,
       maxExp: maxExp,
-      name: member.user.username,
+      name: user.user.username,
       progressWidth: stats.exp > 0 ? `${(stats.exp / maxExp) * 100}%` : '0',
-      rank: rank,
-      roleHexColor: member.displayHexColor,
+      rank: rank || 'n/a',
+      roleHexColor: user.displayHexColor,
       stars: stats.stars
     },
     puppeteerArgs: {

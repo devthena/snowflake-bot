@@ -1,7 +1,5 @@
-
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const DB_NAME = process.env.DB_NAME;
 const LOCAL = process.env.LOCAL;
 const SCOPES = ['identify'];
 const SESSION_SECRET = process.env.SESSION_SECRET;
@@ -9,7 +7,6 @@ const SESSION_SECRET = process.env.SESSION_SECRET;
 const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
-const sqlite3 = require('sqlite3').verbose();
 const DiscordStrategy = require('passport-discord').Strategy;
 
 const isTrue = require('../helpers/isTrue');
@@ -49,44 +46,56 @@ module.exports = (app, Bot) => {
 
   // render: main page
   app.get('/', (req, res) => {
-    var payload = { type: 'landing' };
+
+    let payload = { type: 'landing' };
+
     if (req.isAuthenticated()) {
-      var user = req.session.passport.user;
+      const user = req.session.passport.user;
       payload.profile = user.profile;
     }
+
     res.render('index', payload);
   });
 
   // render: commands page
   app.get('/commands', (req, res) => {
-    var payload = {
+
+    let payload = {
       type: 'commands',
       metaTitle: 'Snowflake Bot | Commands'
     };
+
     if (req.isAuthenticated()) {
-      var user = req.session.passport.user;
+      const user = req.session.passport.user;
       payload.profile = user.profile;
     }
+
     res.render('index', payload);
   });
 
   // render: faq page
   app.get('/faq', (req, res) => {
-    var payload = {
+
+    let payload = {
       type: 'faq',
       metaTitle: 'Snowflake Bot | FAQ'
     };
+
     if (req.isAuthenticated()) {
-      var user = req.session.passport.user;
+      const user = req.session.passport.user;
       payload.profile = user.profile;
     }
+
     res.render('index', payload);
   });
 
   // render: dashboard page
   app.get('/dashboard', checkAuth, (req, res) => {
+
     if (req.isAuthenticated()) {
-      var user = req.session.passport.user;
+
+      const user = req.session.passport.user;
+
       res.render('index', {
         type: 'dashboard',
         metaTitle: 'Snowflake Bot | Dashboard',
@@ -94,6 +103,7 @@ module.exports = (app, Bot) => {
         servers: user.servers,
         isRegistered: user.isRegistered
       });
+
     } else {
       res.redirect('/');
     }
@@ -104,16 +114,16 @@ module.exports = (app, Bot) => {
 
     if (req.isAuthenticated()) {
 
-      var user = req.session.passport.user;
+      const user = req.session.passport.user;
 
       if (user.isRegistered) {
 
-        var serverID = req.params.id;
-        var selectedServer = user.servers.find(server => server.id === serverID);
+        const serverId = req.params.id;
+        let selectedServer = user.servers.find(server => server.id === serverId);
 
         if (selectedServer) {
 
-          var server = Bot.servers.get(serverID);
+          const server = Bot.servers.get(serverId);
           
           selectedServer.channels = server.channels;
           selectedServer.mods = server.mods;
@@ -181,8 +191,8 @@ module.exports = (app, Bot) => {
   // fetch user data from database to see if user is registered
   function fetchUserData(accessToken, refreshToken, profile, done) {
 
-    var serverList = []; // server info list
-    var user = { profile: profile };
+    let serverList = [];
+    let user = { profile: profile };
 
     Bot.guilds.cache.forEach(guild => {
       if (guild.ownerId === profile.id) {
@@ -199,7 +209,7 @@ module.exports = (app, Bot) => {
       }
     });
 
-    var discordTag = `${profile.username}#${profile.discriminator}`;
+    const discordTag = `${profile.username}#${profile.discriminator}`;
 
     let logEvent = {
       author: 'Snowflake Web',
@@ -223,49 +233,33 @@ module.exports = (app, Bot) => {
 
   app.post('/api/server/update', checkAuth, (req, res) => {
 
-    var serverID = req.body.id;
-    var serverUpdates = req.body.updates;
-    var serverInfo = Bot.servers.get(serverID);
-    var isSuccess = false;
-    var errorMessage = null;
-
+    const serverId = req.body.id;
+    const serverUpdates = JSON.parse(req.body.updates);
+    
+    let serverInfo = Bot.servers.get(serverId);
     serverInfo.channels = serverUpdates.channels;
     serverInfo.mods = serverUpdates.mods;
     serverInfo.roles = serverUpdates.roles;
     serverInfo.settings = serverUpdates.settings;
 
-    // update the server Map
-    Bot.servers.set(serverID, serverInfo);
+    Bot.servers.set(serverId, serverInfo);
 
-    // update the database
-    var db = new sqlite3.Database(`./${DB_NAME}`, (error) => {
-      if (error) return Bot.logger.error(`[DB] Cannot establish connection to database: ${error}`);
-      Bot.logger.info('[DB] Established connection to database (web.js - api/server/update)');
-    });
-
-    var sql = `UPDATE guilds SET channels = ?, mods = ?, roles = ?, settings = ? WHERE server_id = ?`;
-
-    var stringValues = [
-      JSON.stringify(serverUpdates.channels),
-      JSON.stringify(serverUpdates.mods),
-      JSON.stringify(serverUpdates.roles),
-      JSON.stringify(serverUpdates.settings),
-      serverID
-    ];
-
-    db.run(sql, stringValues, function (error) {
-      if (error) {
-        Bot.logger.error(`[DB] Cannot update server database: ${error}`);
-        errorMessage = error;
+    Bot.db.collection('guilds').updateOne({ serverId: serverId }, {
+      $set: {
+        channels: JSON.stringify(serverUpdates.channels),
+        mods: JSON.stringify(serverUpdates.mods),
+        roles: JSON.stringify(serverUpdates.roles),
+        settings: JSON.stringify(serverUpdates.settings)
+      }
+    }, err => {
+      if(err) {
+        res.send({ success: false, error: JSON.stringify(errorMessage) });
+        Bot.logger.error(`[DB] Cannot update server database: ${ JSON.stringify(err) }`);
       } else {
-        isSuccess = true;
+        res.send({ success: true, error: null });
       }
     });
 
-    db.close((error) => {
-      if (error) return Bot.logger.error(`[DB] Cannot close database: ${error}`);
-      Bot.logger.info('[DB] Disconnected to the database (web.js - api/server/update)');
-      res.send({ success: isSuccess, error: errorMessage });
-    });
   });
+
 };

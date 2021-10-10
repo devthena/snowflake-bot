@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = async interaction => {
 
   let responseArray = [
     'It is certain.',
@@ -26,5 +26,8 @@ module.exports = () => {
   const randomNum = Math.floor(Math.random() * responseArray.length);
   const answer = responseArray[randomNum];
 
-  return `:8ball: says.. ${answer}`;
+  try {
+    await interaction.reply(`:8ball: says.. ${ answer }`);
+  } catch(err) { console.error(err); }
+  
 };

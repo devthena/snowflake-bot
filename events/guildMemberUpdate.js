@@ -11,7 +11,7 @@ module.exports = async (Bot, oldMember, newMember) => {
 
   if (!newMember.nickname || !oldMember.nickname || newMember.premiumSince) return;
 
-  const subRole = newMember.guild.roles.cache.find(role => role.name.includes('Subscriber'));
+  const subRole = newMember.guild.roles.cache.find(role => role.name.toLowerCase().includes('subscriber'));
 
   const isSubscriber = subRole ? newMember.roles.cache.has(subRole.id) : false;
   if (isSubscriber) return;
