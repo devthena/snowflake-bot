@@ -9,7 +9,7 @@ const memberConfig = require('../constants/memberConfig');
  * @param {MessageReaction} reaction 
  * @param {User} user 
  */
-module.exports = (Bot, reaction, user) => {
+module.exports = async (Bot, reaction, user) => {
 
   const message = reaction.message;
 
@@ -17,21 +17,31 @@ module.exports = (Bot, reaction, user) => {
   if (!message.guild?.available) return;
   if (message.author.bot || user.bot || message.author.system) return;
 
-  const server = Bot.servers.get(message.guildId);
-  if (!server) return;
+  try {
 
-  let member = server.members.get(user.id);
-  if (!member) {
-    member = JSON.parse(JSON.stringify(memberConfig));
-  } else {
-    if (member.exp > 0) {
-      member.exp += expAddends.reactionRemove;
-    } else if (member.level > 1) {
-      member.level -= 1;
-      member.exp = (member.level * LVL_MULTIPLIER) + expAddends.reactionRemove;
+    let member = await Bot.db.collection('members').findOne({ userId: user.id });
+    if(!member) {
+      member = {
+        userId: user.id,
+        serverId: message.guildId,
+        ...memberConfig
+      };
+      await Bot.db.collection('members').insertOne(member);
     }
-  }
 
-  server.members.set(user.id, member);
-  Bot.servers.set(message.guildId, server);
+    let updates = {};
+
+    if (member.exp > 0) {
+      updates.exp = member.exp + expAddends.reactionRemove;
+    } else if (member.level > 1) {
+      updates.level = member.level - 1;
+      updates.exp = (member.level * LVL_MULTIPLIER) + expAddends.reactionRemove;
+    } else {
+      updates = null;
+    }
+
+    if(updates) await Bot.db.collection('members').updateOne({ userId: user.id }, { $set: { ...updates } });
+
+  } catch(err) { console.error(err); }
+
 };

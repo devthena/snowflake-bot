@@ -3,13 +3,20 @@ if (process.version.slice(1).split('.')[0] < 16) {
 }
 
 require('dotenv').config();
-const port = process.env.PORT || 8080;
+
+const MDB_URL = process.env.MONGODB_URL;
+const PORT = process.env.PORT || 8080;
+const TOKEN = process.env.TOKEN;
+
 const express = require('express');
 const app = new express();
 const { promisify } = require('util');
 const readdir = promisify(require('fs').readdir);
 
 const { Client, Intents } = require('discord.js');
+const { MongoClient } = require('mongodb');
+
+const dbclient = new MongoClient(MDB_URL);
 
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/web/views');
@@ -38,6 +45,14 @@ require('./web/router')(app, Bot);
 
 const initBot = async () => {
 
+  try {
+    await dbclient.connect();
+  } catch(err) { return console.log(err); }
+  
+  console.log('* Database connection successful *');
+
+  Bot.db = dbclient.db('snowdb');
+
   const eventFiles = await readdir('./events/');
 
   eventFiles.forEach(file => {
@@ -48,8 +63,8 @@ const initBot = async () => {
     delete require.cache[require.resolve(`./events/${file}`)];
   });
 
-  Bot.login(process.env.TOKEN);
+  Bot.login(TOKEN);
 };
 
-app.listen(port);
+app.listen(PORT);
 initBot();

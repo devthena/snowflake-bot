@@ -1,8 +1,7 @@
-const memberConfig = require('../constants/memberConfig');
 const serverLog = require('../helpers/serverLog');
 
 /**
- * Resets the member EXP stats after leaving the server
+ * Remove member from the database when they leave
  * @listens event:guildMemberRemove
  * @param {Client} Bot 
  * @param {GuildMember} member 
@@ -10,9 +9,6 @@ const serverLog = require('../helpers/serverLog');
 module.exports = (Bot, member) => {
 
   if (!member.guild?.available) return;
-
-  const server = Bot.servers.get(member.guild.id);
-  if (!server) return;
 
   let logEvent = {
     author: member.guild.name,
@@ -23,7 +19,5 @@ module.exports = (Bot, member) => {
   };
   serverLog(Bot, logEvent);
 
-  const defaultMember = JSON.parse(JSON.stringify(memberConfig));
-  server.members.set(member.id, defaultMember);
-  Bot.servers.set(member.guild.id, server);
+  Bot.db.collection('members').deleteOne({ userId: member.id });
 };

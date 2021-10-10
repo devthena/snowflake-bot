@@ -1,6 +1,7 @@
 const { CURRENCY } = require('../constants/botConfig');
+const memberConfig = require('../constants/memberConfig');
 
-module.exports = (recipientData, interaction) => {
+module.exports = async (Bot, interaction) => {
 
   const amount = interaction.options.getInteger('amount');
   const recipient = interaction.options.getMember('user');
@@ -10,15 +11,43 @@ module.exports = (recipientData, interaction) => {
     noPoints: `${recipient.displayName} already has 0 points. :neutral_face:`
   };
 
-  if (amount <= 0) return { message: notices.invalidInput };
-  if(recipientData.points === 0) return { message: notices.noPoints };
-
-  if (amount > recipientData.points) amount = recipientData.points;
-  recipientData.points -= amount;
-
-  return {
-    message: `${interaction.member.displayName}, you have taken ${amount} ${CURRENCY} from ${recipient.displayName}`,
-    updatedRecipient: recipientData
+  if (amount <= 0) {
+    try {
+      await interaction.reply(notices.invalidInput);
+    } catch(err) { console.error(err); }
   };
+
+  if(recipient.id === Bot.user.id) {
+    try {
+      await interaction.reply(`Sorry ${interaction.member.displayName}, you can't take points from me. :snowflake:`);
+    } catch(err) { console.error(err); }
+    return;
+  }
+
+  let recipientData = await Bot.db.collection('members').findOne({ userId: recipient.id });
+  if(!recipientData) {
+    recipientData = {
+      userId: recipient.id,
+      serverId: interaction.guildId,
+      ...memberConfig
+    };
+    await Bot.db.collection('members').insertOne(recipientData);
+  }
+
+  if(recipientData.points === 0) {
+    try {
+      await interaction.reply(notices.noPoints);
+    } catch(err) { console.error(err); }
+  };
+
+  let updates = { points: recipientData.points };
+
+  if (amount > recipientData.points) updates.points = 0;
+  else updates.points -= amount;
+
+  try {
+    await interaction.reply(`${interaction.member.displayName}, you have taken ${amount} ${CURRENCY} from ${recipient.displayName}`);
+    await Bot.db.collection('members').updateOne({ userId: recipient.id }, { $set: { ...updates } });
+  } catch(err) { console.error(err); }
 
 };
