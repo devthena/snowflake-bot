@@ -90,5 +90,5 @@ module.exports = async Bot => {
 
   });
   
-  if(isTrue(LOCAL)) startTimer(Bot);
+  if(!isTrue(LOCAL)) startTimer(Bot);
 };
