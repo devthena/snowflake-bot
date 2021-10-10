@@ -52,8 +52,14 @@ module.exports = async (Bot, member, interaction) => {
 
   try {
     await interaction.reply({ embeds: [ botEmbed ] });
-    await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { lastStar: today } });
-    await Bot.db.collection('members').updateOne({ userId: recipient.id }, { $set: { ...recipientUpdates } });
+    await Bot.db.collection('members').updateOne({
+      userId: interaction.user.id,
+      serverId: interaction.guildId
+    }, { $set: { lastStar: today } });
+    await Bot.db.collection('members').updateOne({
+      userId: recipient.id,
+      serverId: interaction.guildId
+    }, { $set: { ...recipientUpdates } });
   } catch(err) { console.error(err); }
 
 };

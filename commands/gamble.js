@@ -51,10 +51,16 @@ module.exports = async (Bot, member, server, interaction) => {
       if (result === 'win') {
         updates.points += member.points;
         await interaction.reply(`${interaction.member.displayName} won ${points} :moneybag: and now has ${updates.points} ${CURRENCY}! :sparkles:`);
-        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...updates } });
+        await Bot.db.collection('members').updateOne({
+          userId: interaction.user.id,
+          serverId: interaction.guildId
+        }, { $set: { ...updates } });
       } else {
         await interaction.reply(notices.lostAll);
-        await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { points: 0 } });
+        await Bot.db.collection('members').updateOne({
+          userId: interaction.user.id,
+          serverId: interaction.guildId
+        }, { $set: { points: 0 } });
       }
 
     } catch(err) { console.error(err); }
@@ -75,7 +81,10 @@ module.exports = async (Bot, member, server, interaction) => {
         await interaction.reply(`${interaction.member.displayName} lost ${halfPoints} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`);
       }
 
-      await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...updates } });
+      await Bot.db.collection('members').updateOne({
+        userId: interaction.user.id,
+        serverId: interaction.guildId
+      }, { $set: { ...updates } });
       
     } catch(err) { console.error(err); }
     return;
@@ -102,7 +111,10 @@ module.exports = async (Bot, member, server, interaction) => {
         await interaction.reply(`${interaction.member.displayName} lost ${value} :money_with_wings: and now has ${updates.points} ${CURRENCY}.`);
       }
 
-      await Bot.db.collection('members').updateOne({ userId: interaction.user.id }, { $set: { ...updates } });
+      await Bot.db.collection('members').updateOne({
+        userId: interaction.user.id,
+        serverId: interaction.guildId
+      }, { $set: { ...updates } });
       
     } catch(err) { console.error(err); }
 

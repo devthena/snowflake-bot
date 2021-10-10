@@ -41,7 +41,10 @@ module.exports = async (Bot, reaction, user) => {
       updates = null;
     }
 
-    if(updates) await Bot.db.collection('members').updateOne({ userId: user.id }, { $set: { ...updates } });
+    if(updates) await Bot.db.collection('members').updateOne({
+      userId: user.id,
+      serverId: message.guildId
+    }, { $set: { ...updates } });
 
   } catch(err) { console.error(err); }
 

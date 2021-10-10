@@ -40,7 +40,10 @@ module.exports = async (Bot, reaction, user) => {
   let updates = updateLevel(member, expAddends.reactionAdd, displayName, message.guild.channels);
   if(!updates) updates = { exp: member.exp + expAddends.reactionAdd };
 
-  await Bot.db.collection('members').updateOne({ userId: user.id }, { $set: { ...updates } });
+  await Bot.db.collection('members').updateOne({
+    userId: user.id,
+    serverId: message.guildId
+  }, { $set: { ...updates } });
 
   if (isTrue(server.mods.highlightBoard)) {
 
@@ -97,7 +100,10 @@ module.exports = async (Bot, reaction, user) => {
         let authorUpdates = updateLevel(author, expAddends.highlight, displayName, message.guild.channels);
         if(!authorUpdates) authorUpdates = { exp: author.exp += expAddends.highlight };
 
-        await Bot.db.collection('members').updateOne({ userId: message.author.id }, { $set: { ...authorUpdates } });
+        await Bot.db.collection('members').updateOne({
+          userId: message.author.id,
+          serverId: message.guildId
+        }, { $set: { ...authorUpdates } });
 
         let imageUrl = null;
         let description = `${message.cleanContent}\n\nLink for [original message](${message.url}) in ${message.channel}`;
