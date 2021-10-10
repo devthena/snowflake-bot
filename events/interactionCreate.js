@@ -41,7 +41,8 @@ module.exports = async (Bot, interaction) => {
 
     // interactions that use member data
 
-    let member = await Bot.db.collection('members').findOne({ userId: interaction.user.id });
+    let member = await Bot.db.collection('members')
+      .findOne({ userId: interaction.user.id, serverId: interaction.guildId });
     if(!member) {
       member = {
         userId: interaction.user.id,

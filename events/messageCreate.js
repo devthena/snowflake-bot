@@ -18,7 +18,8 @@ module.exports = async (Bot, message) => {
   const words = message.content.split(/ +/g);
   const pattern = new RegExp('[A-Za-z].{2,}');
 
-  let member = await Bot.db.collection('members').findOne({ userId: message.member.id });
+  let member = await Bot.db.collection('members')
+    .findOne({ userId: message.member.id, serverId: message.guildId });
   if(!member) {
     member = {
       userId: message.member.id,

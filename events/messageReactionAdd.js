@@ -23,7 +23,8 @@ module.exports = async (Bot, reaction, user) => {
   const server = Bot.servers.get(message.guildId);
   if (!server) return;
 
-  let member = await Bot.db.collection('members').findOne({ userId: user.id });
+  let member = await Bot.db.collection('members')
+    .findOne({ userId: user.id, serverId: message.guildId });
   if(!member) {
     member = {
       userId: user.id,
@@ -80,7 +81,8 @@ module.exports = async (Bot, reaction, user) => {
 
       if (highlightBoardChannel) {
 
-        let author = await Bot.db.collection('members').findOne({ userId: message.author.id });
+        let author = await Bot.db.collection('members')
+          .findOne({ userId: message.author.id, serverId: message.guildId });
         if(!author) {
           author = {
             userId: message.author.id,

@@ -24,7 +24,8 @@ module.exports = async (Bot, interaction) => {
     return;
   }
 
-  let recipientData = await Bot.db.collection('members').findOne({ userId: recipient.id });
+  let recipientData = await Bot.db.collection('members')
+    .findOne({ userId: recipient.id, serverId: interaction.guildId });
   if(!recipientData) {
     recipientData = {
       userId: recipient.id,
