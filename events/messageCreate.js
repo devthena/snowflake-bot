@@ -1,5 +1,6 @@
 const expAddends = require('../constants/expAddends');
 const updateLevel = require('../helpers/user/updateLevel');
+const interactionCreate = require('./interactionCreate');
 
 /**
  * Runs commands, add points to users, and tracks messages for the highlight board
@@ -53,5 +54,8 @@ module.exports = async (Bot, message) => {
   if(!updates) updates = { points };
   else updates.points = points;
 
-  await Bot.db.collection('members').updateOne({ userId: message.member.id }, { $set: { ...updates } });
+  await Bot.db.collection('members').updateOne({
+    userId: message.member.id,
+    serverId: message.guildId
+  }, { $set: { ...updates } });
 };
