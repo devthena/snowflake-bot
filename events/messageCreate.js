@@ -1,6 +1,6 @@
 const expAddends = require('../constants/expAddends');
+const memberConfig = require('../constants/memberConfig');
 const updateLevel = require('../helpers/user/updateLevel');
-const interactionCreate = require('./interactionCreate');
 
 /**
  * Runs commands, add points to users, and tracks messages for the highlight board
