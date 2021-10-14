@@ -50,7 +50,7 @@ module.exports = async (Bot, member, server, interaction) => {
 
       if (result === 'win') {
         updates.points += member.points;
-        await interaction.reply(`${interaction.member.displayName} won ${points} :moneybag: and now has ${updates.points} ${CURRENCY}! :sparkles:`);
+        await interaction.reply(`${interaction.member.displayName} won ${member.points} :moneybag: and now has ${updates.points} ${CURRENCY}! :sparkles:`);
         await Bot.db.collection('members').updateOne({
           userId: interaction.user.id,
           serverId: interaction.guildId
