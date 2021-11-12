@@ -12,7 +12,7 @@ module.exports = async interaction => {
   if (filtered.length > 0) {
 
     try {
-      await interaction.reply(`Found: **${filtered.length}** | Processing...`);
+      await interaction.reply(`Found: **${filtered.length}** | Starting...`);
     } catch(err) { console.error(err); }
 
     let processedCount = 0;
@@ -37,31 +37,31 @@ module.exports = async interaction => {
 
       if(percent === 100) {
 
-        let finalMessage = `Total Updated: **${ updatedCount }** | Processed: **100%** :white_check_mark:`;
+        let finalMessage = `**100%** Complete | Total Updated: **${ updatedCount }** :white_check_mark:`;
         if(processedCount !== updatedCount) finalMessage += `\n_(some members were not updated due to role hierarchy)_`;
         await channel.send(finalMessage);
 
       } else if (percent >= 75 && progress !== 75) {
 
         progress = 75;
-        await channel.send(`Updated: **${ updatedCount }** | Processed: **75%**`);
+        await channel.send(`Processing... **75%** (${updatedCount} / ${filtered.length})`);
 
       } else if (percent >= 50 && percent < 75 && progress !== 50) {
 
         progress = 50;
-        await channel.send(`Updated: **${ updatedCount }** | Processed: **50%**`);
+        await channel.send(`Processing... **50%** (${updatedCount} / ${filtered.length})`);
 
       } else if(percent >= 25 && percent < 50 && progress !== 25) {
 
         progress = 25;
-        await channel.send(`Updated: **${ updatedCount }** | Processed: **25%**`);
+        await channel.send(`Processing... **25%** (${updatedCount} / ${filtered.length})`);
       }
 
     });
 
   } else {
     try {
-      await interaction.reply('Total members found: 0');
+      await interaction.reply('Found: **0** | No updates needed.');
     } catch(err) { console.error(err); }
   }
 
