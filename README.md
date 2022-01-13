@@ -1,6 +1,6 @@
 ## Snowflake Bot
 
-A Discord bot I created for AthenaUS and AikoBliss servers. This bot is not meant for public use.
+A Discord bot I created for my server. This bot is not meant for public use.
 
 ### Global Commands
 
