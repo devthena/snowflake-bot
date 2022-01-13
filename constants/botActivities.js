@@ -5,10 +5,6 @@ const botActivities = [
     type: 'PLAYING'
   },
   {
-    name: 'with Alias',
-    type: 'PLAYING'
-  },
-  {
     name: 'Athena VODs',
     type: 'WATCHING'
   },
@@ -17,16 +13,32 @@ const botActivities = [
     type: 'WATCHING'
   },
   {
-    name: 'Aiko VODs',
-    type: 'WATCHING'
-  },
-  {
-    name: 'Athena covers',
+    name: 'Athena sing',
     type: 'LISTENING'
   },
   {
     name: 'with 1s and 0s',
     type: 'PLAYING'
+  },
+  {
+    name: 'you gamble all',
+    type: 'WATCHING'
+  },
+  {
+    name: 'keyboard clicks',
+    type: 'LISTENING'
+  },
+  {
+    name: 'you succeed <3',
+    type: 'WATCHING'
+  },
+  {
+    name: 'with a controller',
+    type: 'PLAYING'
+  },
+  {
+    name: 'Athena code',
+    type: 'WATCHING'
   }
 ];
 

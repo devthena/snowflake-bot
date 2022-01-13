@@ -1,7 +1,7 @@
 {
   "name": "snowflake-bot",
-  "version": "1.9.2",
-  "description": "A Discord bot for AthenaUS and AikoBliss servers",
+  "version": "1.9.3",
+  "description": "A Discord bot I created for my server",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/devthena/snowflake-bot#readme",
   "dependencies": {
-    "discord.js": "^13.3.1",
+    "discord.js": "^13.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
