@@ -9,9 +9,9 @@ const config = {
   POLL_RATE: 1800000, // half hour
   URLS: {
     COMMANDS: 'https://snowflakebot.com/commands',
-    FAQ: 'https://snowflakebot.com/faq'
+    FAQ: 'https://snowflakebot.com/faq',
   },
-  VERSION: '1.9.3'
+  VERSION: '1.10.0',
 };
 
 module.exports = config;
