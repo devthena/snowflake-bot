@@ -81,7 +81,7 @@ module.exports = (Bot, oldPresence, newPresence) => {
           channel => channel.name.includes(server.channels.alertStream)
         );
 
-        if (streamActivity && alertStreamChannel) {
+        if (streamActivity && alertStreamChannel && !Bot.hasMaxAlert) {
           let liveMessage = '';
           if (streamActivity.details) liveMessage += streamActivity.details;
           if (streamActivity.url) liveMessage += `\n\n${streamActivity.url}`;
@@ -89,6 +89,12 @@ module.exports = (Bot, oldPresence, newPresence) => {
           let liveImage = streamActivity.assets
             ? streamActivity.assets.largeImageURL()
             : null;
+
+          Bot.hasMaxAlert = true;
+
+          setTimeout(() => {
+            Bot.hasMaxAlert = false;
+          }, 43200000);
 
           const botEmbed = new MessageEmbed()
             .setAuthor({

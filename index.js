@@ -1,5 +1,7 @@
 if (process.version.slice(1).split('.')[0] < 16) {
-  throw new Error('Node 16.0.0 or higher is required. Update Node on your system.');
+  throw new Error(
+    'Node 16.0.0 or higher is required. Update Node on your system.'
+  );
 }
 
 require('dotenv').config();
@@ -34,21 +36,23 @@ const Bot = new Client({
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_PRESENCES
-  ]
+    Intents.FLAGS.GUILD_PRESENCES,
+  ],
 });
 
+Bot.hasMaxAlert = false;
 Bot.logger = require('./helpers/logger').createLogger('snowflake.log');
 Bot.servers = new Map();
 
 require('./web/router')(app, Bot);
 
 const initBot = async () => {
-
   try {
     await dbclient.connect();
-  } catch(err) { return console.log(err); }
-  
+  } catch (err) {
+    return console.log(err);
+  }
+
   console.log('* Database connection successful *');
 
   Bot.db = dbclient.db('snowdb');
