@@ -1,6 +1,6 @@
 {
   "name": "snowflake-bot",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "A Discord bot I created for my server",
   "main": "index.js",
   "scripts": {
