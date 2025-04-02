@@ -29,7 +29,7 @@
     "node-html-to-image": "^3.2.4",
     "passport": "^0.5.0",
     "passport-discord": "^0.1.4",
-    "pug": "^3.0.2"
+    "pug": "^3.0.3"
   },
   "devDependencies": {
     "node-sass": "^7.0.1",
